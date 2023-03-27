@@ -1,5 +1,10 @@
 import argparse
 from synthetic_benchmark import SyntheticBenchmark
+from itertools import chain
+from extrap.modelers import multi_parameter
+from extrap.modelers import single_parameter
+from extrap.util.options_parser import ModelerOptionsAction, ModelerHelpAction
+from extrap.util.options_parser import SINGLE_PARAMETER_MODELER_KEY, SINGLE_PARAMETER_OPTIONS_KEY
 
 
 def main():
@@ -9,21 +14,38 @@ def main():
     Command line arguments:
     --nr-parameters: Number of parameters for the benchmark. Must be a positive integer.
     --nr-functions: Number of functions used for the synthetic evaluation. Must be a positive integer.
+    --noise: Set the percentage of noise induced to the created measurements. Must be a positive integer.
 
     Returns:
     None
     """
     
     # Parse command line arguments
+    modelers_list = list(set(k.lower() for k in
+                             chain(single_parameter.all_modelers.keys(), multi_parameter.all_modelers.keys())))
     parser = argparse.ArgumentParser(description="Run synthetic benchmark.")
     parser.add_argument("--nr-parameters", type=int, choices=[1, 2, 3, 4], required=True,
                         help="Number of parameters for the synthetic benchmark. Must be 1, 2, 3, or 4.")
     parser.add_argument("--nr-functions", type=int, default=1000, required=True,
                         help="Number of synthetic functions used for the evaluation. Must be an integer value.")
+    parser.add_argument("--noise", type=int, default=1, required=True,
+                        help="Percentage of induced noise. Must be an integer value.")
+    modeling_options = parser.add_argument_group("Modeling options")
+    modeling_options.add_argument("--median", action="store_true", dest="median",
+                                  help="Use median values for computation instead of mean values")
+    modeling_options.add_argument("--modeler", action="store", dest="modeler", default='default', type=str.lower,
+                                  choices=modelers_list,
+                                  help="Selects the modeler for generating the performance models")
+    modeling_options.add_argument("--options", dest="modeler_options", default={}, nargs='+', metavar="KEY=VALUE",
+                                  action=ModelerOptionsAction,
+                                  help="Options for the selected modeler")
+    modeling_options.add_argument("--help-modeler", choices=modelers_list, type=str.lower,
+                                  help="Show help for modeler options and exit",
+                                  action=ModelerHelpAction)
     args = parser.parse_args()
 
     # Run the benchmark
-    benchmark = SyntheticBenchmark(args.nr_parameters, args.nr_functions)
+    benchmark = SyntheticBenchmark(args)
     benchmark.run()
 
 

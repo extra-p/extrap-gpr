@@ -8,7 +8,7 @@ from util import analyze_term_contributions_multiplicative
 
 class FunctionGenerator():
 
-    def __init__(self, parameter_values_a, parameter_values_b, parameter_values_c, parameter_values_d, nr_parameters=1, coefficient_min=-1000, coefficient_max=1000, epsilon=1, seed=1, reproducable=False):
+    def __init__(self, parameter_values_a, parameter_values_b, parameter_values_c, parameter_values_d, nr_parameters=1, coefficient_min=0, coefficient_max=1000, epsilon=1, seed=1, reproducable=False):
     
         self.epsilon = epsilon # the minimum contribution each term must have to the overall function value
         self.seed = seed # random seed to make results reproducable
