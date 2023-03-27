@@ -30,7 +30,10 @@ class FunctionGenerator():
     def evaluate_function(self, function, a=1, b=1, c=1, d=1):
         return eval(function.function)
     
-    def generate_function(self):
+    def generate_function(self, inputs):
+
+        counter = inputs[0]
+        shared_dict = inputs[1]
     
         options = ["additive", "multiplicative"]
         
@@ -59,7 +62,7 @@ class FunctionGenerator():
                         valid_function = False
                 else:
                     valid_function = True
-            return f
+            shared_dict[counter] = f
         
         # generate a multiplicative function
         else:
@@ -90,6 +93,5 @@ class FunctionGenerator():
                         valid_function = False
                 else:
                     valid_function = True
-            return f
+            shared_dict[counter] = f
         
-       
