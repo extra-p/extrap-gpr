@@ -73,6 +73,7 @@ class SyntheticBenchmark():
         extrap_function_string = extrap_function_string.replace(" ","")
         extrap_function_string = extrap_function_string.replace("^","**")
         extrap_function_string = extrap_function_string.replace("log2","math.log2")
+        extrap_function_string = extrap_function_string.replace("+-","-")
         return extrap_function_string
 
     def generate_synthetic_functions(self):
@@ -102,6 +103,8 @@ class SyntheticBenchmark():
         data = {}
 
         if self.nr_parameters == 2:
+
+            min_points = 9
 
             experiments = []
             for i in range(self.nr_functions):
@@ -165,6 +168,9 @@ class SyntheticBenchmark():
                 # create copy of the cost dict
                 remaining_points = copy.deepcopy(cost)
 
+                # dict to store the measurement points values for later use for modeling
+                selected_measurement_values = {}
+
                 # find the cheapest line of 5 points for x
                 row_costs = []
                 cord_lists = []
@@ -200,6 +206,22 @@ class SyntheticBenchmark():
                         remaining_points[cheapest_points_x[j]].remove(values[j])
                     except ValueError:
                         pass
+                    # add measurement value to the list
+                    coordinate_id = -1
+                    for k in range(len(experiment.coordinates)):
+                        if cheapest_points_x[j] == experiment.coordinates[k]:
+                            coordinate_id = k
+                    measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
+                    value_id = -1
+                    for k in range(len(measurement_temp.values)):
+                        runtime = measurement_temp.values[k]
+                        nr_processes = cheapest_points_x[j].as_tuple()[0]
+                        core_hours = runtime * nr_processes
+                        if core_hours == values[k]:
+                            value_id = k
+                            break
+                    #print("measurement_temp:",measurement_temp.values[value_id])
+                    selected_measurement_values[cheapest_points_x[j]] = measurement_temp.values[value_id]
                 #print("remaining after:",remaining_points)
                 #print(cheapest_points_x)
 
@@ -239,6 +261,22 @@ class SyntheticBenchmark():
                         remaining_points[cheapest_points_y[j]].remove(values[j])
                     except ValueError:
                         pass
+                    # add measurement value to the list
+                    coordinate_id = -1
+                    for k in range(len(experiment.coordinates)):
+                        if cheapest_points_y[j] == experiment.coordinates[k]:
+                            coordinate_id = k
+                    measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
+                    value_id = -1
+                    for k in range(len(measurement_temp.values)):
+                        runtime = measurement_temp.values[k]
+                        nr_processes = cheapest_points_y[j].as_tuple()[0]
+                        core_hours = runtime * nr_processes
+                        if core_hours == values[k]:
+                            value_id = k
+                            break
+                    #print("measurement_temp:",measurement_temp.values[value_id])
+                    selected_measurement_values[cheapest_points_y[j]] = measurement_temp.values[value_id]
                 #print("remaining after:",remaining_points)
                 #print(cheapest_points_y)
 
@@ -265,65 +303,118 @@ class SyntheticBenchmark():
                         if exists == False:
                             selected_coord_list.append(cheapest_points_y[j])
 
-                print(selected_coord_list)
+                #print("Selected points:",selected_coord_list)
 
-                #TODO: finish code for adding single points
-                """# select x cheapest measurement(s) that are not part of the list so far
+                # select x cheapest measurement(s) that are not part of the list so far
+                # TODO: how to decide how many extra points should be taken???
                 add_measurements = 1
-                for j in range(add_measurements):
-                    added_points = 0
-                    while loop == True:
-                        if added_points == add_measurements:
+                added_points = 0
+                while True:
+                    if added_points == add_measurements:
+                        break
+
+                    point_costs = {}
+                    for key, value in remaining_points.items():
+                        try:
+                            min_value = min(value)
+                        except ValueError:
+                            min_value = math.inf
+                        #print("min_value:",min_value)
+                        point_costs[key] = min_value
+                    temp = min(point_costs, key=point_costs.get)
+                    #print("x:",temp)
+                    #print("x2:",point_costs[temp])
+
+                    # check if point was already selected
+                    # make sure this point was not selected yet
+                    exists = False
+                    for k in range(len(selected_coord_list)):
+                        if temp == selected_coord_list[k]:
+                            exists = True
                             break
 
-                        point_costs = {}
-                        for key, value in remaining_points.items():
-                            min(value)
-                            point_costs[key] = min(value)
-                        temp = min(point_costs, key=point_costs.get)
-                        print(temp)
-                        print(point_costs[temp])
-
-                        # check if point was already selected
-                        # make sure this point was not selected yet
-                        exists = False
-                        for k in range(len(selected_coord_list)):
-                            if temp == selected_coord_list[k]:
-                                exists = True
-                                break
-
-                        # if point was selected already, delete it
-                        if exists == True:
+                    # if point was selected already, delete it
+                    if exists == True:
+                        try:
+                            remaining_points[temp].remove(point_costs[temp])
+                        except ValueError:
                             pass
-                        # if point was not selected yet, use it
-                        else:
-                            pass
-
-                            added_points += 1
-
-                        
-                        if exists == False:
-                            loop = False
-                
-                    if exists == False:
+                    
+                    # if point was not selected yet, use it
+                    else:
                         # add the point to the selected list
                         selected_coord_list.append(temp)
 
+                        # add measurement value to the list
+                        coordinate_id = -1
+                        for j in range(len(experiment.coordinates)):
+                            if temp == experiment.coordinates[j]:
+                                coordinate_id = j
+                        measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
+                        value_id = -1
+                        for j in range(len(measurement_temp.values)):
+                            runtime = measurement_temp.values[j]
+                            nr_processes = temp.as_tuple()[0]
+                            core_hours = runtime * nr_processes
+                            if core_hours == point_costs[temp]:
+                                value_id = j
+                                break
+                        #print("measurement_temp:",measurement_temp.values[value_id])
+                        selected_measurement_values[temp] = measurement_temp.values[value_id]
+
                         # remove this point from the remaining points list
-                        remaining_points[temp].remove(point_costs[temp])
-                
-                    print(remaining_points)"""
+                        try:
+                            remaining_points[temp].remove(point_costs[temp])
+                        except ValueError:
+                            pass
+            
+                        # increment counter value, because a new measurement point was added
+                        added_points += 1
+
+                    
+                #print(remaining_points)
 
                     
 
+                print("Selected points:",selected_coord_list)
+
+                print("selected measurement values:", selected_measurement_values)
 
 
-                   
+                # create new experiment with only the selected measurements and points as coordinates and measurements
+                experiment_generic = Experiment()
+                for j in range(self.nr_parameters):
+                    experiment_generic.add_parameter(Parameter(self.parameter_placeholders[j]))
+                callpath = Callpath("main")
+                experiment_generic.add_callpath(callpath)
+                metric = Metric("runtime")
+                experiment_generic.add_metric(metric)
+                for j in range(len(selected_coord_list)):
+                    coordinate = selected_coord_list[j]
+                    experiment_generic.add_coordinate(coordinate)
+                    value = selected_measurement_values[selected_coord_list[j]] 
+                    experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
+
+                # calculate selected point cost
+                selected_cost = 0
+                for key, value in selected_measurement_values.items():
+                    runtime = value
+                    nr_processes = key.as_tuple()[0]
+                    core_hours = runtime * nr_processes
+                    #print(nr_processes, runtime, core_hours)
+                    selected_cost += core_hours
+                print("selected_cost:",selected_cost)
+
+                # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
+                add_points = len(selected_coord_list) - min_points
+                print("add_points:",add_points)
+
+                # create model using point selection of generic strategy
+                generic_function_string = self.get_extrap_model(experiment_generic)
+                print("generic_function_string:",generic_function_string)
 
                 
                 extrap_function_string = self.get_extrap_model(experiment)
-
-
                 print("extrap_function_string:",extrap_function_string)
 
                 container["extrap_function_string"] = extrap_function_string
@@ -346,12 +437,11 @@ class SyntheticBenchmark():
         #print(data)
 
 
-        # NOTE: the point selection is the important thing, based on that I give a experiment to the modeler with only the selected points and calculate its cost...
-
         
-        #TODO: create models using the generic strategy (working on that atm...)
+        #TODO: evaluate the accuracy and predictive power of the models as described in the paper...
 
-        #TODO: calculate the cost of the points used by the generic strategy and the number of additional points
+
+        ######################################################################################
 
         #TODO: create models using the gpr strategy
 
