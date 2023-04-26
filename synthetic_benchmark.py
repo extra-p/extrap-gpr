@@ -440,6 +440,14 @@ class SyntheticBenchmark():
         
         #TODO: evaluate the accuracy and predictive power of the models as described in the paper...
 
+        #TODO: need to be able to read data from cube files: FASTEST, Kripke, MILC
+        #TODO: need to make measurements for MILC with 2 and three parameters
+        #TODO: need to create, read input files for Relearn somehow...
+
+        #NOTE: -> for case studies... I need the percentage of models where the prediction is within +-5, +-10, +-15, +-20 % of the actual measurements
+        # using a total budget of 15, 20, 30 % of all available points, for the point selection
+        # mit +-1, +-2.5, +-5, +-7.5, +-10 % noise on the measurements for synthetic stuff
+
 
         ######################################################################################
 
