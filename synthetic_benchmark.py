@@ -34,6 +34,47 @@ class SyntheticBenchmark():
         self.parameter_values_c = [1000,2000,3000,4000,5000]
         self.parameter_values_d = [10,12,14,16,18]
         self.noise_percent = args.noise
+        self.parameter_values_a_val = [128]
+        self.parameter_values_b_val = [60]
+        self.parameter_values_c_val = [6000]
+        self.parameter_values_d_val = [20]
+
+    def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
+        # calculate the percentages for each accuracy bucket
+        percentage_bucket_counter = {}
+        for key, value in acurracy_bucket_counter.items():
+            percentage = (value / self.nr_functions) * 100
+            percentage_bucket_counter[key] = percentage
+        return percentage_bucket_counter
+
+    def increment_accuracy_bucket(self, acurracy_bucket_counter, percentage_error):
+        # increase the counter of the accuracy bucket the error falls into for strategy
+        if percentage_error <= 5:
+            acurracy_bucket_counter["5"] = acurracy_bucket_counter["5"] + 1
+            acurracy_bucket_counter["10"] = acurracy_bucket_counter["10"] + 1
+            acurracy_bucket_counter["15"] = acurracy_bucket_counter["15"] + 1
+            acurracy_bucket_counter["20"] = acurracy_bucket_counter["20"] + 1
+            acurracy_bucket_counter["rest"] = acurracy_bucket_counter["rest"] + 1
+        elif percentage_error <= 10:
+            acurracy_bucket_counter["10"] = acurracy_bucket_counter["10"] + 1
+            acurracy_bucket_counter["15"] = acurracy_bucket_counter["15"] + 1
+            acurracy_bucket_counter["20"] = acurracy_bucket_counter["20"] + 1
+            acurracy_bucket_counter["rest"] = acurracy_bucket_counter["rest"] + 1
+        elif percentage_error <= 15:
+            acurracy_bucket_counter["15"] = acurracy_bucket_counter["15"] + 1
+            acurracy_bucket_counter["20"] = acurracy_bucket_counter["20"] + 1
+            acurracy_bucket_counter["rest"] = acurracy_bucket_counter["rest"] + 1
+        elif percentage_error <= 20:
+            acurracy_bucket_counter["20"] = acurracy_bucket_counter["20"] + 1
+            acurracy_bucket_counter["rest"] = acurracy_bucket_counter["rest"] + 1
+        else:
+            acurracy_bucket_counter["rest"] = acurracy_bucket_counter["rest"] + 1
+        return acurracy_bucket_counter
+
+    def percentage_error(self, true_value, measured_value):
+        error = abs(true_value - measured_value)
+        percentage_error = (error / true_value) * 100
+        return percentage_error
 
     def get_extrap_model(self, experiment):
         # initialize model generator
@@ -95,7 +136,6 @@ class SyntheticBenchmark():
         
         return function_dict
 
-        
     def run(self):
 
         function_dict = self.generate_synthetic_functions()
@@ -105,6 +145,20 @@ class SyntheticBenchmark():
         if self.nr_parameters == 2:
 
             min_points = 9
+
+            acurracy_bucket_counter_full = {}
+            acurracy_bucket_counter_full["rest"] = 0
+            acurracy_bucket_counter_full["5"] = 0
+            acurracy_bucket_counter_full["10"] = 0
+            acurracy_bucket_counter_full["15"] = 0
+            acurracy_bucket_counter_full["20"] = 0
+
+            acurracy_bucket_counter_generic = {}
+            acurracy_bucket_counter_generic["rest"] = 0
+            acurracy_bucket_counter_generic["5"] = 0
+            acurracy_bucket_counter_generic["10"] = 0
+            acurracy_bucket_counter_generic["15"] = 0
+            acurracy_bucket_counter_generic["20"] = 0
 
             experiments = []
             for i in range(self.nr_functions):
@@ -155,12 +209,12 @@ class SyntheticBenchmark():
 
                 experiments.append(experiment)
 
-                print("len measurements:",len(experiment.coordinates))
+                #print("len measurements:",len(experiment.coordinates))
 
                 container["experiment"] = experiment
 
-                print("cost:",cost)
-                print("total_cost:",total_cost)
+                #print("cost:",cost)
+                #print("total_cost:",total_cost)
 
                 container["cost_dict"] = cost
                 container["total_cost"] = total_cost
@@ -376,9 +430,9 @@ class SyntheticBenchmark():
 
                     
 
-                print("Selected points:",selected_coord_list)
+                #print("Selected points:",selected_coord_list)
 
-                print("selected measurement values:", selected_measurement_values)
+                #print("selected measurement values:", selected_measurement_values)
 
 
                 # create new experiment with only the selected measurements and points as coordinates and measurements
@@ -403,30 +457,103 @@ class SyntheticBenchmark():
                     core_hours = runtime * nr_processes
                     #print(nr_processes, runtime, core_hours)
                     selected_cost += core_hours
-                print("selected_cost:",selected_cost)
+                #print("selected_cost:",selected_cost)
 
                 # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
                 add_points = len(selected_coord_list) - min_points
-                print("add_points:",add_points)
+                #print("add_points:",add_points)
+
+
+
 
                 # create model using point selection of generic strategy
-                generic_function_string = self.get_extrap_model(experiment_generic)
-                print("generic_function_string:",generic_function_string)
+                model_generic = self.get_extrap_model(experiment_generic)
+                #print("model_generic:",model_generic)
+                container["model_generic"] = model_generic
+
+                # create model using full matrix of points
+                model_full = self.get_extrap_model(experiment)
+                #print("model_full:",model_full)
+                container["model_full"] = model_full
+
+                # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
+                a = self.parameter_values_a_val[0]
+                b = self.parameter_values_b_val[0]
+                prediction_full = eval(model_full)
+                #print("prediction_full:",prediction_full)
+                prediction_generic = eval(model_generic)
+                #print("prediction_generic:",prediction_generic)
+
+                basline_function = function_dict[i].function
+                actual = eval(basline_function)
+                #print("actual:",actual)
+
+                # get the percentage error for the full matrix of points
+                error_full = abs(self.percentage_error(actual, prediction_full))
+                #print("error_full:",error_full)
+
+                # get the percentage error for the full matrix of points
+                error_generic = abs(self.percentage_error(actual, prediction_generic))
+                #print("error_generic:",error_generic)
+
+
+                # increment accuracy bucket for full matrix of points
+                acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
+
+                # increment accuracy bucket for generic strategy
+                acurracy_bucket_counter_generic = self.increment_accuracy_bucket(acurracy_bucket_counter_generic, error_generic)
+
 
                 
-                extrap_function_string = self.get_extrap_model(experiment)
-                print("extrap_function_string:",extrap_function_string)
-
-                container["extrap_function_string"] = extrap_function_string
-
-                
-                
-                #TODO: add other code here...
+                #TODO: fix number of repetitions used during selection, e.g. to 4, with a command line parameter...
 
                 data[i] = container
 
 
-                break 
+                 
+
+            print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
+            print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
+
+            # calculate the percentages for each accuracy bucket
+            percentage_bucket_counter_full = self.calculate_percentage_of_buckets(acurracy_bucket_counter_full)
+            print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
+            percentage_bucket_counter_generic = self.calculate_percentage_of_buckets(acurracy_bucket_counter_generic)
+            print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
+
+
+            import matplotlib.pyplot as plt
+            import numpy as np
+
+            X = ['+-5%','+-10%','+-15%','+-20%']
+            full = [percentage_bucket_counter_full["5"], 
+                    percentage_bucket_counter_full["10"], 
+                    percentage_bucket_counter_full["15"], 
+                    percentage_bucket_counter_full["20"]]
+            generic = [percentage_bucket_counter_generic["5"],
+                       percentage_bucket_counter_generic["10"],
+                       percentage_bucket_counter_generic["15"],
+                       percentage_bucket_counter_generic["20"]]
+
+            X_axis = np.arange(len(X))
+
+            b1 = plt.bar(X_axis - 0.2, full, 0.4, label = 'Full matrix points')
+            b2 = plt.bar(X_axis + 0.2, generic, 0.4, label = 'Generic Strategy')
+
+            plt.bar_label(b1, label_type='edge')
+            plt.bar_label(b2, label_type='edge')
+            
+            plt.xticks(X_axis, X)
+            plt.xlabel("Accuracy Buckets")
+            plt.ylabel("Percentage of models")
+            plt.title("Percentage of Models in each Accuracy Bucket")
+            plt.legend()
+            plt.show()
+            
+            #TODO: plot modeling budget, and additional measurement points
+       
+    
+
 
         elif self.nr_parameters == 3:
             pass
@@ -438,8 +565,7 @@ class SyntheticBenchmark():
 
 
         
-        #TODO: evaluate the accuracy and predictive power of the models as described in the paper...
-
+        
         #TODO: need to be able to read data from cube files: FASTEST, Kripke, MILC
         #TODO: need to make measurements for MILC with 2 and three parameters
         #TODO: need to create, read input files for Relearn somehow...
@@ -463,11 +589,8 @@ class SyntheticBenchmark():
 
         #TODO: parallelize all of these steps (the outer loop that iterates through the functions)
 
-        #TODO: save the results in a csv table
-
-        #TODO: plot the results using matplotlib or plotly
        
-    
+        
         
         
     
