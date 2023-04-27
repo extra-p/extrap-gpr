@@ -14,6 +14,7 @@ def main():
     Command line arguments:
     --nr-parameters: Number of parameters for the benchmark. Must be a positive integer.
     --nr-functions: Number of functions used for the synthetic evaluation. Must be a positive integer.
+    --nr-repetitions: Number of repetitions for each measurement point. Must be a positive integer.
     --noise: Set the percentage of noise induced to the created measurements. Must be a positive integer.
 
     Returns:
@@ -28,6 +29,8 @@ def main():
                         help="Number of parameters for the synthetic benchmark. Must be 2, 3, or 4.")
     parser.add_argument("--nr-functions", type=int, default=1000, required=True,
                         help="Number of synthetic functions used for the evaluation. Must be an integer value.")
+    parser.add_argument("--nr-repetitions", type=int, default=5, required=True,
+                        help="Number of repetitions for each measurement point. Must be an integer value.")
     parser.add_argument("--noise", type=int, default=1, required=True,
                         help="Percentage of induced noise. Must be an integer value.")
     modeling_options = parser.add_argument_group("Modeling options")
