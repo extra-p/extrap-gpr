@@ -19,6 +19,10 @@ from extrap.util.exceptions import RecoverableError
 from extrap.fileio import experiment_io
 from extrap.fileio.io_helper import format_output
 from extrap.fileio.io_helper import save_output
+import math
+from math import log2
+import copy
+from extrap.entities.coordinate import Coordinate
 
 
 def main():
@@ -47,6 +51,12 @@ def main():
 
     parser.add_argument("--budget", type=int, required=True,
                         help="Percentage of total cost of all points that can be used by the selection strategies. Positive integer value between 0-100.")
+    
+    parser.add_argument("--processes", type=int, required=True,
+                        help="Set which number in the list of parameters is the number of processes/MPI ranks. Positive integer value between 0-x.")
+    
+    parser.add_argument("--parameters", type=str, required=True,
+                        help="Set the parameters of the experiments, used for eval(). String list of the parameter names.")
     
     input_options = parser.add_argument_group("Input options")
     group = input_options.add_mutually_exclusive_group(required=True)
@@ -128,8 +138,6 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
 
-    # TODO: code for case study analysis
-
     #TODO: FASTEST, Kripke, MILC
     #TODO: need to make measurements for MILC with 2 and three parameters
     #TODO: need to create, read input files for Relearn somehow...
@@ -143,6 +151,11 @@ def main():
     budget = args.budget
     print("budget:",budget)
 
+    processes = args.processes
+    print("processes:",processes)
+
+    parameters = args.parameters
+    print("parameters:",parameters)
 
     if args.path is not None:
         with ProgressBar(desc='Loading file') as pbar:
@@ -210,15 +223,194 @@ def main():
                 logging.error('Saving experiment: ' + str(err))
                 sys.exit(1)
 
+        # TODO: code for case study analysis
+
+        # TODO: 
+
+        print(experiment.parameters)
+
+        metric_id = -1
+        for i in range(len(experiment.metrics)):
+            if str(experiment.metrics[i]) == "time":
+                metric_id = i
+                break
+        metric = experiment.metrics[metric_id]
+        metric_string = metric.name
+
+        smapes = []
+        cost = {}
+        total_costs = []
+        
+        modeler = experiment.modelers[0]
+        for callpath_id in range(len(experiment.callpaths)):
+            callpath = experiment.callpaths[callpath_id]
+            callpath_string = callpath.name
+            
+            try:
+                model = modeler.models[callpath, metric]
+            except KeyError as e:
+                model = None
+            if model != None:
+                hypothesis = model.hypothesis
+                function = hypothesis.function
+                smape = hypothesis.SMAPE
+                ar2 = hypothesis.AR2
+                function_string = function.to_string(*experiment.parameters)
+                function_string = function_string.replace(" ","")
+                function_string = function_string.replace("^","**")
+                function_string = function_string.replace("log2","math.log2")
+                function_string = function_string.replace("+-","-")
+
+                total_cost = 0
+
+                for i in range(len(experiment.coordinates)):
+                    if experiment.coordinates[i] not in cost:
+                        cost[experiment.coordinates[i]] = []
+                    values = experiment.coordinates[i].as_tuple()
+                    #print("values:",values)
+                    nr_processes = values[processes]
+                    coordinate_id = -1
+                    for k in range(len(experiment.coordinates)):
+                        if experiment.coordinates[i] == experiment.coordinates[k]:
+                            coordinate_id = k
+                    measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+                    runtime = measurement_temp.mean
+                    #print("measurement_temp:",measurement_temp.mean)
+                    core_hours = runtime * nr_processes
+                    cost[experiment.coordinates[i]].append(core_hours)
+                    total_cost += core_hours
+
+            else:
+                smape = 0
+                ar2 = 0
+                function_string = "None"
+                total_cost = 0
+
+            smapes.append(smape)
+            total_costs.append(total_cost)
+
+            print(callpath_string, metric_string, function_string, total_cost)
+
+        # create copy of the cost dict
+        remaining_points = copy.deepcopy(cost)
+        
+        min_points = 0
+        if len(experiment.parameters) == 1:
+            min_points = 5
+        elif len(experiment.parameters) == 2:
+            min_points = 9
+        elif len(experiment.parameters) == 3:
+            min_points = 13
+        elif len(experiment.parameters) == 4:
+            min_points = 17
+        else:
+            min_points = 5
+        
+        # select points with generic strategy
+        
+        # find the cheapest line of 5 points for x
+        #TODO: works only for 2 parameters like that...
+        y_lines = {}
+        for i in range(len(experiment.coordinates)):
+            cord_values = experiment.coordinates[i].as_tuple()
+            x = cord_values[0]
+            y = []
+            for j in range(len(experiment.coordinates)):
+                cord_values2 = experiment.coordinates[j].as_tuple()
+                if cord_values2[0] == x:
+                    y.append(cord_values2[1])
+            if len(y) == 5:
+                #print("x:",x)
+                #print("y:",y)
+                if x not in y_lines:
+                    y_lines[x] = y
+        print("y_lines:",y_lines)
+        # calculate the cost of each of the lines
+        line_costs = {}
+        for key, value in y_lines.items():
+            line_cost = 0
+            for i in range(len(value)):
+                point_cost = sum(cost[Coordinate(key, value[i])])
+                line_cost += point_cost
+            line_costs[key] = line_cost
+        print("line_costs:",line_costs)
+        x_value = min(line_costs, key=line_costs.get)
+        y_values = y_lines[min(line_costs, key=line_costs.get)]
+        print("y_values:",y_values)
+
+        selected_points = []
+        for i in range(len(y_values)):
+            cord = Coordinate(x_value, y_values[i])
+            selected_points.append(cord)
+
+        print("selected_points:",selected_points)
+
+        # find the cheapest line of 5 points for y
+        #TODO: works only for 2 parameters like that...
+        x_lines = {}
+        for i in range(len(experiment.coordinates)):
+            cord_values = experiment.coordinates[i].as_tuple()
+            y = cord_values[1]
+            x = []
+            for j in range(len(experiment.coordinates)):
+                cord_values2 = experiment.coordinates[j].as_tuple()
+                if cord_values2[1] == y:
+                    x.append(cord_values2[0])
+            if len(x) == 5:
+                #print("x:",x)
+                #print("y:",y)
+                if y not in x_lines:
+                    x_lines[y] = x
+        print("x_lines:",x_lines)
+        # calculate the cost of each of the lines
+        line_costs = {}
+        for key, value in x_lines.items():
+            line_cost = 0
+            for i in range(len(value)):
+                point_cost = sum(cost[Coordinate(value[i], key)])
+                line_cost += point_cost
+            line_costs[key] = line_cost
+        print("line_costs:",line_costs)
+        y_value = min(line_costs, key=line_costs.get)
+        x_values = x_lines[min(line_costs, key=line_costs.get)]
+        print("x_values:",x_values)
+
+        for i in range(len(x_values)):
+            cord = Coordinate(x_values[i], y_value)
+            exists = False
+            for j in range(len(selected_points)):
+                if selected_points[j] == cord:
+                    exists = True
+                    break
+            if exists == False:
+                selected_points.append(cord)
+
+        print("selected_points:",selected_points)
+
+        #TODO: add some additional single points
+
+        
+
+
+
+            
+
+
+
+        
+
+
+
+
         # format modeler output into text
-        text = format_output(experiment, printtype)
+        #text = format_output(experiment, printtype)
 
         # print formatted output to command line
-        print(text)
+        #print(text)
 
         # save formatted output to text file
-        if print_output:
-            save_output(text, print_path)
+        #if print_output:
+        #    save_output(text, print_path)
 
     else:
         logging.error("No file path given to load files.")
