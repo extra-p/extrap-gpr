@@ -138,6 +138,8 @@ def main():
     # using a total budget of 15, 20, 30 % of all available points, for the point selection
     # mit +-1, +-2.5, +-5, +-7.5, +-10 % noise on the measurements for synthetic stuff
 
+    #TODO: use only kernels > 1 % runtime from total???
+
     budget = args.budget
     print("budget:",budget)
 

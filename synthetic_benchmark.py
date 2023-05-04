@@ -67,40 +67,54 @@ class SyntheticBenchmark():
         return experiment_generic
 
     def add_additional_point_generic(self, remaining_points, selected_coord_list):
-        point_costs = {}
-        for key, value in remaining_points.items():
+        while True:
+            point_costs = {}
+            for key, value in remaining_points.items():
+                try:
+                    min_value = min(value)
+                except ValueError:
+                    min_value = math.inf
+                point_costs[key] = min_value
             try:
-                min_value = min(value)
-            except ValueError:
-                min_value = math.inf
-            point_costs[key] = min_value
-        temp = min(point_costs, key=point_costs.get)
-    
-        # check if point was already selected
-        # make sure this point was not selected yet
-        exists = False
-        for k in range(len(selected_coord_list)):
-            if temp == selected_coord_list[k]:
-                exists = True
+                temp = min(point_costs, key=point_costs.get)
+            except Exception as e:
+                print(e)
+                #print("point_costs:",point_costs)
+                #print("remaining_points:",remaining_points)
+                return remaining_points, selected_coord_list
+        
+            # check if point was already selected
+            # make sure this point was not selected yet
+            exists = False
+            for k in range(len(selected_coord_list)):
+                if temp == selected_coord_list[k]:
+                    exists = True
+                    break
+            # if point was selected already, delete it
+            if exists == True:
+                try:
+                    #remaining_points[temp].remove(point_costs[temp])
+                    del remaining_points[temp]
+                except ValueError as e:
+                    print(e)
+                    print("temp:",temp)
+                    print("selected_coord_list:",selected_coord_list)
+                    print("remaining_points:",remaining_points)
+                    return 0
+            # if point was not selected yet, break the loop and add this point
+            else:
                 break
 
-        # if point was selected already, delete it
-        if exists == True:
-            try:
-                remaining_points[temp].remove(point_costs[temp])
-            except ValueError:
-                pass
-        
         # if point was not selected yet, use it
-        else:
-            # add the point to the selected list
-            selected_coord_list.append(temp)
+        # add the point to the selected list
+        selected_coord_list.append(temp)
 
-            # remove this point from the remaining points list
-            try:
-                remaining_points[temp].remove(point_costs[temp])
-            except ValueError:
-                pass
+        # remove this point from the remaining points list
+        try:
+            #remaining_points[temp].remove(point_costs[temp])
+            del remaining_points[temp]
+        except ValueError as e:
+            print(e)
 
         return remaining_points, selected_coord_list
 
@@ -423,77 +437,73 @@ class SyntheticBenchmark():
 
         #print("Selected points:",selected_coord_list)
 
+        #NOTE: (generic, RL-strategy...)
         # select x cheapest measurement(s) that are not part of the list so far
-        # TODO: how to decide how many extra points should be taken???
-        # take points until there is no further improvement in accurac on the points used for modeling
-        # how many times no improvement???
-        # need to eval the old and new model against each other
-        # compare error, improvement between them...
-
+        # continue doing this until there is no improvement in smape value on measured points for a delta of X iterations
         added_points = 0
 
-        print("len selected_coord_list:",len(selected_coord_list))
-
-        #TODO: Bug here is that the points are not added to the selected list, is because of input and output as same variable..., fix this!!!
+        #print("len selected_coord_list:",len(selected_coord_list))
 
         # add the first additional point, this is mandatory for the generic strategy
-        remaining_points_base, selected_coord_list_base = self.add_additional_point_generic(copy.deepcopy(remaining_points), copy.deepcopy(selected_coord_list))
+        remaining_points_base, selected_coord_list_base = self.add_additional_point_generic(remaining_points, selected_coord_list)
         # increment counter value, because a new measurement point was added
         added_points += 1
 
-        print("len selected_coord_list_base:",len(selected_coord_list_base))
+        #print("len selected_coord_list_base:",len(selected_coord_list_base))
 
         #print("added_points:",added_points)
 
         # create first model
-        experiment_generic_base = self.create_experiment(selected_coord_list, experiment)
-        model_generic_base, models = self.get_extrap_model(experiment_generic_base)
+        experiment_generic_base = self.create_experiment(selected_coord_list_base, experiment)
+        _, models = self.get_extrap_model(experiment_generic_base)
         hypothesis = None
         for model in models.values():
             hypothesis = model.hypothesis
-        rss_base = hypothesis.RSS
-        ar2_base = hypothesis.AR2
-        print("rss_base:",rss_base)
-        print("ar2_base:",ar2_base)
+        rss_base = hypothesis.SMAPE
+        #ar2_base = hypothesis.AR2
+        #print("rss_base:",rss_base)
+        #print("ar2_base:",ar2_base)
 
-        stall_counter = 0
-        delta = 0
+        stall_counter = 1
+        #TODO: find the best delta for 2,3,4 parameters...
+        delta = 1
         while True:
-
-            #TODO: should I use specific rss, AR2 values???
 
             # add another point
             remaining_points_new, selected_coord_list_new = self.add_additional_point_generic(remaining_points_base, selected_coord_list_base)
             # increment counter value, because a new measurement point was added
             added_points += 1
 
+            if len(remaining_points_new) == 0:
+                #print("remaining_points_new:",len(remaining_points_new))
+                break
+
             # create new model
-            experiment_generic_new = self.create_experiment(selected_coord_list, experiment)
+            experiment_generic_new = self.create_experiment(selected_coord_list_new, experiment)
             model_generic_new, models = self.get_extrap_model(experiment_generic_new)
             hypothesis = None
             for model in models.values():
                 hypothesis = model.hypothesis
-            rss_new = hypothesis.RSS
-            ar2_new = hypothesis.AR2
-            print("rss_new:",rss_new)
-            print("ar2_new:",ar2_new)
+            rss_new = hypothesis.SMAPE
+            #ar2_new = hypothesis.AR2
+            #print("rss_new:",rss_new)
+            #print("ar2_new:",ar2_new)
 
             # if better continue, else stop after x steps without improvement...
-            if rss_new < rss_base:
-                stall_counter = 0
+            if rss_new <= rss_base:
+                #print("new rss is smaller")
+                stall_counter = 1
                 rss_base = rss_new
                 selected_coord_list_base = selected_coord_list_new
                 remaining_points_base = remaining_points_new
             else:
-                if stall_counter == 3:
+                #print("new rss is larger")
+                if stall_counter == delta:
                     break
                 stall_counter += 1
 
         #print("added_points:",added_points)
-
-        print("len selected_coord_list_new:",len(selected_coord_list_new))
-
-
+        #print("len selected_coord_list_new:",len(selected_coord_list_base),len(selected_coord_list_new),added_points)
 
 
         """add_measurements = 1
@@ -608,7 +618,7 @@ class SyntheticBenchmark():
         # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
         add_points_generic = len(selected_coord_list) - min_points
         #add_points_generic_container.append(add_points_generic)
-        print("add_points_generic:",add_points_generic)
+        #print("add_points_generic:",add_points_generic)
 
         # create model using point selection of generic strategy
         model_generic, _ = self.get_extrap_model(experiment_generic_new)
@@ -831,9 +841,7 @@ class SyntheticBenchmark():
 
         #TODO: calculate the cost of the points used by the hybrid strategy and the number of additional points
 
-        #TODO: calculate the model error of all strategies
-
-        #TODO: parallelize all of these steps (the outer loop that iterates through the functions)
+        #TODO: add same functionality for 3,4 parameters...
 
        
         
