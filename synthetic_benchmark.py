@@ -22,6 +22,8 @@ from extrap.util.options_parser import SINGLE_PARAMETER_MODELER_KEY, SINGLE_PARA
 from extrap.util.progress_bar import ProgressBar
 import numpy as np
 
+from generic_strategy import add_additional_point_generic
+
 
 class SyntheticBenchmark():
 
@@ -66,7 +68,7 @@ class SyntheticBenchmark():
             experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
         return experiment_generic
 
-    def add_additional_point_generic(self, remaining_points, selected_coord_list):
+    """def add_additional_point_generic(self, remaining_points, selected_coord_list):
         while True:
             point_costs = {}
             for key, value in remaining_points.items():
@@ -116,7 +118,7 @@ class SyntheticBenchmark():
         except ValueError as e:
             print(e)
 
-        return remaining_points, selected_coord_list
+        return remaining_points, selected_coord_list"""
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
@@ -445,7 +447,7 @@ class SyntheticBenchmark():
         #print("len selected_coord_list:",len(selected_coord_list))
 
         # add the first additional point, this is mandatory for the generic strategy
-        remaining_points_base, selected_coord_list_base = self.add_additional_point_generic(remaining_points, selected_coord_list)
+        remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_coord_list)
         # increment counter value, because a new measurement point was added
         added_points += 1
 
@@ -470,7 +472,7 @@ class SyntheticBenchmark():
         while True:
 
             # add another point
-            remaining_points_new, selected_coord_list_new = self.add_additional_point_generic(remaining_points_base, selected_coord_list_base)
+            remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
             # increment counter value, because a new measurement point was added
             added_points += 1
 

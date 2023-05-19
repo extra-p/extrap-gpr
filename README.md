@@ -1,5 +1,14 @@
 # extrap-gpr
 
+## Run the evaluation tool:
+
+`python .\case_study.py --budget 20 --extra-p .\fastest.extra-p --processes 0 --parameters "p","size"`
+
+`python .\synthetic_evaluation.py --nr-parameters 2 --nr-functions 10 --nr-repetitions 5 --noise 1`
+
+`python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size"`
+
+
 ## Bulding Extra-P from source
 
 1. `cd extrap-counter`

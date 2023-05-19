@@ -22,7 +22,86 @@ from extrap.fileio.io_helper import save_output
 import math
 from math import log2
 import copy
+import extrap
 from extrap.entities.coordinate import Coordinate
+from generic_strategy import add_additional_point_generic
+from extrap.entities.experiment import Experiment
+from extrap.entities.parameter import Parameter
+from extrap.entities.callpath import Callpath
+from extrap.entities.metric import Metric
+from extrap.entities.measurement import Measurement
+
+
+def get_extrap_model(experiment, args):
+    # initialize model generator
+    model_generator = ModelGenerator(
+        experiment, modeler=args.modeler, use_median=True)
+
+    # apply modeler options
+    modeler = model_generator.modeler
+    if isinstance(modeler, MultiParameterModeler) and args.modeler_options:
+        # set single-parameter modeler of multi-parameter modeler
+        single_modeler = args.modeler_options[SINGLE_PARAMETER_MODELER_KEY]
+        if single_modeler is not None:
+            modeler.single_parameter_modeler = single_parameter.all_modelers[single_modeler]()
+        # apply options of single-parameter modeler
+        if modeler.single_parameter_modeler is not None:
+            for name, value in args.modeler_options[SINGLE_PARAMETER_OPTIONS_KEY].items():
+                if value is not None:
+                    setattr(modeler.single_parameter_modeler, name, value)
+
+    for name, value in args.modeler_options.items():
+        if value is not None:
+            setattr(modeler, name, value)
+
+    with ProgressBar(desc='Generating models') as pbar:
+        # create models from data
+        model_generator.model_all(pbar)
+
+    modeler = experiment.modelers[0]
+    models = modeler.models
+    extrap_function_string = ""
+    for model in models.values():
+        hypothesis = model.hypothesis
+        function = hypothesis.function
+        function_string = function.to_string(*experiment.parameters)
+        extrap_function_string += function_string + "\n"
+    # convert into python interpretable function
+    extrap_function_string = extrap_function_string.replace(" ","")
+    extrap_function_string = extrap_function_string.replace("^","**")
+    extrap_function_string = extrap_function_string.replace("log2","math.log2")
+    extrap_function_string = extrap_function_string.replace("+-","-")
+    return extrap_function_string, models
+
+
+def create_experiment(selected_coord_list, experiment, nr_parameters, parameter_placeholders, metric_id, callpath_id):
+    # create new experiment with only the selected measurements and points as coordinates and measurements
+    experiment_generic = Experiment()
+    for j in range(nr_parameters):
+        experiment_generic.add_parameter(Parameter(parameter_placeholders[j]))
+
+    callpath = experiment.callpaths[callpath_id]
+    experiment_generic.add_callpath(callpath)
+
+    metric = experiment.metrics[metric_id]
+    experiment_generic.add_metric(metric)
+
+    for j in range(len(selected_coord_list)):
+        coordinate = selected_coord_list[j]
+        experiment_generic.add_coordinate(coordinate)
+
+        coordinate_id = -1
+        for k in range(len(experiment.coordinates)):
+            if coordinate == experiment.coordinates[k]:
+                coordinate_id = k
+        measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+        #print("haha:",measurement_temp.median)
+
+        if measurement_temp != None:
+            #value = selected_measurement_values[selected_coord_list[j]] 
+            #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
+            experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
+    return experiment_generic
 
 
 def main():
@@ -225,9 +304,8 @@ def main():
 
         # TODO: code for case study analysis
 
-        # TODO: 
-
-        print(experiment.parameters)
+        
+        #print(experiment.parameters)
 
         metric_id = -1
         for i in range(len(experiment.metrics)):
@@ -237,14 +315,30 @@ def main():
         metric = experiment.metrics[metric_id]
         metric_string = metric.name
 
+        min_points = 0
+        if len(experiment.parameters) == 1:
+            min_points = 5
+        elif len(experiment.parameters) == 2:
+            min_points = 9
+        elif len(experiment.parameters) == 3:
+            min_points = 13
+        elif len(experiment.parameters) == 4:
+            min_points = 17
+        else:
+            min_points = 5
+
         smapes = []
-        cost = {}
-        total_costs = []
+        cost_container = {}
+        total_costs_container = {}
+        all_points_functions_strings = {}
         
         modeler = experiment.modelers[0]
         for callpath_id in range(len(experiment.callpaths)):
             callpath = experiment.callpaths[callpath_id]
             callpath_string = callpath.name
+
+            cost = {}
+            total_cost = 0
             
             try:
                 model = modeler.models[callpath, metric]
@@ -260,8 +354,9 @@ def main():
                 function_string = function_string.replace("^","**")
                 function_string = function_string.replace("log2","math.log2")
                 function_string = function_string.replace("+-","-")
+                all_points_functions_strings[callpath_string] = function_string
 
-                total_cost = 0
+                #total_cost = 0
 
                 for i in range(len(experiment.coordinates)):
                     if experiment.coordinates[i] not in cost:
@@ -274,11 +369,19 @@ def main():
                         if experiment.coordinates[i] == experiment.coordinates[k]:
                             coordinate_id = k
                     measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
-                    runtime = measurement_temp.mean
+                    # should calculate with all values not just mean
+                    coordinate_cost = 0
+                    for k in range(len(measurement_temp.values)):
+                        runtime = measurement_temp.values[k]
+                        core_hours = runtime * nr_processes
+                        coordinate_cost += core_hours
+                    total_cost += coordinate_cost
+
+                    """runtime = measurement_temp.mean
                     #print("measurement_temp:",measurement_temp.mean)
                     core_hours = runtime * nr_processes
                     cost[experiment.coordinates[i]].append(core_hours)
-                    total_cost += core_hours
+                    total_cost += core_hours"""
 
             else:
                 smape = 0
@@ -287,109 +390,242 @@ def main():
                 total_cost = 0
 
             smapes.append(smape)
-            total_costs.append(total_cost)
+            #total_costs.append(total_cost)
 
-            print(callpath_string, metric_string, function_string, total_cost)
+            cost_container[callpath_string] = cost
+            total_costs_container[callpath_string] = total_cost
 
-        # create copy of the cost dict
-        remaining_points = copy.deepcopy(cost)
+            #print(callpath_string, metric_string, function_string, total_cost)
+
+
+
+        for callpath_id in range(len(experiment.callpaths)):
+            callpath = experiment.callpaths[callpath_id]
+            callpath_string = callpath.name
+
+            # get the cost values for this particular callpath
+            cost = cost_container[callpath_string]
+            total_cost = total_costs_container[callpath_string]
+
+            # create copy of the cost dict
+            remaining_points = copy.deepcopy(cost)
         
-        min_points = 0
-        if len(experiment.parameters) == 1:
-            min_points = 5
-        elif len(experiment.parameters) == 2:
-            min_points = 9
-        elif len(experiment.parameters) == 3:
-            min_points = 13
-        elif len(experiment.parameters) == 4:
-            min_points = 17
-        else:
-            min_points = 5
-        
-        # select points with generic strategy
-        
-        # find the cheapest line of 5 points for x
-        #TODO: works only for 2 parameters like that...
-        y_lines = {}
-        for i in range(len(experiment.coordinates)):
-            cord_values = experiment.coordinates[i].as_tuple()
-            x = cord_values[0]
-            y = []
-            for j in range(len(experiment.coordinates)):
-                cord_values2 = experiment.coordinates[j].as_tuple()
-                if cord_values2[0] == x:
-                    y.append(cord_values2[1])
-            if len(y) == 5:
-                #print("x:",x)
-                #print("y:",y)
-                if x not in y_lines:
-                    y_lines[x] = y
-        print("y_lines:",y_lines)
-        # calculate the cost of each of the lines
-        line_costs = {}
-        for key, value in y_lines.items():
-            line_cost = 0
-            for i in range(len(value)):
-                point_cost = sum(cost[Coordinate(key, value[i])])
-                line_cost += point_cost
-            line_costs[key] = line_cost
-        print("line_costs:",line_costs)
-        x_value = min(line_costs, key=line_costs.get)
-        y_values = y_lines[min(line_costs, key=line_costs.get)]
-        print("y_values:",y_values)
+            # select points with generic strategy
+            
+            # find the cheapest line of 5 points for x
+            #TODO: works only for 2 parameters like that...
+            y_lines = {}
+            for i in range(len(experiment.coordinates)):
+                cord_values = experiment.coordinates[i].as_tuple()
+                x = cord_values[0]
+                y = []
+                for j in range(len(experiment.coordinates)):
+                    cord_values2 = experiment.coordinates[j].as_tuple()
+                    if cord_values2[0] == x:
+                        y.append(cord_values2[1])
+                if len(y) == 5:
+                    #print("x:",x)
+                    #print("y:",y)
+                    if x not in y_lines:
+                        y_lines[x] = y
+            #print("y_lines:",y_lines)
+            # calculate the cost of each of the lines
+            line_costs = {}
+            for key, value in y_lines.items():
+                line_cost = 0
+                for i in range(len(value)):
+                    point_cost = sum(cost[Coordinate(key, value[i])])
+                    line_cost += point_cost
+                line_costs[key] = line_cost
+            #print("line_costs:",line_costs)
+            x_value = min(line_costs, key=line_costs.get)
+            y_values = y_lines[min(line_costs, key=line_costs.get)]
+            #print("y_values:",y_values)
 
-        selected_points = []
-        for i in range(len(y_values)):
-            cord = Coordinate(x_value, y_values[i])
-            selected_points.append(cord)
+            #print("DEBUG:",remaining_points)
+            # remove these points from the list of remaining points
+            for j in range(len(y_lines)):
+                try:
+                    cord = Coordinate(x_value, y_values[i])
+                    #remaining_points[y_lines[j]].remove(y_values[j])
+                    remaining_points.pop(cord)
+                except KeyError:
+                    pass
+            #print("DEBUG_2:",remaining_points)
 
-        print("selected_points:",selected_points)
-
-        # find the cheapest line of 5 points for y
-        #TODO: works only for 2 parameters like that...
-        x_lines = {}
-        for i in range(len(experiment.coordinates)):
-            cord_values = experiment.coordinates[i].as_tuple()
-            y = cord_values[1]
-            x = []
-            for j in range(len(experiment.coordinates)):
-                cord_values2 = experiment.coordinates[j].as_tuple()
-                if cord_values2[1] == y:
-                    x.append(cord_values2[0])
-            if len(x) == 5:
-                #print("x:",x)
-                #print("y:",y)
-                if y not in x_lines:
-                    x_lines[y] = x
-        print("x_lines:",x_lines)
-        # calculate the cost of each of the lines
-        line_costs = {}
-        for key, value in x_lines.items():
-            line_cost = 0
-            for i in range(len(value)):
-                point_cost = sum(cost[Coordinate(value[i], key)])
-                line_cost += point_cost
-            line_costs[key] = line_cost
-        print("line_costs:",line_costs)
-        y_value = min(line_costs, key=line_costs.get)
-        x_values = x_lines[min(line_costs, key=line_costs.get)]
-        print("x_values:",x_values)
-
-        for i in range(len(x_values)):
-            cord = Coordinate(x_values[i], y_value)
-            exists = False
-            for j in range(len(selected_points)):
-                if selected_points[j] == cord:
-                    exists = True
-                    break
-            if exists == False:
+            # add these points to the list of selected points
+            selected_points = []
+            for i in range(len(y_values)):
+                cord = Coordinate(x_value, y_values[i])
                 selected_points.append(cord)
 
-        print("selected_points:",selected_points)
+            #print("selected_points:",selected_points)
 
-        #TODO: add some additional single points
+            # find the cheapest line of 5 points for y
+            #TODO: works only for 2 parameters like that...
+            x_lines = {}
+            for i in range(len(experiment.coordinates)):
+                cord_values = experiment.coordinates[i].as_tuple()
+                y = cord_values[1]
+                x = []
+                for j in range(len(experiment.coordinates)):
+                    cord_values2 = experiment.coordinates[j].as_tuple()
+                    if cord_values2[1] == y:
+                        x.append(cord_values2[0])
+                if len(x) == 5:
+                    #print("x:",x)
+                    #print("y:",y)
+                    if y not in x_lines:
+                        x_lines[y] = x
+            #print("x_lines:",x_lines)
+            # calculate the cost of each of the lines
+            line_costs = {}
+            for key, value in x_lines.items():
+                line_cost = 0
+                for i in range(len(value)):
+                    point_cost = sum(cost[Coordinate(value[i], key)])
+                    line_cost += point_cost
+                line_costs[key] = line_cost
+            #print("line_costs:",line_costs)
+            y_value = min(line_costs, key=line_costs.get)
+            x_values = x_lines[min(line_costs, key=line_costs.get)]
+            #print("x_values:",x_values)
 
-        
+            # remove these points from the list of remaining points
+            for j in range(len(x_lines)):
+                try:
+                    cord = Coordinate(x_values[i], y_value)
+                    #remaining_points[x_lines[j]].remove(x_values[j])
+                    remaining_points.pop(cord)
+                except KeyError:
+                    pass
+
+            # add these points to the list of selected points
+            for i in range(len(x_values)):
+                cord = Coordinate(x_values[i], y_value)
+                exists = False
+                for j in range(len(selected_points)):
+                    if selected_points[j] == cord:
+                        exists = True
+                        break
+                if exists == False:
+                    selected_points.append(cord)
+
+            #print("selected_points:",selected_points)
+
+            # add some additional single points
+
+            # select x cheapest measurement(s) that are not part of the list so far
+            # continue doing this until there is no improvement in smape value on measured points for a delta of X iterations
+            added_points = 0
+
+            #print("len selected_coord_list:",len(selected_coord_list))
+
+            # add the first additional point, this is mandatory for the generic strategy
+            remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
+            # increment counter value, because a new measurement point was added
+            added_points += 1
+
+            #print("len selected_coord_list_base:",len(selected_coord_list_base))
+
+            #print("added_points:",added_points)
+
+            # create first model
+            experiment_generic_base = create_experiment(selected_coord_list_base, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
+            #print("DEBUG:", len(experiment_generic_base.callpaths))
+            _, models = get_extrap_model(experiment_generic_base, args)
+            hypothesis = None
+            for model in models.values():
+                hypothesis = model.hypothesis
+            rss_base = hypothesis.SMAPE
+            #ar2_base = hypothesis.AR2
+            #print("rss_base:",rss_base)
+            #print("ar2_base:",ar2_base)
+
+            stall_counter = 1
+            #TODO: find the best delta for 2,3,4 parameters...
+            delta = 1
+            while True:
+
+                # add another point
+                remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
+                # increment counter value, because a new measurement point was added
+                added_points += 1
+
+                if len(remaining_points_new) == 0:
+                    #print("remaining_points_new:",len(remaining_points_new))
+                    break
+
+                # create new model
+                experiment_generic_new = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
+                #print("DEBUG:", len(experiment_generic_new.callpaths))
+                model_generic_new, models = get_extrap_model(experiment_generic_new, args)
+                hypothesis = None
+                for model in models.values():
+                    hypothesis = model.hypothesis
+                rss_new = hypothesis.SMAPE
+                #ar2_new = hypothesis.AR2
+                #print("rss_new:",rss_new)
+                #print("ar2_new:",ar2_new)
+
+                # if better continue, else stop after x steps without improvement...
+                if rss_new <= rss_base:
+                    #print("new rss is smaller")
+                    stall_counter = 1
+                    rss_base = rss_new
+                    selected_coord_list_base = selected_coord_list_new
+                    remaining_points_base = remaining_points_new
+                else:
+                    #print("new rss is larger")
+                    if stall_counter == delta:
+                        break
+                    stall_counter += 1
+
+            #print("added_points:",added_points)
+            #print("len selected_coord_list_new:",len(selected_coord_list_base),len(selected_coord_list_new),added_points)
+
+            
+            # calculate selected point cost
+            selected_cost = 0
+            for j in range(len(selected_points)):
+                coordinate = selected_points[j]
+                coordinate_id = -1
+                for k in range(len(experiment.coordinates)):
+                    if coordinate == experiment.coordinates[k]:
+                        coordinate_id = k
+                measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+                #print("measurement_temp:",measurement_temp)
+                coordinate_cost = 0
+                for k in range(len(measurement_temp.values)):
+                    runtime = measurement_temp.values[k]
+                    nr_processes = coordinate.as_tuple()[0]
+                    core_hours = runtime * nr_processes
+                    coordinate_cost += core_hours
+                selected_cost += coordinate_cost
+            #print("selected_cost:",selected_cost)
+
+            # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
+            percentage_cost_generic = selected_cost / (total_cost / 100)
+            #print("percentage_cost_generic:",percentage_cost_generic)
+
+            # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
+            add_points_generic = len(selected_points) - min_points
+            #add_points_generic_container.append(add_points_generic)
+            #print("add_points_generic:",add_points_generic)
+
+            # create model using point selection of generic strategy
+            #print("DEBUG:", len(experiment_generic_new.callpaths))
+            model_generic, _ = get_extrap_model(experiment_generic_new, args)
+            #print("model_generic:",model_generic)
+            #container["model_generic"] = model_generic
+
+            # create model using full matrix of points
+            #model_full, _ = get_extrap_model(experiment, args)
+            #TODO: use this instead here:   all_points_functions_strings[callpath_string]
+            #print("model_full:",model_full)
+            #container["model_full"] = model_full
+
+            
 
 
 
