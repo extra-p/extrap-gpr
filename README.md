@@ -2,6 +2,12 @@
 
 ## Run the evaluation tool:
 
+FASTEST: `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1`
+
+Relearn:
+
+Kripke:
+
 `python .\case_study.py --budget 20 --extra-p .\fastest.extra-p --processes 0 --parameters "p","size"`
 
 `python .\synthetic_evaluation.py --nr-parameters 2 --nr-functions 10 --nr-repetitions 5 --noise 1`
