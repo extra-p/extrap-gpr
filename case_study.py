@@ -38,6 +38,27 @@ def percentage_error(true_value, measured_value):
     return percentage_error
 
 
+def calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id):
+    # calculate selected point cost
+    selected_cost = 0
+    for j in range(len(selected_points)):
+        coordinate = selected_points[j]
+        coordinate_id = -1
+        for k in range(len(experiment.coordinates)):
+            if coordinate == experiment.coordinates[k]:
+                coordinate_id = k
+        measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+        #print("measurement_temp:",measurement_temp)
+        coordinate_cost = 0
+        for k in range(len(measurement_temp.values)):
+            runtime = measurement_temp.values[k]
+            nr_processes = coordinate.as_tuple()[0]
+            core_hours = runtime * nr_processes
+            coordinate_cost += core_hours
+        selected_cost += coordinate_cost
+    return selected_cost
+
+
 def increment_accuracy_bucket(acurracy_bucket_counter, percentage_error):
     # increase the counter of the accuracy bucket the error falls into for strategy
     if percentage_error <= 5:
@@ -168,7 +189,7 @@ def main():
 
     positional_args = parser.add_argument_group("Positional args")
 
-    parser.add_argument("--budget", type=int, required=True,
+    parser.add_argument("--budget", type=int, required=False, default=0,
                         help="Percentage of total cost of all points that can be used by the selection strategies. Positive integer value between 0-100.")
     
     parser.add_argument("--processes", type=int, required=True,
@@ -264,17 +285,11 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
 
-    #TODO: FASTEST, Kripke, MILC
+    #TODO: FASTEST, Kripke, MILC, Relearn
     #TODO: need to make measurements for MILC with 2 and three parameters
     #TODO: need to create, read input files for Relearn somehow...
 
-    #NOTE: -> for case studies... I need the percentage of models where the prediction is within +-5, +-10, +-15, +-20 % of the actual measurements
-    # using a total budget of 15, 20, 30 % of all available points, for the point selection
-    # mit +-1, +-2.5, +-5, +-7.5, +-10 % noise on the measurements for synthetic stuff
-
-    #TODO: use only kernels > 1 % runtime from total???
-
-    budget = args.budget
+    budget = int(args.budget)
     print("budget:",budget)
 
     processes = args.processes
@@ -359,11 +374,6 @@ def main():
             except RecoverableError as err:
                 logging.error('Saving experiment: ' + str(err))
                 sys.exit(1)
-
-        # TODO: code for case study analysis
-
-        
-        #print(experiment.parameters)
 
         metric_id = -1
         for i in range(len(experiment.metrics)):
@@ -639,10 +649,16 @@ def main():
                 #print("rss_base:",rss_base)
                 #print("ar2_base:",ar2_base)
 
-                stall_counter = 1
-                #TODO: find the best delta for 2,3,4 parameters...
-                #TODO: introduce a budget command line parameter switch, based on which the strategy keeps adding points until the set budget is reached...
-                delta = 1
+                """stall_counter = 1
+                if len(experiment.parameters) == 2:
+                    delta = 3
+                elif len(experiment.parameters) == 3:
+                    delta = 5
+                elif len(experiment.parameters) == 4:
+                    delta = 10
+                else:
+                    delta = 3"""
+                #delta = 3
                 while True:
 
                     # add another point
@@ -654,10 +670,20 @@ def main():
                         #print("remaining_points_new:",len(remaining_points_new))
                         break
 
+                    # calculate selected point cost
+                    current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, callpath_id, metric_id)
+                    current_cost = current_cost / (total_cost / 100)
+
+                    #print("budget:",budget,"current_cost:",current_cost)
+
+                    if budget != 0:
+                        if current_cost >= budget:
+                            break
+
                     # create new model
                     experiment_generic_new = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
                     #print("DEBUG:", len(experiment_generic_new.callpaths))
-                    model_generic_new, models = get_extrap_model(experiment_generic_new, args)
+                    _, models = get_extrap_model(experiment_generic_new, args)
                     hypothesis = None
                     for model in models.values():
                         hypothesis = model.hypothesis
@@ -666,7 +692,10 @@ def main():
                     #print("rss_new:",rss_new)
                     #print("ar2_new:",ar2_new)
 
-                    # if better continue, else stop after x steps without improvement...
+                    selected_coord_list_base = selected_coord_list_new
+                    remaining_points_base = remaining_points_new
+
+                    """# if better continue, else stop after x steps without improvement...
                     if rss_new <= rss_base:
                         #print("new rss is smaller")
                         stall_counter = 1
@@ -675,32 +704,13 @@ def main():
                         remaining_points_base = remaining_points_new
                     else:
                         #print("new rss is larger")
-                        if stall_counter == delta:
-                            break
-                        stall_counter += 1
+                        if budget == 0:
+                            if stall_counter == delta:
+                                break
+                        stall_counter += 1"""
 
-                #print("added_points:",added_points)
-                #print("len selected_coord_list_new:",len(selected_coord_list_base),len(selected_coord_list_new),added_points)
-
-                
                 # calculate selected point cost
-                selected_cost = 0
-                for j in range(len(selected_points)):
-                    coordinate = selected_points[j]
-                    coordinate_id = -1
-                    for k in range(len(experiment.coordinates)):
-                        if coordinate == experiment.coordinates[k]:
-                            coordinate_id = k
-                    measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
-                    #print("measurement_temp:",measurement_temp)
-                    coordinate_cost = 0
-                    for k in range(len(measurement_temp.values)):
-                        runtime = measurement_temp.values[k]
-                        nr_processes = coordinate.as_tuple()[0]
-                        core_hours = runtime * nr_processes
-                        coordinate_cost += core_hours
-                    selected_cost += coordinate_cost
-                #print("selected_cost:",selected_cost)
+                selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
 
                 # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
                 percentage_cost_generic = selected_cost / (total_cost / 100)
@@ -720,15 +730,7 @@ def main():
                 #container["model_generic"] = model_generic
 
                 # create model using full matrix of points
-                #model_full, _ = get_extrap_model(experiment, args)
-                #TODO: use this instead here:   all_points_functions_strings[callpath_string]
-                #print("model_full:",model_full)
-                #container["model_full"] = model_full
-
-
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
-                #print("DEBUG:",parameters)
-
                 if parameters[0] == "p" and parameters[1] == "size":
                     p = int(eval_point[0])
                     size = int(eval_point[1])
