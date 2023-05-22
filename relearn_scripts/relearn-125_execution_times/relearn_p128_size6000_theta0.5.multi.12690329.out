@@ -1,0 +1,204 @@
+Number ranks: 128
+Partitioning based on number neurons would be: Rank 0: my_num_neurons: 6000 [start_id,end_id]: [0,5999]
+
+[INFO:Rank 0]  START: Fri Jul 26 16:48:46 2019
+
+** PARAMETERS **
+
+num_neurons                  : 768000
+frac_neurons_exc             : 0.8
+simulation_time              : 1
+x_0                          : 0.05
+tau_x                        : 5
+k                            : 0.03
+tau_C                        : 5000
+beta                         : 0.001
+C_target                     : 0.5
+refrac_time                  : 4
+h                            : 10
+eta_A                        : 0
+eta_D_ex                     : 0
+eta_D_in                     : 0
+nu                           : 1e-05
+vacant_retract_ratio         : 0
+accept_criterion (BH)        : 0.5
+sigma (BH)                   : 750
+naive_method (BH)            : 0
+num_log_files                : 9
+log_start_neuron             : 0
+mpi_rma_mem_size (Byte)      : 314572800
+max_num_pending_vacant_axons : 1000
+
+[INFO:Rank 0]  Simulation box length          : 2392 (height = width = depth)
+[INFO:Rank 0]  Subdomain length               : 299 (height = width = depth)
+[INFO:Rank 0]  Total number subdomains        : 512
+[INFO:Rank 0]  Number subdomains per dimension: 8
+[INFO:Rank 0]  My number of neurons   : 6000
+[INFO:Rank 0]  My number of subdomains: 4
+[INFO:Rank 0]  My subdomain ids       : [ 0 , 3 ]
+[INFO:Rank 0]  Subdomain: 0
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 0
+[INFO:Rank 0]      index_3d   : ( 0 , 0 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 0 , 0 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 299 , 299 , 299 )
+
+[INFO:Rank 0]  Subdomain: 1
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 1
+[INFO:Rank 0]      index_3d   : ( 1 , 0 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 299 , 0 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 598 , 299 , 299 )
+
+[INFO:Rank 0]  Subdomain: 2
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 2
+[INFO:Rank 0]      index_3d   : ( 0 , 1 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 0 , 299 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 299 , 598 , 299 )
+
+[INFO:Rank 0]  Subdomain: 3
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 3
+[INFO:Rank 0]      index_3d   : ( 1 , 1 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 299 , 299 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 598 , 598 , 299 )
+
+[INFO:Rank 0]  init_free_object_list: max_num_objects: 1572352  sizeof(OctreeNode): 200
+[INFO:Rank 0]  Neurons created
+[INFO:Rank 0]  Neurons inserted into subdomains
+[INFO:Rank 0]  Subdomains inserted into global tree
+[INFO:Rank 0]  Network graph created
+[INFO:Rank 0]  Synaptic elements initialized 
+
+** STATE AFTER: 1 of 1 msec ** [Fri Jul 26 16:48:47 2019]
+** UPDATE CONNECTIVITY AFTER: 1 of 1 msec ** [Fri Jul 26 16:48:47 2019]
+
+[INFO:Rank 0]  Sum (all processes) number synapses deleted: 0
+[INFO:Rank 0]  Sum (all processes) number synapses created: 550743
+
+======== TIMERS GLOBAL OVER ALL RANKS ========
+                                                (    min      |     avg      |     max     ) sec.
+TIMERS: main()
+  main()                                       : 10.8624      | 10.8634      | 10.865      
+  Initialization                               : 0.577611     | 0.579015     | 0.582134    
+  Simulation loop                              : 10.2808      | 10.2839      | 10.2849     
+    Update electrical activity                 : 2.6e-08      | 3.62812e-08  | 1.39e-07    
+    Update #synaptic elements delta            : 2.5e-08      | 3.41641e-08  | 4.4e-08     
+    Connectivity update                        : 10.2808      | 10.2839      | 10.2848     
+      Update #synaptic elements + del synapses : 0            | 0            | 0           
+      Update local trees                       : 0.0008347    | 0.000855217  | 0.000955521 
+      Exchange branch nodes (w/ Allgather)     : 8.9688e-05   | 0.00350744   | 0.00413047  
+      Insert branch nodes into global tree     : 2.4887e-05   | 2.6575e-05   | 3.1342e-05  
+      Update global tree                       : 1.115e-05    | 1.15185e-05  | 1.4766e-05  
+      Find target neurons (w/ RMA)             : 1.31741      | 5.52125      | 10.0266     
+      Empty remote nodes cache                 : 0.0154462    | 0.0216712    | 0.0272659   
+      Create synapses (w/ Alltoall)            : 0.226095     | 4.73625      | 8.94572     
+
+======== RMA MEMORY ALLOCATOR RANK 0 ========
+Min num objects available: 1511586
+
+[INFO:Rank 0]  END: Fri Jul 26 16:48:57 2019
+
+Number ranks: 128
+Partitioning based on number neurons would be: Rank 0: my_num_neurons: 6000 [start_id,end_id]: [0,5999]
+
+[INFO:Rank 0]  START: Fri Jul 26 16:48:59 2019
+
+** PARAMETERS **
+
+num_neurons                  : 768000
+frac_neurons_exc             : 0.8
+simulation_time              : 1
+x_0                          : 0.05
+tau_x                        : 5
+k                            : 0.03
+tau_C                        : 5000
+beta                         : 0.001
+C_target                     : 0.5
+refrac_time                  : 4
+h                            : 10
+eta_A                        : 0
+eta_D_ex                     : 0
+eta_D_in                     : 0
+nu                           : 1e-05
+vacant_retract_ratio         : 0
+accept_criterion (BH)        : 0.5
+sigma (BH)                   : 750
+naive_method (BH)            : 0
+num_log_files                : 9
+log_start_neuron             : 0
+mpi_rma_mem_size (Byte)      : 314572800
+max_num_pending_vacant_axons : 1000
+
+[INFO:Rank 0]  Simulation box length          : 2392 (height = width = depth)
+[INFO:Rank 0]  Subdomain length               : 299 (height = width = depth)
+[INFO:Rank 0]  Total number subdomains        : 512
+[INFO:Rank 0]  Number subdomains per dimension: 8
+[INFO:Rank 0]  My number of neurons   : 6000
+[INFO:Rank 0]  My number of subdomains: 4
+[INFO:Rank 0]  My subdomain ids       : [ 0 , 3 ]
+[INFO:Rank 0]  Subdomain: 0
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 0
+[INFO:Rank 0]      index_3d   : ( 0 , 0 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 0 , 0 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 299 , 299 , 299 )
+
+[INFO:Rank 0]  Subdomain: 1
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 1
+[INFO:Rank 0]      index_3d   : ( 1 , 0 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 299 , 0 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 598 , 299 , 299 )
+
+[INFO:Rank 0]  Subdomain: 2
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 2
+[INFO:Rank 0]      index_3d   : ( 0 , 1 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 0 , 299 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 299 , 598 , 299 )
+
+[INFO:Rank 0]  Subdomain: 3
+[INFO:Rank 0]      num_neurons: 1500
+[INFO:Rank 0]      index_1d   : 3
+[INFO:Rank 0]      index_3d   : ( 1 , 1 , 0 )
+[INFO:Rank 0]      xyz_min    : ( 299 , 299 , 0 )
+[INFO:Rank 0]      xyz_max    : ( 598 , 598 , 299 )
+
+[INFO:Rank 0]  init_free_object_list: max_num_objects: 1572352  sizeof(OctreeNode): 200
+[INFO:Rank 0]  Neurons created
+[INFO:Rank 0]  Neurons inserted into subdomains
+[INFO:Rank 0]  Subdomains inserted into global tree
+[INFO:Rank 0]  Network graph created
+[INFO:Rank 0]  Synaptic elements initialized 
+
+** STATE AFTER: 1 of 1 msec ** [Fri Jul 26 16:49:00 2019]
+** UPDATE CONNECTIVITY AFTER: 1 of 1 msec ** [Fri Jul 26 16:49:00 2019]
+
+[INFO:Rank 0]  Sum (all processes) number synapses deleted: 0
+[INFO:Rank 0]  Sum (all processes) number synapses created: 550743
+
+======== TIMERS GLOBAL OVER ALL RANKS ========
+                                                (    min      |     avg      |     max     ) sec.
+TIMERS: main()
+  main()                                       : 10.8573      | 10.8585      | 10.8601     
+  Initialization                               : 0.576033     | 0.57837      | 0.586229    
+  Simulation loop                              : 10.2722      | 10.2796      | 10.2811     
+    Update electrical activity                 : 2.6e-08      | 3.46641e-08  | 4e-08       
+    Update #synaptic elements delta            : 2.5e-08      | 3.38594e-08  | 4.4e-08     
+    Connectivity update                        : 10.2721      | 10.2795      | 10.281      
+      Update #synaptic elements + del synapses : 0            | 0            | 0           
+      Update local trees                       : 0.000835204  | 0.00086466   | 0.000930138 
+      Exchange branch nodes (w/ Allgather)     : 0.0001407    | 0.0076211    | 0.00919145  
+      Insert branch nodes into global tree     : 2.5002e-05   | 2.66841e-05  | 4.393e-05   
+      Update global tree                       : 1.108e-05    | 1.20539e-05  | 3.1162e-05  
+      Find target neurons (w/ RMA)             : 1.33361      | 5.51694      | 10.0182     
+      Empty remote nodes cache                 : 0.0160242    | 0.0217726    | 0.027894    
+      Create synapses (w/ Alltoall)            : 0.225799     | 4.73204      | 8.92079     
+
+======== RMA MEMORY ALLOCATOR RANK 0 ========
+Min num objects available: 1511586
+
+[INFO:Rank 0]  END: Fri Jul 26 16:49:10 2019
+
