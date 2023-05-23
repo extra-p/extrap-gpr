@@ -1,5 +1,9 @@
 # extrap-gpr
 
+## GPR Tests
+
+`python .\gpr.py --nr-parameters 2 --nr-functions 1 --nr-repetitions 5 --noise 1`
+
 ## Run the evaluation tool:
 
 FASTEST: `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1`
