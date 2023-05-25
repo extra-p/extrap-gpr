@@ -30,13 +30,21 @@ from extrap.entities.parameter import Parameter
 from extrap.entities.callpath import Callpath
 from extrap.entities.metric import Metric
 from extrap.entities.measurement import Measurement
-
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 def percentage_error(true_value, measured_value):
     error = abs(true_value - measured_value)
     percentage_error = (error / true_value) * 100
     return percentage_error
 
+def get_eval_string(function_string):
+    function_string = function_string.replace(" ","")
+    function_string = function_string.replace("^","**")
+    function_string = function_string.replace("log2","math.log2")
+    function_string = function_string.replace("+-","-")
+    return function_string
 
 def calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id):
     # calculate selected point cost
@@ -167,13 +175,7 @@ def create_experiment(selected_coord_list, experiment, nr_parameters, parameter_
 
 def main():
     """
-    Runs an evaluation for a case study based on the cube files loaded from the specified directory.
-
-    Command line args:
-    --budget: Percentage of total cost of all points that can be used by the selection strategies. Positive integer value between 0-100.
-
-    Returns:
-    None
+    Runs an evaluation for a case study based on the cube files loaded from the specified directory or another input file format.
     """
 
     # Parse command line args
@@ -189,7 +191,7 @@ def main():
 
     positional_args = parser.add_argument_group("Positional args")
 
-    parser.add_argument("--budget", type=int, required=False, default=0,
+    parser.add_argument("--budget", type=int, required=True, default=100,
                         help="Percentage of total cost of all points that can be used by the selection strategies. Positive integer value between 0-100.")
     
     parser.add_argument("--processes", type=int, required=True,
@@ -338,7 +340,7 @@ def main():
                 logging.error("The given file path is not valid.")
                 sys.exit(1)
 
-        experiment.debug()
+        #experiment.debug()
 
         # initialize model generator
         model_generator = ModelGenerator(
@@ -357,14 +359,16 @@ def main():
                     if value is not None:
                         setattr(modeler.single_parameter_modeler, name, value)
 
+        # apply modeler options
         for name, value in args.modeler_options.items():
             if value is not None:
                 setattr(modeler, name, value)
 
+        # create models from data
         with ProgressBar(desc='Generating models') as pbar:
-            # create models from data
             model_generator.model_all(pbar)
 
+        # save experiment if set in command line options
         if args.save_experiment:
             try:
                 with ProgressBar(desc='Saving experiment') as pbar:
@@ -375,14 +379,17 @@ def main():
                 logging.error('Saving experiment: ' + str(err))
                 sys.exit(1)
 
+        # get metric id and string of runtime/time metric
         metric_id = -1
         for i in range(len(experiment.metrics)):
-            if str(experiment.metrics[i]) == "time":
+            if str(experiment.metrics[i]) == "time" or str(experiment.metrics[i]) == "runtime":
                 metric_id = i
                 break
         metric = experiment.metrics[metric_id]
         metric_string = metric.name
+        print("Metric:",metric_string)
 
+        # set the minimum number of points required for modeling with the sparse modeler
         min_points = 0
         if len(experiment.parameters) == 1:
             min_points = 5
@@ -420,6 +427,8 @@ def main():
         runtime_sums = {}
 
         modeler = experiment.modelers[0]
+
+        # calculate the overall runtime of the application and the cost of each kernel per measurement point
         for callpath_id in range(len(experiment.callpaths)):
             callpath = experiment.callpaths[callpath_id]
             callpath_string = callpath.name
@@ -435,34 +444,28 @@ def main():
                 hypothesis = model.hypothesis
                 function = hypothesis.function
                 smape = hypothesis.SMAPE
-                ar2 = hypothesis.AR2
+                
+                # get the extrap function as a string
                 function_string = function.to_string(*experiment.parameters)
-                function_string = function_string.replace(" ","")
-                function_string = function_string.replace("^","**")
-                function_string = function_string.replace("log2","math.log2")
-                function_string = function_string.replace("+-","-")
+                function_string = get_eval_string(function_string)
                 all_points_functions_strings[callpath_string] = function_string
 
-                #total_cost = 0
-
                 overall_runtime = 0
-
                 for i in range(len(experiment.coordinates)):
                     if experiment.coordinates[i] not in cost:
                         cost[experiment.coordinates[i]] = []
                     values = experiment.coordinates[i].as_tuple()
-                    #print("values:",values)
                     nr_processes = values[processes]
                     coordinate_id = -1
                     for k in range(len(experiment.coordinates)):
                         if experiment.coordinates[i] == experiment.coordinates[k]:
                             coordinate_id = k
                     measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
-                    # should calculate with all values not just mean
                     coordinate_cost = 0
                     for k in range(len(measurement_temp.values)):
                         runtime = measurement_temp.values[k]
                         core_hours = runtime * nr_processes
+                        cost[experiment.coordinates[i]].append(core_hours)
                         coordinate_cost += core_hours
                         overall_runtime += runtime
                     total_cost += coordinate_cost
@@ -475,14 +478,12 @@ def main():
 
             else:
                 smape = 0
-                ar2 = 0
                 function_string = "None"
                 total_cost = 0
                 overall_runtime = 0
 
             smapes.append(smape)
-            #total_costs.append(total_cost)
-
+           
             cost_container[callpath_string] = cost
             total_costs_container[callpath_string] = total_cost
 
@@ -512,7 +513,7 @@ def main():
             
             if callpath_cost >= filter:
                 kernels_used += 1
-                print("callpath_cost:",callpath_cost)
+                print("callpath_cost_percent_from_total:",callpath_cost)
 
                 # create copy of the cost dict
                 remaining_points = copy.deepcopy(cost)
@@ -659,55 +660,72 @@ def main():
                 else:
                     delta = 3"""
                 #delta = 3
-                while True:
+                
+                #print("remaining_points_base:",remaining_points_base)
+                #print("selected_coord_list_base:",selected_coord_list_base)
 
-                    # add another point
-                    remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
-                    # increment counter value, because a new measurement point was added
-                    added_points += 1
+                # calculate selected point cost
+                current_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
+                current_cost_percent = current_cost / (total_cost / 100)
 
-                    if len(remaining_points_new) == 0:
-                        #print("remaining_points_new:",len(remaining_points_new))
-                        break
+                if current_cost_percent < budget:
+                    while True:
+                        # add another point
+                        remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
+                        
+                        # increment counter value, because a new measurement point was added
+                        added_points += 1
 
-                    # calculate selected point cost
-                    current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, callpath_id, metric_id)
-                    current_cost = current_cost / (total_cost / 100)
+                        #print("remaining_points_new:",remaining_points_new)
 
-                    #print("budget:",budget,"current_cost:",current_cost)
-
-                    if budget != 0:
-                        if current_cost >= budget:
+                        if len(remaining_points_new) == 0:
+                            #print("remaining_points_new:",len(remaining_points_new))
                             break
 
-                    # create new model
-                    experiment_generic_new = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
-                    #print("DEBUG:", len(experiment_generic_new.callpaths))
-                    _, models = get_extrap_model(experiment_generic_new, args)
-                    hypothesis = None
-                    for model in models.values():
-                        hypothesis = model.hypothesis
-                    rss_new = hypothesis.SMAPE
-                    #ar2_new = hypothesis.AR2
-                    #print("rss_new:",rss_new)
-                    #print("ar2_new:",ar2_new)
+                        # calculate selected point cost
+                        current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, callpath_id, metric_id)
+                        current_cost_percent = current_cost / (total_cost / 100)
 
-                    selected_coord_list_base = selected_coord_list_new
-                    remaining_points_base = remaining_points_new
+                        #print("budget:",budget,"current_cost_percent:",current_cost_percent)
 
-                    """# if better continue, else stop after x steps without improvement...
-                    if rss_new <= rss_base:
-                        #print("new rss is smaller")
-                        stall_counter = 1
-                        rss_base = rss_new
+                        if current_cost_percent >= budget:
+                            break
+
+                        # create new model
+                        experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
+                        #print("DEBUG:", len(experiment_generic_base.callpaths))
+                        _, models = get_extrap_model(experiment_generic_base, args)
+                        hypothesis = None
+                        for model in models.values():
+                            hypothesis = model.hypothesis
+                        #rss_new = hypothesis.SMAPE
+                        #ar2_new = hypothesis.AR2
+                        #print("rss_new:",rss_new)
+                        #print("ar2_new:",ar2_new)
+
                         selected_coord_list_base = selected_coord_list_new
                         remaining_points_base = remaining_points_new
-                    else:
-                        #print("new rss is larger")
-                        if budget == 0:
-                            if stall_counter == delta:
-                                break
-                        stall_counter += 1"""
+
+                        #print("selected_coord_list_base:",selected_coord_list_base)
+
+                        """# if better continue, else stop after x steps without improvement...
+                        if rss_new <= rss_base:
+                            #print("new rss is smaller")
+                            stall_counter = 1
+                            rss_base = rss_new
+                            selected_coord_list_base = selected_coord_list_new
+                            remaining_points_base = remaining_points_new
+                        else:
+                            #print("new rss is larger")
+                            if budget == 0:
+                                if stall_counter == delta:
+                                    break
+                            stall_counter += 1"""
+                
+                else:
+                    pass
+
+                #print("experiment_generic_base:",experiment_generic_base)
 
                 # calculate selected point cost
                 selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
@@ -724,8 +742,8 @@ def main():
                 add_points_generic_container.append(add_points_generic)
 
                 # create model using point selection of generic strategy
-                #print("DEBUG:", len(experiment_generic_new.callpaths))
-                model_generic, _ = get_extrap_model(experiment_generic_new, args)
+                #print("DEBUG:", len(experiment_generic_base.callpaths))
+                model_generic, _ = get_extrap_model(experiment_generic_base, args)
                 #print("model_generic:",model_generic)
                 #container["model_generic"] = model_generic
 
@@ -734,7 +752,9 @@ def main():
                 if parameters[0] == "p" and parameters[1] == "size":
                     p = int(eval_point[0])
                     size = int(eval_point[1])
-                    #print("p:",p,"size:",size)
+                elif parameters[0] == "p" and parameters[1] == "n":
+                    p = int(eval_point[0])
+                    n = int(eval_point[1])
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
@@ -789,8 +809,7 @@ def main():
         percentage_bucket_counter_generic = calculate_percentage_of_buckets(acurracy_bucket_counter_generic, kernels_used)
         print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
 
-        import matplotlib.pyplot as plt
-        import numpy as np
+        
 
         X = ['+-5%','+-10%','+-15%','+-20%']
         full = [percentage_bucket_counter_full["5"], 
@@ -830,17 +849,22 @@ def main():
         #TODO: calculate this mean_budget_hybrid
         mean_budget_hybrid = 15
 
-        langs = ["generic", "gpr", "hybrid"]
-        cost = [mean_budget_generic, mean_budget_gpr, mean_budget_hybrid]
+        mean_budget_generic = float("{:.2f}".format(mean_budget_generic))
+        mean_budget_gpr = float("{:.2f}".format(mean_budget_gpr))
+        mean_budget_hybrid = float("{:.2f}".format(mean_budget_hybrid))
+
+        langs = ["full", "generic", "gpr", "hybrid\n(generic+gpr)"]
+        cost = [100, mean_budget_generic, mean_budget_gpr, mean_budget_hybrid]
         
         b1 = plt.bar(langs, cost, 0.4)
         
         plt.bar_label(b1, label_type='edge')
         
         plt.xticks(np.arange(len(langs)), langs)
-        plt.xlabel("Measurement Point selection strategy")
-        plt.ylabel("Percentage of budget")
+        plt.xlabel("masurement point selection strategy")
+        plt.ylabel("percentage of budget")
         plt.title("Modeling Budget used by each strategy to achieve outlined accuracy")
+        plt.tight_layout()
         plt.savefig('cost.png')
         plt.show()
 
@@ -850,25 +874,80 @@ def main():
         #TODO: calculate this mean_budget_hybrid
         mean_add_points_hybrid = 15
 
-        add_points = [mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]
+        #add_points = [len(experiment.coordinates), mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]
+        add_points = {
+            "base points": np.array([min_points, min_points, min_points, min_points]),
+            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, 5, 5]),
+        }
+
+        print(min_points)
+
+        fig, ax = plt.subplots()
+        bottom = np.zeros(4)
+
+        for boolean, add_point in add_points.items():
+            p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom)
+            bottom += add_point
+        ax.bar_label(p, label_type='edge')
+        ax.legend(loc="upper right")
+        plt.xlabel("measurement Point selection strategy")
+        plt.ylabel("additional measurement points")
+        plt.title("Number of measurement points used by each\n strategy to achieve outlined accuracy")
+        plt.tight_layout()
+        plt.savefig('additional_points.png')
+        plt.show()
         
-        b1 = plt.bar(langs, add_points, 0.4)
+        """b1 = plt.bar(langs, add_points, 0.4)
         
         plt.bar_label(b1, label_type='edge')
         
         plt.xticks(np.arange(len(langs)), langs)
-        plt.xlabel("Measurement Point selection strategy")
-        plt.ylabel("Additional measurement points")
-        plt.title("Additional measurement points used by each strategy to achieve outlined accuracy")
+        plt.xlabel("measurement Point selection strategy")
+        plt.ylabel("additional measurement points")
+        plt.title("Additional measurement points used by each\n strategy to achieve outlined accuracy")
+        plt.tight_layout()
         plt.savefig('additional_points.png')
-        plt.show()
+        plt.show()"""
             
 
 
+        from plotting import plot_measurement_point_number
+        
+        """tips = sns.load_dataset('tips')
+        # Let's massage the data a bit to be aggregated by day of week, with
+        # columns for each gender. We could leave it in long format as well (
+        # with gender as values in a single column).
+        agg_tips = tips.groupby(['day', 'sex'])['tip'].sum().unstack().fillna(0)
 
-            
+        print("agg_tips:",agg_tips)
+        """
+        
 
+        #[min_points, min_points, min_points, min_points]
+        #[len(experiment.coordinates)-min_points, mean_add_points_generic, 5, 5]
 
+        df1 = pd.DataFrame([
+            ["additional points", "full", len(experiment.coordinates)-min_points],
+            ["additional points", "generic", mean_add_points_generic],
+            ["additional points", "gpr", 5],
+            ["additional points", "hybrid\n(generic+gpr)", 5],
+            ["base points","full", min_points],
+            ["base points","generic", min_points],
+            ["base points","gpr", min_points],
+            ["base points", "hybrid\n(generic+gpr)", min_points]
+                            ], index=["a", "b", "c", "d", "e", "f", "g", "h"], columns=["type", "strategy", "value"])
+        df2 = pd.DataFrame(data=df1, index=["a", "b", "c", "d", "e", "f", "g", "h"])
+        print(df2)
+
+        #TODO: need to get the type in the right order... is shown incorrectly in the chart...
+        # base need to be on the bottom part...
+
+        agg_df2 = df2.groupby(['strategy', 'type'])['value'].sum().unstack().fillna(0)
+        #agg_df2.sort_values(by="type") 
+
+        print(agg_df2)
+
+        plot_measurement_point_number(agg_df2)
 
         
 

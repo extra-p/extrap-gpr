@@ -19,7 +19,7 @@ do
 done
 
 echo "" >> $FILENAME
-echo "METRIC runtime" >> $FILENAME
+echo "METRIC time" >> $FILENAME
 echo "" >> $FILENAME
 
 for kernel in "${KERNELS[@]}"
