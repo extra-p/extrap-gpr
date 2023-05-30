@@ -33,6 +33,7 @@ from extrap.entities.measurement import Measurement
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from plotting import plot_measurement_point_number, plot_model_accuracy, plot_costs
 
 def percentage_error(true_value, measured_value):
     error = abs(true_value - measured_value)
@@ -621,6 +622,10 @@ def main():
 
                 #print("selected_points:",selected_points)
 
+                # calculate the cost for the selected base points
+                base_point_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
+                base_point_cost = base_point_cost / (total_cost / 100)
+
                 # add some additional single points
 
                 # select x cheapest measurement(s) that are not part of the list so far
@@ -797,76 +802,54 @@ def main():
                 pass
 
 
-        print("kernels_used:",kernels_used)
+        print("Number of kernels used:",kernels_used)
+
+        #TODO: until the other strategies are working
+        acurracy_bucket_counter_gpr = copy.deepcopy(acurracy_bucket_counter_generic)
+        acurracy_bucket_counter_hybrid = copy.deepcopy(acurracy_bucket_counter_generic)
 
         print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
         print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
+        print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_gpr)
+        print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_hybrid)
 
         # calculate the percentages for each accuracy bucket
-        nr_callpaths = len(experiment.callpaths)
         percentage_bucket_counter_full = calculate_percentage_of_buckets(acurracy_bucket_counter_full, kernels_used)
         print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
         percentage_bucket_counter_generic = calculate_percentage_of_buckets(acurracy_bucket_counter_generic, kernels_used)
         print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
+        percentage_bucket_counter_gpr = calculate_percentage_of_buckets(acurracy_bucket_counter_gpr, kernels_used)
+        print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
+        percentage_bucket_counter_hybrid = calculate_percentage_of_buckets(acurracy_bucket_counter_hybrid, kernels_used)
+        print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
 
+        # plot the results of the model accuracy analysis
+        plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid)
         
-
-        X = ['+-5%','+-10%','+-15%','+-20%']
-        full = [percentage_bucket_counter_full["5"], 
-                percentage_bucket_counter_full["10"], 
-                percentage_bucket_counter_full["15"], 
-                percentage_bucket_counter_full["20"]]
-        generic = [percentage_bucket_counter_generic["5"],
-                    percentage_bucket_counter_generic["10"],
-                    percentage_bucket_counter_generic["15"],
-                    percentage_bucket_counter_generic["20"]]
-
-        X_axis = np.arange(len(X))
-
-        b1 = plt.bar(X_axis - 0.2, full, 0.4, label = 'Full matrix points')
-        b2 = plt.bar(X_axis + 0.2, generic, 0.4, label = 'Generic Strategy')
-
-        plt.bar_label(b1, label_type='edge')
-        plt.bar_label(b2, label_type='edge')
-        
-        plt.xticks(X_axis, X)
-        plt.xlabel("Accuracy Buckets")
-        plt.ylabel("Percentage of models")
-        plt.title("Percentage of Models in each Accuracy Bucket")
-        plt.legend()
-        plt.savefig('accuracy.png')
-        plt.show()
-        
-        mean_budget_generic = np.mean(percentage_cost_generic_container)
+        mean_budget_generic = np.nanmean(percentage_cost_generic_container)
         print("mean_budget_generic:",mean_budget_generic)
 
-        mean_add_points_generic = np.mean(add_points_generic_container)
+        mean_add_points_generic = np.nanmean(add_points_generic_container)
         print("mean_add_points_generic:",mean_add_points_generic)
 
         #TODO: calculate this mean_budget_gpr
-        mean_budget_gpr = 10
+        mean_budget_gpr = base_point_cost+10
 
         #TODO: calculate this mean_budget_hybrid
-        mean_budget_hybrid = 15
+        mean_budget_hybrid = base_point_cost+15
 
-        mean_budget_generic = float("{:.2f}".format(mean_budget_generic))
-        mean_budget_gpr = float("{:.2f}".format(mean_budget_gpr))
-        mean_budget_hybrid = float("{:.2f}".format(mean_budget_hybrid))
+        used_costs = {
+            "base points": np.array([base_point_cost, base_point_cost, base_point_cost, base_point_cost]),
+            "additional points": np.array([100-base_point_cost, mean_budget_generic-base_point_cost, mean_budget_gpr-base_point_cost, mean_budget_hybrid-base_point_cost]),
+        }
 
-        langs = ["full", "generic", "gpr", "hybrid\n(generic+gpr)"]
-        cost = [100, mean_budget_generic, mean_budget_gpr, mean_budget_hybrid]
-        
-        b1 = plt.bar(langs, cost, 0.4)
-        
-        plt.bar_label(b1, label_type='edge')
-        
-        plt.xticks(np.arange(len(langs)), langs)
-        plt.xlabel("masurement point selection strategy")
-        plt.ylabel("percentage of budget")
-        plt.title("Modeling Budget used by each strategy to achieve outlined accuracy")
-        plt.tight_layout()
-        plt.savefig('cost.png')
-        plt.show()
+        # plot the analysis result for the costs and budgets
+        plot_costs(used_costs, base_point_cost)
+
+        add_points = {
+            "base points": np.array([min_points, min_points, min_points, min_points]),
+            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, 5, 5]),
+        }
 
         #TODO: calculate this mean_budget_gpr
         mean_add_points_gpr = 10
@@ -874,102 +857,12 @@ def main():
         #TODO: calculate this mean_budget_hybrid
         mean_add_points_hybrid = 15
 
-        #add_points = [len(experiment.coordinates), mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]
-        add_points = {
-            "base points": np.array([min_points, min_points, min_points, min_points]),
-            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, 5, 5]),
-        }
-
-        print(min_points)
-
-        fig, ax = plt.subplots()
-        bottom = np.zeros(4)
-
-        for boolean, add_point in add_points.items():
-            p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom)
-            bottom += add_point
-        ax.bar_label(p, label_type='edge')
-        ax.legend(loc="upper right")
-        plt.xlabel("measurement Point selection strategy")
-        plt.ylabel("additional measurement points")
-        plt.title("Number of measurement points used by each\n strategy to achieve outlined accuracy")
-        plt.tight_layout()
-        plt.savefig('additional_points.png')
-        plt.show()
-        
-        """b1 = plt.bar(langs, add_points, 0.4)
-        
-        plt.bar_label(b1, label_type='edge')
-        
-        plt.xticks(np.arange(len(langs)), langs)
-        plt.xlabel("measurement Point selection strategy")
-        plt.ylabel("additional measurement points")
-        plt.title("Additional measurement points used by each\n strategy to achieve outlined accuracy")
-        plt.tight_layout()
-        plt.savefig('additional_points.png')
-        plt.show()"""
-            
-
-
-        from plotting import plot_measurement_point_number
-        
-        """tips = sns.load_dataset('tips')
-        # Let's massage the data a bit to be aggregated by day of week, with
-        # columns for each gender. We could leave it in long format as well (
-        # with gender as values in a single column).
-        agg_tips = tips.groupby(['day', 'sex'])['tip'].sum().unstack().fillna(0)
-
-        print("agg_tips:",agg_tips)
-        """
-        
-
-        #[min_points, min_points, min_points, min_points]
-        #[len(experiment.coordinates)-min_points, mean_add_points_generic, 5, 5]
-
-        df1 = pd.DataFrame([
-            ["additional points", "full", len(experiment.coordinates)-min_points],
-            ["additional points", "generic", mean_add_points_generic],
-            ["additional points", "gpr", 5],
-            ["additional points", "hybrid\n(generic+gpr)", 5],
-            ["base points","full", min_points],
-            ["base points","generic", min_points],
-            ["base points","gpr", min_points],
-            ["base points", "hybrid\n(generic+gpr)", min_points]
-                            ], index=["a", "b", "c", "d", "e", "f", "g", "h"], columns=["type", "strategy", "value"])
-        df2 = pd.DataFrame(data=df1, index=["a", "b", "c", "d", "e", "f", "g", "h"])
-        print(df2)
-
-        #TODO: need to get the type in the right order... is shown incorrectly in the chart...
-        # base need to be on the bottom part...
-
-        agg_df2 = df2.groupby(['strategy', 'type'])['value'].sum().unstack().fillna(0)
-        #agg_df2.sort_values(by="type") 
-
-        print(agg_df2)
-
-        plot_measurement_point_number(agg_df2)
-
-        
-
-
-
-
-        # format modeler output into text
-        #text = format_output(experiment, printtype)
-
-        # print formatted output to command line
-        #print(text)
-
-        # save formatted output to text file
-        #if print_output:
-        #    save_output(text, print_path)
+        # plot the analysis result for the additional measurement point numbers
+        plot_measurement_point_number(add_points, min_points)
 
     else:
         logging.error("No file path given to load files.")
         sys.exit(1)
-    
-
 
 if __name__ == "__main__":
     main()
-
