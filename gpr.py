@@ -22,14 +22,21 @@ def main():
                         help="Percentage of induced noise. Must be an integer value.")
     args = parser.parse_args()
 
+    random.seed(10)
+
     # create a syntethic function
     benchmark = SyntheticBenchmark(args)
     functions = benchmark.generate_synthetic_functions()
     function = functions[0].function
+
+    function = "1.5+2.3*a**2*math.log2(a)**1*2.75*b**1*math.log2(b)**1"
+
+    print("function:",function)
     
     # x1 is the number of processes
     x1_min = 1
     x1_max = benchmark.parameter_values_a_val[0]+1
+    # x2 is the problem size
     x2_min = 1
     x2_max = benchmark.parameter_values_b_val[0]+1
 
@@ -46,9 +53,16 @@ def main():
 
     # create the training data
     x_train = benchmark.parameter_values_a
+    x_train = np.array(x_train)
+    x_train = x_train.reshape(-1, 1)
+    print("x_train:",x_train)
+
+
+
     y_train2 = []
     for i in range(len(x_train)):
         a = x_train[i]
+        b = 
         result = eval(function)
         values = []
         for _ in range(5):
@@ -60,13 +74,13 @@ def main():
                 result *= ((100+noise)/100)
             values.append(result)
         y_train2.append(np.mean(values))
-    x_train = np.array(x_train)
+    
     y_train2 = np.array(y_train2)
     x_train_plot = x_train
     y_train2_plot = y_train2
-    x_train = x_train.reshape(-1, 1)
+    #x_train = x_train.reshape(-1, 1)
     y_train2 = y_train2.reshape(-1, 1)
-    print("x_train:",x_train)
+    #print("x_train:",x_train)
     print("y_train2:",y_train2)
 
     # calculate the costs of each of these training points
@@ -111,46 +125,49 @@ def main():
     #print("y_sample:",y_sample[0])
     #predicted_y = y_sample[0]
 
+
+
+
+
+
+
     # plot the baseline function
     plt.plot(X1, runtime, label=r"$f(a)="+str(function)+"$", linestyle="dotted")
 
     # plot the training points
-    plt.errorbar(
-        x_train_plot,
-        y_train2_plot,
-        noise_std,
-        linestyle="None",
-        color="tab:blue",
-        marker=".",
-        markersize=10,
-        label="Observations",
-    )
+    plt.errorbar(x_train_plot, y_train2_plot, noise_std, linestyle="None", color="tab:blue", marker=".", markersize=10, label="Observations")
 
     # plot mean prediction model created by gpr
-    plt.plot(X1, mean_prediction, label="Mean prediction")
+    #plt.plot(X1, mean_prediction, label="Mean prediction")
 
     # plot the 95% confidence interval
-    plt.fill_between(
+    """plt.fill_between(
         X1.ravel(),
         mean_prediction - 1.96 * std_prediction,
         mean_prediction + 1.96 * std_prediction,
         color="tab:orange",
         alpha=0.5,
         label=r"95% confidence interval",
-    )
+    )"""
 
     # visualize the prediction of the target evaluation point
     #plt.plot(XX, predicted_y, marker="X")
-    plt.plot(XX, predicted_y[0], marker="X", label="target point")
+    
+    #plt.plot(XX, predicted_y[0], marker="X", label="target point")
 
 
     plt.legend()
     plt.xlabel("number of processes $a$")
     plt.ylabel("$f(a)$")
     _ = plt.title("Gaussian process regression on a noisy dataset")
+    plt.tight_layout()
     plt.show()
 
     #print("mean_prediction:",mean_prediction)
+
+
+
+    #double rated = std::pow( costForIndex[current_index].second, 2 ) / ( std::pow( std::abs( gp.var( x )), 2 ));
 
 
 

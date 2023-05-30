@@ -4,20 +4,24 @@
 
 `python .\gpr.py --nr-parameters 2 --nr-functions 1 --nr-repetitions 5 --noise 1`
 
-## Run the evaluation tool:
+## Run the evaluation tool for the case studies:
 
 FASTEST: `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1`
 
-Relearn:
+Relearn: `python .\case_study.py --text .\relearn_scripts\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30`
 
 Kripke:
 
-`python .\case_study.py --budget 20 --extra-p .\fastest.extra-p --processes 0 --parameters "p","size"`
 
-`python .\synthetic_evaluation.py --nr-parameters 2 --nr-functions 10 --nr-repetitions 5 --noise 1`
+-------------------------------------------------------------------------------------------------------------------------
+
+`python .\case_study.py --budget 20 --extra-p .\fastest.extra-p --processes 0 --parameters "p","size"`
 
 `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size"`
 
+## Run the evaluation tool for the synthetic evaluation:
+
+`python .\synthetic_evaluation.py --nr-parameters 2 --nr-functions 10 --nr-repetitions 5 --noise 1`
 
 ## Bulding Extra-P from source
 
@@ -28,15 +32,9 @@ Kripke:
 
 ## Notes:
 
-* create a new side panel for the measurement point selection and cost analysis
-
-* the user needs to specify which variable is the number of processes, as we use it to calculate the cost, cost = runtime * nr_processes = core hours
-
 * we need to identify how many and which points are available atm
-    * not enough for modeling
-    * enough for modeling
-    * enough for starting adding points using the generic strategy
-    * enough to use gpr strategy
+    * not enough for modeling -> advice finishing the lines of 5 points for each parameter
+    * enough for modeling -> advice additional points from the matrix of possible points (decide based on estimated cost from our created model)
 
 
 ### Generic Strategy
@@ -51,3 +49,7 @@ sufficient (by comparing the accuracy metrics of the two models on the points us
 3. Recreate the model using all available points.
 4. If the quality of the model evaluated in step 2 is insufficient,
 return to step 2. (or if there is more budget available for modeling...)
+
+### GPR strategy
+
+### Hybrid strategy

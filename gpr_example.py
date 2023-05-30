@@ -54,6 +54,9 @@ def main():
     noise_std = 0.75
     y_train_noisy = y_train + rng.normal(loc=0.0, scale=noise_std, size=y_train.shape)
 
+    print(y_train, y_train_noisy)
+
+
     #TODO: could use the noise level extracted from the measurements for the alpha value here...
     kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e2))
     gaussian_process = GaussianProcessRegressor(
