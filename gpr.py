@@ -449,9 +449,12 @@ def main():
             print("remaining_points:",remaining_points)
 
 
-
+            #CONTINUE HERE
             counter = 0
             while True:
+
+                #TODO: need to define budget value correctly
+                budget = 1000000000000
 
                 # identify all possible next points that would 
                 # still fit into the modeling budget
@@ -463,7 +466,7 @@ def main():
                     # fit in the budget or not...
                     #TODO is budget total or percent???
                     if np.sum(value) <= budget:
-                        fitting_measurements.append(i)
+                        fitting_measurements.append(key)
 
                 print("fitting_measurements:",fitting_measurements)
 
@@ -471,10 +474,35 @@ def main():
                 best_index = -1
                 best_rated = sys.float_info.max
 
-                for i in range(len(fittingMeasurements)):
-                    fittingMeasurements[i]
-                    coord = 
+                for i in range(len(fitting_measurements)):
+                    #y = remaining_points[fitting_measurements[i]]
+                    #print("y:",y)
+                    #z = fitting_measurements[i]
+                    #print("z:",z.as_tuple())
+                    #coord = experiment.coordinates[xxx[i]]
+                    parameter_values = fitting_measurements[i].as_tuple()
+                    x = []
+                    
+                    for j in range(len(parameter_values)):
+                    
+                        if len(normalization_factors) != 0:
+                            x.append(parameter_values[j] * normalization_factors[experiment.parameters[j]])
+                    
+                        else:
+                            x.append(parameter_values[j])
+                    
+                    rated = np.sum(remaining_points[fitting_measurements[i]])
+                    print("rated:",rated)
+                    rated = 1
+                    #TODO: convert this formula
+                    #double rated = std::pow( costForIndex[current_index].second, 2 ) / ( std::pow( std::abs( gp.var( x )), 2 ));
 
+                    if rated <= best_rated:
+                        best_rated = rated
+                        best_index = i
+                    
+
+                # add measurement
 
                 #DEBUG only to brake the look, remove later!!!
                 if counter == 1:
