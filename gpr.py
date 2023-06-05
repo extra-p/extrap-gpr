@@ -81,8 +81,6 @@ def main():
     modeling_options.add_argument("--help-modeler", choices=modelers_list, type=str.lower,
                                   help="Show help for modeler options and exit",
                                   action=ModelerHelpAction)
-    positional_args.add_argument("path", metavar="FILEPATH", type=str, action="store",
-                                      help="Specify a file path for Extra-P to work with")
     
     input_options = parser.add_argument_group("Input options")
     group = input_options.add_mutually_exclusive_group(required=True)
@@ -403,6 +401,10 @@ def main():
             base_point_cost = base_point_cost / (total_cost / 100)
 
             print("base_point_cost %:",base_point_cost)
+
+            ##################################
+
+            # GPR code...
 
             ##################################
 

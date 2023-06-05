@@ -2,7 +2,7 @@
 
 ## GPR Tests
 
-`python .\gpr.py --nr-parameters 2 --nr-functions 1 --nr-repetitions 5 --noise 1`
+`python .\gpr.py --text .\relearn_scripts\relearn_data.txt --mode case --budget 60 --processes 0 --parameters "p","n" --filter 0 --eval_point 512,9000`
 
 ## Run the evaluation tool for the case studies:
 
