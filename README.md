@@ -4,6 +4,8 @@
 
 `python .\gpr.py --text .\relearn_scripts\relearn_data.txt --mode case --budget 60 --processes 0 --parameters "p","n" --filter 0 --eval_point 512,9000`
 
+`python .\gpr.py --text .\relearn_scripts\gpr_test_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 0 --budget 30 --mode case --normalization True`
+
 ## Run the evaluation tool for the case studies:
 
 FASTEST: `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1`

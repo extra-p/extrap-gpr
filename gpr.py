@@ -432,6 +432,7 @@ def main():
             # create a gaussian process regressor
             from temp import add_measurements_to_gpr
 
+            #TODO: need to make sure this is correct
             kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e2))
             gaussian_process = GaussianProcessRegressor(
                 kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
@@ -475,13 +476,11 @@ def main():
                 # find best
                 best_index = -1
                 best_rated = sys.float_info.max
+                reps = 0
 
                 for i in range(len(fitting_measurements)):
-                    #y = remaining_points[fitting_measurements[i]]
-                    #print("y:",y)
-                    #z = fitting_measurements[i]
-                    #print("z:",z.as_tuple())
-                    #coord = experiment.coordinates[xxx[i]]
+                    reps = len(remaining_points[fitting_measurements[i]])
+                   
                     parameter_values = fitting_measurements[i].as_tuple()
                     x = []
                     
@@ -493,18 +492,30 @@ def main():
                         else:
                             x.append(parameter_values[j])
                     
-                    rated = np.sum(remaining_points[fitting_measurements[i]])
-                    print("rated:",rated)
-                    rated = 1
-                    #TODO: convert this formula
-                    #double rated = std::pow( costForIndex[current_index].second, 2 ) / ( std::pow( std::abs( gp.var( x )), 2 ));
+                    # term_1 is cost(t)^2
+                    term_1 = math.pow(np.sum(remaining_points[fitting_measurements[i]]), 2)
+                    # predict variance of input vector x with the gaussian process
+                    x = [x]
+                    _, y_cov = gaussian_process.predict(x, return_cov=True)
+                    y_cov = abs(y_cov)
+                    # term_2 is gp_cov(t,t)^2
+                    term_2 = math.pow(y_cov, 2)
+                    # rated is h(t)
+                    rated = term_1 / term_2
 
                     if rated <= best_rated:
                         best_rated = rated
-                        best_index = i
-                    
+                        best_index = i    
 
                 # add measurement
+                if best_index != -1:
+
+                    avg = 0
+
+                    for i in range(reps):
+                        pass
+
+
 
                 #DEBUG only to brake the look, remove later!!!
                 if counter == 1:
