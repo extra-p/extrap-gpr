@@ -27,6 +27,8 @@ from case_study import get_eval_string
 import copy
 from case_study import calculate_selected_point_cost
 from extrap.entities.coordinate import Coordinate
+from temp import add_measurements_to_gpr
+from temp import add_measurement_to_gpr
 
 
 def main():
@@ -398,6 +400,7 @@ def main():
 
             # calculate the cost for the selected base points
             base_point_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
+            base_point_cost_core_hours = base_point_cost
             base_point_cost = base_point_cost / (total_cost / 100)
 
             print("base_point_cost %:",base_point_cost)
@@ -430,8 +433,6 @@ def main():
                 print("normalization_factors:",normalization_factors)
 
             # create a gaussian process regressor
-            from temp import add_measurements_to_gpr
-
             #TODO: need to make sure this is correct
             kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e2))
             gaussian_process = GaussianProcessRegressor(
@@ -449,31 +450,31 @@ def main():
                             experiment.parameters)
             
 
-            print("remaining_points:",remaining_points)
+            #DEBUG
+            #print("remaining_points:",remaining_points)
 
 
-            #CONTINUE HERE
-            counter = 0
+            # add additional measurement points until break criteria is met
+            counter = 0 # DEBUG only...
+            current_cost = base_point_cost_core_hours
             while True:
 
-                #TODO: need to define budget value correctly
-                budget = 1000000000000
-
+                budget_core_hours = budget * (total_cost / 100)
+                
                 # identify all possible next points that would 
-                # still fit into the modeling budget
+                # still fit into the modeling budget in core hours
                 fitting_measurements = []
                 for key, value in remaining_points.items():
-                    #print(key, np.sum(value))
-                    #TODO: this is too simple
-                    # need to calculate if adding this point will
-                    # fit in the budget or not...
-                    #TODO is budget total or percent???
-                    if np.sum(value) <= budget:
+                
+                    new_cost = current_cost + np.sum(value)
+                    print("new_cost:",new_cost, "budget_core_hours:",budget_core_hours)
+
+                    if new_cost <= budget_core_hours:
                         fitting_measurements.append(key)
 
                 print("fitting_measurements:",fitting_measurements)
 
-                # find best
+                # find the next best additional measurement point using the gpr
                 best_index = -1
                 best_rated = sys.float_info.max
                 reps = 0
@@ -507,15 +508,48 @@ def main():
                         best_rated = rated
                         best_index = i    
 
-                # add measurement
+                # if there has been a point found that is suitable
                 if best_index != -1:
 
-                    avg = 0
+                    #avg = 0
+                
+                    # add the identified measurement point to the experiment, selected point list
+                    print("selected_points:",selected_points)
+                    parameter_values = fitting_measurements[best_index].as_tuple()
+                    cord = Coordinate(parameter_values)
+                    selected_points.append(cord)
+                    print("selected_points:",selected_points)
+                    
+                    
+                    #for i in range(reps):
+                    #    pass
 
-                    for i in range(reps):
-                        pass
+                    #TODO: add the new point to the gpr and call fit()
+                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                            cord, 
+                            experiment.measurements, 
+                            callpath, 
+                            metric,
+                            normalization_factors,
+                            experiment.parameters)
+                    
+                    #TODO: remove the identified measurement point from the remaining point list
+                    
+                    #TODO: update the number of additional points used
+
+                    # update the current measurement cost variable
+                    new_cost = current_cost + np.sum(fitting_measurements[best_index])
+                    current_cost = new_cost
 
 
+                #TODO: what is the cancel criteria for the while True loop???
+                # if len(fitting_measurements) == 0 I guess and...
+                # something else???
+
+                # if there are no suitable measurement points found
+                # cancel the while True loop
+                else:
+                    break
 
                 #DEBUG only to brake the look, remove later!!!
                 if counter == 1:
