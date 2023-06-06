@@ -325,18 +325,15 @@ def main():
             #print("line_costs:",line_costs)
             x_value = min(line_costs, key=line_costs.get)
             y_values = y_lines[min(line_costs, key=line_costs.get)]
-            #print("y_values:",y_values)
+            #print("y_values:",y_values,"x_value:",x_value)
 
-            #print("DEBUG:",remaining_points)
             # remove these points from the list of remaining points
-            for j in range(len(y_lines)):
+            for j in range(len(y_values)):
                 try:
-                    cord = Coordinate(x_value, y_values[i])
-                    #remaining_points[y_lines[j]].remove(y_values[j])
+                    cord = Coordinate(x_value, y_values[j])
                     remaining_points.pop(cord)
                 except KeyError:
                     pass
-            #print("DEBUG_2:",remaining_points)
 
             # add these points to the list of selected points
             selected_points = []
@@ -377,10 +374,9 @@ def main():
             #print("x_values:",x_values)
 
             # remove these points from the list of remaining points
-            for j in range(len(x_lines)):
+            for j in range(len(x_values)):
                 try:
-                    cord = Coordinate(x_values[i], y_value)
-                    #remaining_points[x_lines[j]].remove(x_values[j])
+                    cord = Coordinate(x_values[j], y_value)
                     remaining_points.pop(cord)
                 except KeyError:
                     pass
@@ -432,9 +428,31 @@ def main():
                     
                 print("normalization_factors:",normalization_factors)
 
+            ##################################
+            #//Setup GPR
+            #std::string cov = "CovMatern5iso";
+            #GaussianProcess gp( dim, cov );
+            #Eigen::VectorXd gpr_params( gp.covf().get_param_dim() );
+            #gpr_params << 5.0, 0.0;
+            #gp.covf().set_loghyper( gpr_params );
+
+            # ell = 5.0
+            #sf2 = 0.0
+            ####################################
+
             # create a gaussian process regressor
             #TODO: need to make sure this is correct
-            kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e2))
+            #TODO: what hyper parameter values to choose?
+            #TODO: should not use alpha I guess...
+            #TODO: should use RBF or something else???
+
+
+            from sklearn.gaussian_process.kernels import Matern
+            # nu should be [0.5, 1.5, 2.5, inf] 
+            kernel = 1.0 * Matern(length_scale=1.0, nu=1.5)
+
+
+            #kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e3))
             gaussian_process = GaussianProcessRegressor(
                 kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
             )
@@ -449,38 +467,33 @@ def main():
                             normalization_factors,
                             experiment.parameters)
             
-
             #DEBUG
             #print("remaining_points:",remaining_points)
 
-
             # add additional measurement points until break criteria is met
-            counter = 0 # DEBUG only...
-            current_cost = base_point_cost_core_hours
+            add_points = 0
+            budget_core_hours = budget * (total_cost / 100)
+                
             while True:
 
-                budget_core_hours = budget * (total_cost / 100)
-                
                 # identify all possible next points that would 
                 # still fit into the modeling budget in core hours
                 fitting_measurements = []
                 for key, value in remaining_points.items():
-                
-                    new_cost = current_cost + np.sum(value)
-                    print("new_cost:",new_cost, "budget_core_hours:",budget_core_hours)
 
+                    current_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
+                    new_cost = current_cost + np.sum(value)
+                    
                     if new_cost <= budget_core_hours:
                         fitting_measurements.append(key)
 
-                print("fitting_measurements:",fitting_measurements)
+                #print("fitting_measurements:",fitting_measurements)
 
                 # find the next best additional measurement point using the gpr
                 best_index = -1
                 best_rated = sys.float_info.max
-                reps = 0
 
                 for i in range(len(fitting_measurements)):
-                    reps = len(remaining_points[fitting_measurements[i]])
                    
                     parameter_values = fitting_measurements[i].as_tuple()
                     x = []
@@ -511,20 +524,12 @@ def main():
                 # if there has been a point found that is suitable
                 if best_index != -1:
 
-                    #avg = 0
-                
                     # add the identified measurement point to the experiment, selected point list
-                    print("selected_points:",selected_points)
                     parameter_values = fitting_measurements[best_index].as_tuple()
                     cord = Coordinate(parameter_values)
                     selected_points.append(cord)
-                    print("selected_points:",selected_points)
                     
-                    
-                    #for i in range(reps):
-                    #    pass
-
-                    #TODO: add the new point to the gpr and call fit()
+                    # add the new point to the gpr and call fit()
                     gaussian_process = add_measurement_to_gpr(gaussian_process, 
                             cord, 
                             experiment.measurements, 
@@ -533,28 +538,34 @@ def main():
                             normalization_factors,
                             experiment.parameters)
                     
-                    #TODO: remove the identified measurement point from the remaining point list
-                    
-                    #TODO: update the number of additional points used
+                    # remove the identified measurement point from the remaining point list
+                    try:
+                        remaining_points.pop(cord)
+                    except KeyError:
+                        pass
 
-                    # update the current measurement cost variable
-                    new_cost = current_cost + np.sum(fitting_measurements[best_index])
-                    current_cost = new_cost
-
-
-                #TODO: what is the cancel criteria for the while True loop???
-                # if len(fitting_measurements) == 0 I guess and...
-                # something else???
+                    # update the number of additional points used
+                    add_points += 1
 
                 # if there are no suitable measurement points found
-                # cancel the while True loop
+                # break the while True loop
                 else:
                     break
+                #TODO: for use in extra-p later could also go by accuracy improvement with a certain threshold
 
-                #DEBUG only to brake the look, remove later!!!
-                if counter == 1:
-                    break
-                counter += 1
+            #DEBUG print outs
+            print("selected_points:",selected_points)
+            current_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
+            print("Cost used in core hours: {:.2f}".format(current_cost))
+            current_cost_percent = current_cost / (total_cost / 100)
+            current_cost_percent_string = "{:.2f}".format(current_cost_percent)
+            print("Used",current_cost_percent_string,"% of the",budget,"% budget.")
+            print("Additinal points used:",add_points)
+            #print("remaining_points:",remaining_points)
+
+
+
+
 
 
     else:
