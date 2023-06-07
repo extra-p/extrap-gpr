@@ -195,6 +195,9 @@ def main():
     parser.add_argument("--budget", type=int, required=True, default=100,
                         help="Percentage of total cost of all points that can be used by the selection strategies. Positive integer value between 0-100.")
     
+    parser.add_argument("--plot", type=bool, required=False, default=False,
+                        help="Set if the plots should be shown after running the anlysis.")
+
     parser.add_argument("--processes", type=int, required=True,
                         help="Set which number in the list of parameters is the number of processes/MPI ranks. Positive integer value between 0-x.")
     
@@ -259,6 +262,9 @@ def main():
 
     # set output print type
     printtype = args.print_type.upper()
+
+    # set show plots
+    plot = args.plot
 
     # set use mean or median for computation
     use_median = args.median
@@ -639,119 +645,67 @@ def main():
                 # increment counter value, because a new measurement point was added
                 added_points += 1
 
-                #print("len selected_coord_list_base:",len(selected_coord_list_base))
-
-                #print("added_points:",added_points)
-
                 # create first model
                 experiment_generic_base = create_experiment(selected_coord_list_base, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
-                #print("DEBUG:", len(experiment_generic_base.callpaths))
                 _, models = get_extrap_model(experiment_generic_base, args)
                 hypothesis = None
                 for model in models.values():
                     hypothesis = model.hypothesis
-                rss_base = hypothesis.SMAPE
-                #ar2_base = hypothesis.AR2
-                #print("rss_base:",rss_base)
-                #print("ar2_base:",ar2_base)
-
-                """stall_counter = 1
-                if len(experiment.parameters) == 2:
-                    delta = 3
-                elif len(experiment.parameters) == 3:
-                    delta = 5
-                elif len(experiment.parameters) == 4:
-                    delta = 10
-                else:
-                    delta = 3"""
-                #delta = 3
-                
-                #print("remaining_points_base:",remaining_points_base)
-                #print("selected_coord_list_base:",selected_coord_list_base)
 
                 # calculate selected point cost
                 current_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
                 current_cost_percent = current_cost / (total_cost / 100)
-
-                if current_cost_percent < budget:
+                
+                if current_cost_percent <= budget:
                     while True:
-                        # add another point
+                        # find another point for selection
                         remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
-                        
-                        # increment counter value, because a new measurement point was added
-                        added_points += 1
-
-                        #print("remaining_points_new:",remaining_points_new)
-
-                        if len(remaining_points_new) == 0:
-                            #print("remaining_points_new:",len(remaining_points_new))
-                            break
 
                         # calculate selected point cost
                         current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, callpath_id, metric_id)
                         current_cost_percent = current_cost / (total_cost / 100)
 
-                        #print("budget:",budget,"current_cost_percent:",current_cost_percent)
-
+                        # current cost exceeds budget so break the loop
                         if current_cost_percent >= budget:
                             break
 
-                        # create new model
-                        experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
-                        #print("DEBUG:", len(experiment_generic_base.callpaths))
-                        _, models = get_extrap_model(experiment_generic_base, args)
-                        hypothesis = None
-                        for model in models.values():
-                            hypothesis = model.hypothesis
-                        #rss_new = hypothesis.SMAPE
-                        #ar2_new = hypothesis.AR2
-                        #print("rss_new:",rss_new)
-                        #print("ar2_new:",ar2_new)
+                        # add the new found point
+                        else:
 
-                        selected_coord_list_base = selected_coord_list_new
-                        remaining_points_base = remaining_points_new
+                            # increment counter value, because a new measurement point was added
+                            added_points += 1
 
-                        #print("selected_coord_list_base:",selected_coord_list_base)
+                            # create new model
+                            experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
+                            _, models = get_extrap_model(experiment_generic_base, args)
+                            hypothesis = None
+                            for model in models.values():
+                                hypothesis = model.hypothesis
 
-                        """# if better continue, else stop after x steps without improvement...
-                        if rss_new <= rss_base:
-                            #print("new rss is smaller")
-                            stall_counter = 1
-                            rss_base = rss_new
                             selected_coord_list_base = selected_coord_list_new
                             remaining_points_base = remaining_points_new
-                        else:
-                            #print("new rss is larger")
-                            if budget == 0:
-                                if stall_counter == delta:
-                                    break
-                            stall_counter += 1"""
-                
+
+                        # if there are no points remaining that can be selected break the loop
+                        if len(remaining_points_base) == 0:
+                            break
+
                 else:
                     pass
-
-                #print("experiment_generic_base:",experiment_generic_base)
 
                 # calculate selected point cost
                 selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
 
                 # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
                 percentage_cost_generic = selected_cost / (total_cost / 100)
-                #print("percentage_cost_generic:",percentage_cost_generic)
                 percentage_cost_generic_container.append(percentage_cost_generic)
 
                 # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
-                add_points_generic = len(selected_points) - min_points
-                #add_points_generic_container.append(add_points_generic)
-                #print("add_points_generic:",add_points_generic)
-                add_points_generic_container.append(add_points_generic)
-
+                #add_points_generic = len(selected_coord_list_base) - min_points
+                add_points_generic_container.append(added_points)
+                
                 # create model using point selection of generic strategy
-                #print("DEBUG:", len(experiment_generic_base.callpaths))
                 model_generic, _ = get_extrap_model(experiment_generic_base, args)
-                #print("model_generic:",model_generic)
-                #container["model_generic"] = model_generic
-
+                
                 # create model using full matrix of points
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
                 if parameters[0] == "p" and parameters[1] == "size":
@@ -793,13 +747,14 @@ def main():
                 # increment accuracy bucket for generic strategy
                 acurracy_bucket_counter_generic = increment_accuracy_bucket(acurracy_bucket_counter_generic, error_generic)
 
-                #result_container["add_points_generic"] = add_points_generic
-                #result_container["percentage_cost_generic"] = percentage_cost_generic
-                #result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
-                #result_container["acurracy_bucket_counter_generic"] = acurracy_bucket_counter_generic
-            
+                
+
+
+
             else:
                 pass
+
+            
 
 
         print("Number of kernels used:",kernels_used)
@@ -808,23 +763,24 @@ def main():
         acurracy_bucket_counter_gpr = copy.deepcopy(acurracy_bucket_counter_generic)
         acurracy_bucket_counter_hybrid = copy.deepcopy(acurracy_bucket_counter_generic)
 
-        print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
-        print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
-        print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_gpr)
-        print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_hybrid)
+        #print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
+        #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
+        #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_gpr)
+        #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_hybrid)
 
         # calculate the percentages for each accuracy bucket
         percentage_bucket_counter_full = calculate_percentage_of_buckets(acurracy_bucket_counter_full, kernels_used)
-        print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
+        #print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
         percentage_bucket_counter_generic = calculate_percentage_of_buckets(acurracy_bucket_counter_generic, kernels_used)
-        print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
+        #print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
         percentage_bucket_counter_gpr = calculate_percentage_of_buckets(acurracy_bucket_counter_gpr, kernels_used)
-        print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
+        #print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
         percentage_bucket_counter_hybrid = calculate_percentage_of_buckets(acurracy_bucket_counter_hybrid, kernels_used)
-        print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
+        #print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
 
         # plot the results of the model accuracy analysis
-        plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid)
+        if plot == True:
+            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid)
         
         mean_budget_generic = np.nanmean(percentage_cost_generic_container)
         print("mean_budget_generic:",mean_budget_generic)
@@ -844,7 +800,8 @@ def main():
         }
 
         # plot the analysis result for the costs and budgets
-        plot_costs(used_costs, base_point_cost)
+        if plot == True:
+            plot_costs(used_costs, base_point_cost)
 
         add_points = {
             "base points": np.array([min_points, min_points, min_points, min_points]),
@@ -858,7 +815,8 @@ def main():
         mean_add_points_hybrid = 15
 
         # plot the analysis result for the additional measurement point numbers
-        plot_measurement_point_number(add_points, min_points)
+        if plot == True:
+            plot_measurement_point_number(add_points, min_points)
 
     else:
         logging.error("No file path given to load files.")

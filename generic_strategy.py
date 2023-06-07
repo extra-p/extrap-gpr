@@ -1,6 +1,9 @@
 import math
+import copy
 
 def add_additional_point_generic(remaining_points, selected_coord_list):
+    remaining_points = copy.deepcopy(remaining_points)
+    selected_coord_list = copy.deepcopy(selected_coord_list)
     while True:
         point_costs = {}
         for key, value in remaining_points.items():

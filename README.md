@@ -8,9 +8,9 @@
 
 ## Run the evaluation tool for the case studies:
 
-FASTEST: `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1`
+FASTEST: `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --plot True`
 
-Relearn: `python .\case_study.py --text .\relearn_scripts\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30`
+Relearn: `python .\case_study.py --text .\relearn_scripts\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True`
 
 Kripke:
 
