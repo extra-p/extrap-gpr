@@ -453,6 +453,17 @@ def main():
         percentage_cost_gpr_container = []
         add_points_gpr_container = []
 
+        # hybrid
+        acurracy_bucket_counter_hybrid = {}
+        acurracy_bucket_counter_hybrid["rest"] = 0
+        acurracy_bucket_counter_hybrid["5"] = 0
+        acurracy_bucket_counter_hybrid["10"] = 0
+        acurracy_bucket_counter_hybrid["15"] = 0
+        acurracy_bucket_counter_hybrid["20"] = 0
+
+        percentage_cost_hybrid_container = []
+        add_points_hybrid_container = []
+
         runtime_sums = {}
 
         modeler = experiment.modelers[0]
@@ -908,17 +919,9 @@ def main():
                     else:
                         break
 
-                #DEBUG print outs
-                print("selected_points_gpr:",selected_points_gpr)
                 current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, callpath_id, metric_id)
-                print("Cost used in core hours: {:.2f}".format(current_cost))
                 current_cost_percent = current_cost / (total_cost / 100)
-                current_cost_percent_string = "{:.2f}".format(current_cost_percent)
-                print("Used",current_cost_percent_string,"% of the",budget,"% budget.")
-                print("Additinal points used:",add_points_gpr)
-                #print("remaining_points_gpr:",remaining_points_gpr)
-
-
+                
                 # cost used of the gpr strategy
                 percentage_cost_gpr_container.append(current_cost_percent)
 
@@ -964,19 +967,214 @@ def main():
                 # increment accuracy bucket for gpr strategy
                 acurracy_bucket_counter_gpr = increment_accuracy_bucket(acurracy_bucket_counter_gpr, error_gpr)
 
+                #####################
+                ## Hybrid strategy ##
+                #####################
+
+                ##################################
+                #//Setup GPR
+                #std::string cov = "CovMatern5iso";
+                #GaussianProcess gp( dim, cov );
+                #Eigen::VectorXd gpr_params( gp.covf().get_param_dim() );
+                #gpr_params << 5.0, 0.0;
+                #gp.covf().set_loghyper( gpr_params );
+
+                # ell = 5.0
+                #sf2 = 0.0
+                ####################################
+
+                # create a gaussian process regressor
+                #TODO: need to make sure this is correct
+                #TODO: what hyper parameter values to choose?
+                #TODO: should not use alpha I guess...
+                #TODO: should use RBF or something else???
+
+                # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
+                kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5)
+
+                gaussian_process_hybrid = GaussianProcessRegressor(
+                    kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
+                )
+
+                # add all of the selected measurement points to the gaussian process
+                # as training data and train it for these points
+                gaussian_process_hybrid = add_measurements_to_gpr(gaussian_process_hybrid, 
+                                selected_points, 
+                                experiment.measurements, 
+                                callpath, 
+                                metric,
+                                normalization_factors,
+                                experiment.parameters)
+                
+                # add additional measurement points until break criteria is met
+                add_points_hybrid = 0
+                budget_core_hours = budget * (total_cost / 100)
+
+                remaining_points_hybrid = copy.deepcopy(remaining_points)
+                selected_points_hybrid = copy.deepcopy(selected_points)
+
+                # create base model for gpr hybrid
+                experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
+                 
+                while True:
+
+                    # identify all possible next points that would 
+                    # still fit into the modeling budget in core hours
+                    fitting_measurements = []
+                    for key, value in remaining_points_hybrid.items():
+
+                        current_cost = calculate_selected_point_cost(selected_points_hybrid, experiment, callpath_id, metric_id)
+                        new_cost = current_cost + np.sum(value)
+                        
+                        if new_cost <= budget_core_hours:
+                            fitting_measurements.append(key)
+
+                    #print("fitting_measurements:",fitting_measurements)
+
+                    # determine the switching point between gpr and hybrid strategy
+                    swtiching_point = 0
+                    if len(experiment.parameters) == 2:
+                        swtiching_point = 11
+                    elif len(experiment.parameters) == 3:
+                        swtiching_point = 18
+                    elif len(experiment.parameters) == 4:
+                        swtiching_point = 25
+                    else:
+                        swtiching_point = 11
+
+                    best_index = -1
                     
+                    # find the next best additional measurement point using the gpr strategy
+                    if add_points_hybrid + min_points > swtiching_point:
+                        best_rated = sys.float_info.max
+
+                        for i in range(len(fitting_measurements)):
+                    
+                            parameter_values = fitting_measurements[i].as_tuple()
+                            x = []
+                            
+                            for j in range(len(parameter_values)):
+                            
+                                if len(normalization_factors) != 0:
+                                    x.append(parameter_values[j] * normalization_factors[experiment.parameters[j]])
+                            
+                                else:
+                                    x.append(parameter_values[j])
+                            
+                            # term_1 is cost(t)^2
+                            term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
+                            # predict variance of input vector x with the gaussian process
+                            x = [x]
+                            _, y_cov = gaussian_process_hybrid.predict(x, return_cov=True)
+                            y_cov = abs(y_cov)
+                            # term_2 is gp_cov(t,t)^2
+                            term_2 = math.pow(y_cov, 2)
+                            # rated is h(t)
+                            rated = term_1 / term_2
+
+                            if rated <= best_rated:
+                                best_rated = rated
+                                best_index = i 
+
+                    # find the next best additional measurement point using the generic strategy
+                    else:
+                        lowest_cost = sys.float_info.max
+                        for i in range(len(fitting_measurements)):
+                            
+                            # get the cost of the measurement point
+                            cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
+                        
+                            if cost < lowest_cost:
+                                lowest_cost = cost
+                                best_index = i
+
+                    # if there has been a point found that is suitable
+                    if best_index != -1:
+
+                        # add the identified measurement point to the experiment, selected point list
+                        parameter_values = fitting_measurements[best_index].as_tuple()
+                        cord = Coordinate(parameter_values)
+                        selected_points_hybrid.append(cord)
+                        
+                        # add the new point to the gpr and call fit()
+                        gaussian_process_hybrid = add_measurement_to_gpr(gaussian_process_hybrid, 
+                                cord, 
+                                experiment.measurements, 
+                                callpath, 
+                                metric,
+                                normalization_factors,
+                                experiment.parameters)
+                        
+                        # remove the identified measurement point from the remaining point list
+                        try:
+                            remaining_points_hybrid.pop(cord)
+                        except KeyError:
+                            pass
+
+                        # update the number of additional points used
+                        add_points_hybrid += 1
+
+                        # add this point to the hybrid experiment
+                        experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
+
+                    # if there are no suitable measurement points found
+                    # break the while True loop
+                    else:
+                        break
+
+                current_cost = calculate_selected_point_cost(selected_points_hybrid, experiment, callpath_id, metric_id)
+                current_cost_percent = current_cost / (total_cost / 100)
+
+                # cost used of the hybrid strategy
+                percentage_cost_hybrid_container.append(current_cost_percent)
+
+                # additionally used data points (exceeding the base requirement of the sparse modeler)
+                add_points_hybrid_container.append(add_points_hybrid)
+
+                # create model using point selection of hybrid strategy
+                model_generic, _ = get_extrap_model(experiment_hybrid_base, args)
+                
+                # create model using full matrix of points
+                # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
+                #TODO: needs to be extended for other case studies...
+                if parameters[0] == "p" and parameters[1] == "size":
+                    p = int(eval_point[0])
+                    size = int(eval_point[1])
+                elif parameters[0] == "p" and parameters[1] == "n":
+                    p = int(eval_point[0])
+                    n = int(eval_point[1])
+
+                prediction_full = eval(all_points_functions_strings[callpath_string])
+                #print("prediction_full:",prediction_full)
+                prediction_hybrid = eval(model_generic)
+                #print("prediction_hybrid:",prediction_hybrid)
+
+                cord_id = -1
+                #TODO: only works for 2 parameters
+                for o in range(len(experiment.coordinates)):
+                    parameter_values = experiment.coordinates[o].as_tuple()
+                    #print("parameter_values:",parameter_values)
+                    if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
+                        cord_id = o
+                        break
+                #print("DEBUG:",experiment.coordinates[cord_id], "eval point:",eval_point)
+                measurement_temp = experiment.get_measurement(cord_id, callpath_id, metric_id)
+                #print("measurement_temp:",measurement_temp)
+                actual = measurement_temp.mean
+                #print("actual:",actual)
+
+                # get the percentage error for the full matrix of points
+                error_hybrid = abs(percentage_error(actual, prediction_hybrid))
+                #print("error_hybrid:",error_hybrid)
+
+                # increment accuracy bucket for hybrid strategy
+                acurracy_bucket_counter_hybrid = increment_accuracy_bucket(acurracy_bucket_counter_hybrid, error_hybrid)
 
             else:
                 pass
 
-            
-
-
         print("Number of kernels used:",kernels_used,"of",len(experiment.callpaths),"callpaths.")
         print("Total number of measurement points:",len(experiment.coordinates))
-
-        #TODO: until the other strategies are working
-        acurracy_bucket_counter_hybrid = copy.deepcopy(acurracy_bucket_counter_generic)
 
         #print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
         #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
@@ -1011,8 +1209,11 @@ def main():
         mean_add_points_gpr = np.nanmean(add_points_gpr_container)
         print("mean_add_points_gpr:",mean_add_points_gpr)
 
-        #TODO: calculate this mean_budget_hybrid
-        mean_budget_hybrid = base_point_cost+15
+        mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container)
+        print("mean_budget_hybrid:",mean_budget_hybrid)
+
+        mean_add_points_hybrid = np.nanmean(add_points_hybrid_container)
+        print("mean_add_points_hybrid:",mean_add_points_hybrid)
 
         used_costs = {
             "base points": np.array([base_point_cost, base_point_cost, base_point_cost, base_point_cost]),
@@ -1025,11 +1226,8 @@ def main():
 
         add_points = {
             "base points": np.array([min_points, min_points, min_points, min_points]),
-            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, mean_add_points_gpr, 5]),
+            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
-
-        #TODO: calculate this mean_budget_hybrid
-        mean_add_points_hybrid = 15
 
         # plot the analysis result for the additional measurement point numbers
         if plot == True:
