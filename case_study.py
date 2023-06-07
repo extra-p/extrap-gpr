@@ -210,6 +210,8 @@ def main():
     parser.add_argument("--filter", type=int, required=True,
                         help="Set a integer value as percentage filter for callpaths. Sets how much they need to contribute to ovarll runtime to be used for analysis.")
     
+    parser.add_argument("--normalization", type=bool, default=False,
+                        help="Set if normalization of the measurement points parameter values is used for the gpr approach.")
 
     input_options = parser.add_argument_group("Input options")
     group = input_options.add_mutually_exclusive_group(required=True)
@@ -265,6 +267,9 @@ def main():
 
     # set show plots
     plot = args.plot
+
+    normalization = args.normalization
+    print("Use normalization?:",normalization)
 
     # set use mean or median for computation
     use_median = args.median
@@ -347,8 +352,6 @@ def main():
                 logging.error("The given file path is not valid.")
                 sys.exit(1)
 
-        #experiment.debug()
-
         # initialize model generator
         model_generator = ModelGenerator(
             experiment, modeler=args.modeler, use_median=use_median)
@@ -409,11 +412,11 @@ def main():
         else:
             min_points = 5
 
-        smapes = []
         cost_container = {}
         total_costs_container = {}
         all_points_functions_strings = {}
         
+        # full
         acurracy_bucket_counter_full = {}
         acurracy_bucket_counter_full["rest"] = 0
         acurracy_bucket_counter_full["5"] = 0
@@ -421,6 +424,7 @@ def main():
         acurracy_bucket_counter_full["15"] = 0
         acurracy_bucket_counter_full["20"] = 0
 
+        # generic
         acurracy_bucket_counter_generic = {}
         acurracy_bucket_counter_generic["rest"] = 0
         acurracy_bucket_counter_generic["5"] = 0
@@ -430,6 +434,17 @@ def main():
 
         percentage_cost_generic_container = []
         add_points_generic_container = []
+
+        # gpr
+        acurracy_bucket_counter_gpr = {}
+        acurracy_bucket_counter_gpr["rest"] = 0
+        acurracy_bucket_counter_gpr["5"] = 0
+        acurracy_bucket_counter_gpr["10"] = 0
+        acurracy_bucket_counter_gpr["15"] = 0
+        acurracy_bucket_counter_gpr["20"] = 0
+
+        percentage_cost_gpr_container = []
+        add_points_gpr_container = []
 
         runtime_sums = {}
 
@@ -450,7 +465,6 @@ def main():
             if model != None:
                 hypothesis = model.hypothesis
                 function = hypothesis.function
-                smape = hypothesis.SMAPE
                 
                 # get the extrap function as a string
                 function_string = function.to_string(*experiment.parameters)
@@ -477,27 +491,15 @@ def main():
                         overall_runtime += runtime
                     total_cost += coordinate_cost
 
-                    """runtime = measurement_temp.mean
-                    #print("measurement_temp:",measurement_temp.mean)
-                    core_hours = runtime * nr_processes
-                    cost[experiment.coordinates[i]].append(core_hours)
-                    total_cost += core_hours"""
-
             else:
-                smape = 0
                 function_string = "None"
                 total_cost = 0
                 overall_runtime = 0
 
-            smapes.append(smape)
-           
             cost_container[callpath_string] = cost
             total_costs_container[callpath_string] = total_cost
 
             runtime_sums[callpath_string] = overall_runtime
-
-            #print(callpath_string, metric_string, function_string, total_cost)
-
 
         total_runtime_sum = 0
         for key, value in runtime_sums.items():
@@ -557,16 +559,13 @@ def main():
                 y_values = y_lines[min(line_costs, key=line_costs.get)]
                 #print("y_values:",y_values)
 
-                #print("DEBUG:",remaining_points)
                 # remove these points from the list of remaining points
-                for j in range(len(y_lines)):
+                for j in range(len(y_values)):
                     try:
-                        cord = Coordinate(x_value, y_values[i])
-                        #remaining_points[y_lines[j]].remove(y_values[j])
+                        cord = Coordinate(x_value, y_values[j])
                         remaining_points.pop(cord)
                     except KeyError:
                         pass
-                #print("DEBUG_2:",remaining_points)
 
                 # add these points to the list of selected points
                 selected_points = []
@@ -607,10 +606,9 @@ def main():
                 #print("x_values:",x_values)
 
                 # remove these points from the list of remaining points
-                for j in range(len(x_lines)):
+                for j in range(len(x_values)):
                     try:
-                        cord = Coordinate(x_values[i], y_value)
-                        #remaining_points[x_lines[j]].remove(x_values[j])
+                        cord = Coordinate(x_values[j], y_value)
                         remaining_points.pop(cord)
                     except KeyError:
                         pass
@@ -626,7 +624,7 @@ def main():
                     if exists == False:
                         selected_points.append(cord)
 
-                #print("selected_points:",selected_points)
+                print("selected_points:",selected_points)
 
                 # calculate the cost for the selected base points
                 base_point_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
