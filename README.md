@@ -12,12 +12,11 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 
 ## Run the evaluation tool for the case studies:
 
-FASTEST: `python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --plot True --normalization True`
+FASTEST: `.\case_study.py --budget 20 --cube D:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --plot True --normalization True`
 
 Relearn: `python .\case_study.py --text .\relearn_scripts\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True`
 
-Kripke:
-
+Kripke: ``
 
 
 
@@ -72,3 +71,13 @@ the sparse modeling technique.
 2. uses generic strategy until a swtiching_point is hit, e.g. 11 selected points (base points + additional points) for 2 parameters.
 3. then uses gpr strategy to select points
 4. continues selecting points with 2. and 3. until the given budget is exhausted
+
+
+### CLANG
+
+ml Stages/2022 GCC/11.2.0 ParaStationMPI/5.5.0-1 Clang/13.0.1 libtool/.2.4.6 Python/3.9.6
+
+export PATH=/p/project/deepsea/demorais1/scorep-llvm/build/install/bin/:$PATH
+export MPICH_CC=clang MPICH_CXX=clang++
+mpicxx --version
+export SCOREP_TIMER=logical_basicblocks

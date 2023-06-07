@@ -39,8 +39,10 @@ from temp import add_measurement_to_gpr
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
 from sklearn.gaussian_process.kernels import Matern
-                
-            
+import warnings
+from sklearn.exceptions import ConvergenceWarning
+
+#TODO: parallelize for loop that iterates through callpaths if possible, cause FASTEST takes really long with filer=0...
 
 def percentage_error(true_value, measured_value):
     error = abs(true_value - measured_value)
@@ -263,6 +265,10 @@ def main():
 
     args = parser.parse_args()
 
+    # disable deprecation warnings...
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    warnings.filterwarnings("ignore", category=ConvergenceWarning)
+
     # check scaling type
     scaling_type = args.scaling_type
 
@@ -306,10 +312,9 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
 
-    #TODO: FASTEST, Kripke, MILC, Relearn
+    #TODO: make sure the code works for all case studies: FASTEST, Kripke, MILC, Relearn
     #TODO: need to make measurements for MILC with 2 and three parameters
-    #TODO: need to create, read input files for Relearn somehow...
-
+    
     budget = int(args.budget)
     print("budget:",budget)
 
@@ -540,7 +545,7 @@ def main():
             
             if callpath_cost >= filter:
                 kernels_used += 1
-                print("callpath_cost_percent_from_total:",callpath_cost)
+                #print("callpath_cost_percent_from_total:",callpath_cost)
 
                 # create copy of the cost dict
                 remaining_points = copy.deepcopy(cost)
@@ -642,13 +647,13 @@ def main():
                     if exists == False:
                         selected_points.append(cord)
 
-                print("selected_points:",selected_points)
+                #print("selected_points:",selected_points)
 
                 # calculate the cost for the selected base points
                 base_point_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
                 base_point_cost = base_point_cost / (total_cost / 100)
 
-                print("base_point_cost %:",base_point_cost)
+                #print("base_point_cost %:",base_point_cost)
 
                 # add some additional single points
 
