@@ -396,7 +396,6 @@ def main():
 
             # calculate the cost for the selected base points
             base_point_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
-            base_point_cost_core_hours = base_point_cost
             base_point_cost = base_point_cost / (total_cost / 100)
 
             print("base_point_cost %:",base_point_cost)
@@ -471,17 +470,20 @@ def main():
             #print("remaining_points:",remaining_points)
 
             # add additional measurement points until break criteria is met
-            add_points = 0
+            add_points_gpr = 0
             budget_core_hours = budget * (total_cost / 100)
+
+            remaining_points_gpr = copy.deepcopy(remaining_points)
+            selected_points_gpr = copy.deepcopy(selected_points)
                 
             while True:
 
                 # identify all possible next points that would 
                 # still fit into the modeling budget in core hours
                 fitting_measurements = []
-                for key, value in remaining_points.items():
+                for key, value in remaining_points_gpr.items():
 
-                    current_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
+                    current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, callpath_id, metric_id)
                     new_cost = current_cost + np.sum(value)
                     
                     if new_cost <= budget_core_hours:
@@ -507,7 +509,7 @@ def main():
                             x.append(parameter_values[j])
                     
                     # term_1 is cost(t)^2
-                    term_1 = math.pow(np.sum(remaining_points[fitting_measurements[i]]), 2)
+                    term_1 = math.pow(np.sum(remaining_points_gpr[fitting_measurements[i]]), 2)
                     # predict variance of input vector x with the gaussian process
                     x = [x]
                     _, y_cov = gaussian_process.predict(x, return_cov=True)
@@ -527,7 +529,7 @@ def main():
                     # add the identified measurement point to the experiment, selected point list
                     parameter_values = fitting_measurements[best_index].as_tuple()
                     cord = Coordinate(parameter_values)
-                    selected_points.append(cord)
+                    selected_points_gpr.append(cord)
                     
                     # add the new point to the gpr and call fit()
                     gaussian_process = add_measurement_to_gpr(gaussian_process, 
@@ -540,12 +542,12 @@ def main():
                     
                     # remove the identified measurement point from the remaining point list
                     try:
-                        remaining_points.pop(cord)
+                        remaining_points_gpr.pop(cord)
                     except KeyError:
                         pass
 
                     # update the number of additional points used
-                    add_points += 1
+                    add_points_gpr += 1
 
                 # if there are no suitable measurement points found
                 # break the while True loop
@@ -554,14 +556,14 @@ def main():
                 #TODO: for use in extra-p later could also go by accuracy improvement with a certain threshold
 
             #DEBUG print outs
-            print("selected_points:",selected_points)
-            current_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
+            print("selected_points_gpr:",selected_points_gpr)
+            current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, callpath_id, metric_id)
             print("Cost used in core hours: {:.2f}".format(current_cost))
             current_cost_percent = current_cost / (total_cost / 100)
             current_cost_percent_string = "{:.2f}".format(current_cost_percent)
             print("Used",current_cost_percent_string,"% of the",budget,"% budget.")
-            print("Additinal points used:",add_points)
-            #print("remaining_points:",remaining_points)
+            print("Additinal points used:",add_points_gpr)
+            #print("remaining_points_gpr:",remaining_points_gpr)
 
 
 
