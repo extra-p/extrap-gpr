@@ -799,10 +799,8 @@ def main():
                 #TODO: should not use alpha I guess...
                 #TODO: should use RBF or something else???
 
-
                 # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
                 kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5)
-
 
                 #kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e3))
                 gaussian_process = GaussianProcessRegressor(

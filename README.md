@@ -1,10 +1,14 @@
 # extrap-gpr
 
-## GPR Tests
+Evaluation code for the GPR journal paper. Contains the code to do a synthetic and case study analysis for different parameter-value selection strategies to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points.
 
-`python .\gpr.py --text .\relearn_scripts\relearn_data.txt --mode case --budget 60 --processes 0 --parameters "p","n" --filter 0 --eval_point 512,9000`
+## GPR tests
 
 `python .\gpr.py --text .\relearn_scripts\gpr_test_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 0 --budget 30 --mode case --normalization True`
+
+## Hybrid tests
+
+`python .\hybrid.py --text .\relearn_scripts\gpr_test_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 0 --budget 30 --mode case --normalization True`
 
 ## Run the evaluation tool for the case studies:
 
@@ -15,11 +19,7 @@ Relearn: `python .\case_study.py --text .\relearn_scripts\relearn_data.txt --pro
 Kripke:
 
 
--------------------------------------------------------------------------------------------------------------------------
 
-`python .\case_study.py --budget 20 --extra-p .\fastest.extra-p --processes 0 --parameters "p","size"`
-
-`python .\case_study.py --budget 20 --cube C:\Users\ritte\Downloads\fastest\ --processes 0 --parameters "p","size"`
 
 ## Run the evaluation tool for the synthetic evaluation:
 
@@ -47,11 +47,28 @@ the sparse modeling technique.
 2. Perform an additional measurement, starting from the
 cheapest ones available. Using the model previously determined,
 one can assess if the quality of the model is
-sufficient (by comparing the accuracy metrics of the two models on the points used for modeling) or if additional points are required.
+sufficient (by comparing the accuracy metrics of the two models on the points used for modeling) or if additional points are required. Or until no more modeling budget is available.
 3. Recreate the model using all available points.
 4. If the quality of the model evaluated in step 2 is insufficient,
 return to step 2. (or if there is more budget available for modeling...)
 
 ### GPR strategy
 
+1. Measure the cheapest available lines of five points per
+parameter. Use these points to create a first model using
+the sparse modeling technique. 
+2. Use these points as input to the GPR.
+3. Train the GPR.
+4. Suggest a new point using the trained GPR.
+5. Take this measurement and add it to the experiment. Create a new model.
+6. Add the new point to the GPR. Train the GPR again.
+7. Continue this process until budget for modeling is exhausted. Steps: 4-6.
+
 ### Hybrid strategy
+
+1. Measure the cheapest available lines of five points per
+parameter. Use these points to create a first model using
+the sparse modeling technique.
+2. uses generic strategy until a swtiching_point is hit, e.g. 11 selected points (base points + additional points) for 2 parameters.
+3. then uses gpr strategy to select points
+4. continues selecting points with 2. and 3. until the given budget is exhausted
