@@ -37,8 +37,8 @@ from plotting import plot_measurement_point_number, plot_model_accuracy, plot_co
 from temp import add_measurements_to_gpr
 from temp import add_measurement_to_gpr
 from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import RBF
 from sklearn.gaussian_process.kernels import Matern
+from sklearn.gaussian_process.kernels import WhiteKernel
 import warnings
 from sklearn.exceptions import ConvergenceWarning
 
@@ -312,8 +312,7 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
 
-    #TODO: make sure the code works for all case studies: FASTEST, Kripke, MILC, Relearn
-    #TODO: need to make measurements for MILC with 2 and three parameters
+    #TODO: make sure the code works for all case studies: FASTEST, Kripke, Relearn, Lulesh, Minife, Quicksilver
     
     budget = int(args.budget)
     print("budget:",budget)
@@ -797,30 +796,17 @@ def main():
                         
                     print("normalization_factors:",normalization_factors)
 
-                ##################################
-                #//Setup GPR
-                #std::string cov = "CovMatern5iso";
-                #GaussianProcess gp( dim, cov );
-                #Eigen::VectorXd gpr_params( gp.covf().get_param_dim() );
-                #gpr_params << 5.0, 0.0;
-                #gp.covf().set_loghyper( gpr_params );
-
-                # ell = 5.0
-                #sf2 = 0.0
-                ####################################
-
                 # create a gaussian process regressor
                 #TODO: need to make sure this is correct
-                #TODO: what hyper parameter values to choose?
-                #TODO: should not use alpha I guess...
                 #TODO: should use RBF or something else???
 
                 # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
-                kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5)
+                #TODO white kernel noise= could be actual found noise in the measurements...
+                kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=0.0336)
 
                 #kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e3))
                 gaussian_process = GaussianProcessRegressor(
-                    kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
+                    kernel=kernel, n_restarts_optimizer=20
                 )
 
                 # add all of the selected measurement points to the gaussian process
