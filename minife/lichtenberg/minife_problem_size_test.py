@@ -10,13 +10,13 @@ p = [64,128,256,512,1024]
 n_e = [600]
 p_e = [2048]
 
-base = 600
+base = 90
 
 base_nx = base
 base_ny = base
 base_nz = base
 
-ranks = 512
+ranks = 2048
 x = ((base_nx * base_ny * base_nz) * ranks)
 nx = math.pow(x, (1/3))
 nx = int(nx)
