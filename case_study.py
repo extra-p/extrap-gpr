@@ -312,7 +312,7 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
 
-    #TODO: make sure the code works for all case studies: FASTEST, Kripke, Relearn, Lulesh, Minife, Quicksilver
+    #TODO: make sure the code works for all case studies: FASTEST, Kripke, Lulesh, Minife, Quicksilver
     
     budget = int(args.budget)
     print("budget:",budget)
@@ -984,27 +984,37 @@ def main():
                 ## Hybrid strategy ##
                 #####################
 
-                ##################################
-                #//Setup GPR
-                #std::string cov = "CovMatern5iso";
-                #GaussianProcess gp( dim, cov );
-                #Eigen::VectorXd gpr_params( gp.covf().get_param_dim() );
-                #gpr_params << 5.0, 0.0;
-                #gp.covf().set_loghyper( gpr_params );
-
-                # ell = 5.0
-                #sf2 = 0.0
-                ####################################
-
-                # create a gaussian process regressor
-                #TODO: need to make sure this is correct
-                #TODO: what hyper parameter values to choose?
-                #TODO: should not use alpha I guess...
-                #TODO: should use RBF or something else???
+                # do an noise analysis on the existing points
+                m = experiment.measurements
+                #print("DEBUG:",m)
+                n = m[(callpath, metric)]
+                #print("DEBUG:",n)
+                temp = []
+                for cord in selected_points:
+                    for meas in n:
+                        if meas.coordinate == cord:
+                            temp.append(meas)
+                            break
+                #print("temp:",temp)
+                nns = []
+                for meas in temp:
+                    #print("DEBUG:",meas.values)
+                    mean_mes = np.mean(meas.values)
+                    pps = []
+                    for val in meas.values:
+                        pp = abs((val / (mean_mes / 100)) - 100)
+                        pps.append(pp)
+                        #print(pp,"%")
+                    nn = np.mean(pps)
+                    nns.append(nn)
+                mean_noise = np.mean(nns)
+                #print("mean_noise:",mean_noise,"%")
 
                 # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
-                kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5)
+                # matern kernel + white kernel to simulate actual noise found in the measurements
+                kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=mean_noise)
 
+                # create a gaussian process regressor
                 gaussian_process_hybrid = GaussianProcessRegressor(
                     kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
                 )
