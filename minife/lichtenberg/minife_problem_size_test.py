@@ -10,11 +10,7 @@ p = [64,128,256,512,1024]
 n_e = [600]
 p_e = [2048]
 
-<<<<<<< HEAD
-base = 90
-=======
-base = 110
->>>>>>> 88dc6b0680559a7dc7e1c68ed911e75e531f7193
+base = 95
 
 base_nx = base
 base_ny = base

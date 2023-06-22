@@ -795,16 +795,38 @@ def main():
                         normalization_factors[experiment.parameters[i]] = param_value_max
                         
                     print("normalization_factors:",normalization_factors)
-
-                # create a gaussian process regressor
-                #TODO: need to make sure this is correct
-                #TODO: should use RBF or something else???
+                
+                # do an noise analysis on the existing points
+                m = experiment.measurements
+                #print("DEBUG:",m)
+                n = m[(callpath, metric)]
+                #print("DEBUG:",n)
+                temp = []
+                for cord in selected_points:
+                    for meas in n:
+                        if meas.coordinate == cord:
+                            temp.append(meas)
+                            break
+                #print("temp:",temp)
+                nns = []
+                for meas in temp:
+                    #print("DEBUG:",meas.values)
+                    mean_mes = np.mean(meas.values)
+                    pps = []
+                    for val in meas.values:
+                        pp = abs((val / (mean_mes / 100)) - 100)
+                        pps.append(pp)
+                        #print(pp,"%")
+                    nn = np.mean(pps)
+                    nns.append(nn)
+                mean_noise = np.mean(nns)
+                #print("mean_noise:",mean_noise,"%")
 
                 # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
-                #TODO white kernel noise= could be actual found noise in the measurements...
-                kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=0.0336)
+                # matern kernel + white kernel to simulate actual noise found in the measurements
+                kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=mean_noise)
 
-                #kernel = 1 * RBF(length_scale=1.0, length_scale_bounds=(1e-2, 1e3))
+                # create a gaussian process regressor
                 gaussian_process = GaussianProcessRegressor(
                     kernel=kernel, n_restarts_optimizer=20
                 )
