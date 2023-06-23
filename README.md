@@ -2,21 +2,11 @@
 
 Evaluation code for the GPR journal paper. Contains the code to do a synthetic and case study analysis for different parameter-value selection strategies to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points.
 
-## GPR tests
-
-`python .\gpr.py --text .\relearn_scripts\gpr_test_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 0 --budget 30 --mode case --normalization True`
-
-## Hybrid tests
-
-`python .\hybrid.py --text .\relearn_scripts\gpr_test_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 0 --budget 30 --mode case --normalization True`
-
-
-
 ## Run the evaluation tool for the case studies:
 
 FASTEST: `.\case_study.py --budget 20 --cube D:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --plot True --normalization True`
 
-Relearn: `python .\case_study.py --text .\relearn_scripts\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True`
+Relearn: `python .\case_study.py --text .\relearn\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True`
 
 Kripke: ``
 
