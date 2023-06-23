@@ -10,7 +10,7 @@ p = [64,128,256,512,1024]
 n_e = [600]
 p_e = [2048]
 
-base = 95
+base = 100
 
 base_nx = base
 base_ny = base

@@ -10,6 +10,8 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 
 `python .\hybrid.py --text .\relearn_scripts\gpr_test_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 0 --budget 30 --mode case --normalization True`
 
+
+
 ## Run the evaluation tool for the case studies:
 
 FASTEST: `.\case_study.py --budget 20 --cube D:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --plot True --normalization True`
