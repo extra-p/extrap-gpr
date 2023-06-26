@@ -42,7 +42,6 @@ from sklearn.gaussian_process.kernels import WhiteKernel
 import warnings
 from sklearn.exceptions import ConvergenceWarning
 
-#TODO: parallelize for loop that iterates through callpaths if possible, cause FASTEST takes really long with filer=0...
 
 def percentage_error(true_value, measured_value):
     error = abs(true_value - measured_value)
@@ -68,11 +67,12 @@ def calculate_selected_point_cost(selected_points, experiment, callpath_id, metr
         measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
         #print("measurement_temp:",measurement_temp)
         coordinate_cost = 0
-        for k in range(len(measurement_temp.values)):
-            runtime = measurement_temp.values[k]
-            nr_processes = coordinate.as_tuple()[0]
-            core_hours = runtime * nr_processes
-            coordinate_cost += core_hours
+        if measurement_temp != None:
+            for k in range(len(measurement_temp.values)):
+                runtime = measurement_temp.values[k]
+                nr_processes = coordinate.as_tuple()[0]
+                core_hours = runtime * nr_processes
+                coordinate_cost += core_hours
         selected_cost += coordinate_cost
     return selected_cost
 
@@ -363,6 +363,25 @@ def main():
                 logging.error("The given file path is not valid.")
                 sys.exit(1)
 
+        # make sure the evaluation point is not used for modeling
+        measurements_backup = copy.deepcopy(experiment.measurements)
+        measurement_evaluation = copy.deepcopy(experiment.measurements)
+        #coordinate_evaluation = copy.deepcopy(experiment.coordinates)
+        experiment.measurements = None
+        for o in range(len(experiment.metrics)):
+            for k in range(len(experiment.callpaths)):
+                for i in range(len(experiment.coordinates)):
+                    cord = measurements_backup[experiment.callpaths[k], experiment.metrics[o]][i].coordinate
+                    if cord == Coordinate(float(eval_point[0]),float(eval_point[1])):
+                        measurements_backup[experiment.callpaths[k], experiment.metrics[o]].pop(i)
+        experiment.measurements = measurements_backup
+        coordinate_evaluation = []
+        for i in range(len(experiment.coordinates)):
+            coordinate_evaluation.append(experiment.coordinates[i])
+        for i in range(len(experiment.coordinates)):
+            if experiment.coordinates[i] == Coordinate(float(eval_point[0]),float(eval_point[1])):
+                experiment.coordinates.pop(i)
+
         # initialize model generator
         model_generator = ModelGenerator(
             experiment, modeler=args.modeler, use_median=use_median)
@@ -505,12 +524,13 @@ def main():
                             coordinate_id = k
                     measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
                     coordinate_cost = 0
-                    for k in range(len(measurement_temp.values)):
-                        runtime = measurement_temp.values[k]
-                        core_hours = runtime * nr_processes
-                        cost[experiment.coordinates[i]].append(core_hours)
-                        coordinate_cost += core_hours
-                        overall_runtime += runtime
+                    if measurement_temp != None:
+                        for k in range(len(measurement_temp.values)):
+                            runtime = measurement_temp.values[k]
+                            core_hours = runtime * nr_processes
+                            cost[experiment.coordinates[i]].append(core_hours)
+                            coordinate_cost += core_hours
+                            overall_runtime += runtime
                     total_cost += coordinate_cost
 
             else:
@@ -743,18 +763,18 @@ def main():
                 prediction_generic = eval(model_generic)
                 #print("prediction_generic:",prediction_generic)
 
-                cord_id = -1
+                # get the actual measured value
+                eval_measurement = None
                 #TODO: only works for 2 parameters
-                for o in range(len(experiment.coordinates)):
-                    parameter_values = experiment.coordinates[o].as_tuple()
+                for o in range(len(coordinate_evaluation)):
+                    parameter_values = coordinate_evaluation[o].as_tuple()
                     #print("parameter_values:",parameter_values)
                     if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
-                        cord_id = o
+                        eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
                         break
-                #print("DEBUG:",experiment.coordinates[cord_id], "eval point:",eval_point)
-                measurement_temp = experiment.get_measurement(cord_id, callpath_id, metric_id)
-                #print("measurement_temp:",measurement_temp)
-                actual = measurement_temp.mean
+
+                #print("eval_measurement:",eval_measurement)
+                actual = eval_measurement.mean
                 #print("actual:",actual)
 
                 # get the percentage error for the full matrix of points
@@ -839,7 +859,7 @@ def main():
                                 callpath, 
                                 metric,
                                 normalization_factors,
-                                experiment.parameters)
+                                experiment.parameters, eval_point)
                 
                 # add additional measurement points until break criteria is met
                 add_points_gpr = 0
@@ -959,18 +979,18 @@ def main():
                 prediction_gpr = eval(model_generic)
                 #print("prediction_gpr:",prediction_gpr)
 
-                cord_id = -1
+                # get the actual measured value
+                eval_measurement = None
                 #TODO: only works for 2 parameters
-                for o in range(len(experiment.coordinates)):
-                    parameter_values = experiment.coordinates[o].as_tuple()
+                for o in range(len(coordinate_evaluation)):
+                    parameter_values = coordinate_evaluation[o].as_tuple()
                     #print("parameter_values:",parameter_values)
                     if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
-                        cord_id = o
+                        eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
                         break
-                #print("DEBUG:",experiment.coordinates[cord_id], "eval point:",eval_point)
-                measurement_temp = experiment.get_measurement(cord_id, callpath_id, metric_id)
-                #print("measurement_temp:",measurement_temp)
-                actual = measurement_temp.mean
+
+                #print("eval_measurement:",eval_measurement)
+                actual = eval_measurement.mean
                 #print("actual:",actual)
 
                 # get the percentage error for the full matrix of points
@@ -1027,7 +1047,7 @@ def main():
                                 callpath, 
                                 metric,
                                 normalization_factors,
-                                experiment.parameters)
+                                experiment.parameters, eval_point)
                 
                 # add additional measurement points until break criteria is met
                 add_points_hybrid = 0
@@ -1172,18 +1192,18 @@ def main():
                 prediction_hybrid = eval(model_generic)
                 #print("prediction_hybrid:",prediction_hybrid)
 
-                cord_id = -1
+                # get the actual measured value
+                eval_measurement = None
                 #TODO: only works for 2 parameters
-                for o in range(len(experiment.coordinates)):
-                    parameter_values = experiment.coordinates[o].as_tuple()
+                for o in range(len(coordinate_evaluation)):
+                    parameter_values = coordinate_evaluation[o].as_tuple()
                     #print("parameter_values:",parameter_values)
                     if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
-                        cord_id = o
+                        eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
                         break
-                #print("DEBUG:",experiment.coordinates[cord_id], "eval point:",eval_point)
-                measurement_temp = experiment.get_measurement(cord_id, callpath_id, metric_id)
-                #print("measurement_temp:",measurement_temp)
-                actual = measurement_temp.mean
+
+                #print("eval_measurement:",eval_measurement)
+                actual = eval_measurement.mean
                 #print("actual:",actual)
 
                 # get the percentage error for the full matrix of points

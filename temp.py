@@ -1,4 +1,4 @@
-
+from extrap.entities.coordinate import Coordinate
 
 def add_measurements_to_gpr(gaussian_process, 
                             selected_coordinates, 
@@ -6,7 +6,7 @@ def add_measurements_to_gpr(gaussian_process,
                             callpath, 
                             metric,
                             normalization_factors,
-                            parameters):
+                            parameters, eval_point):
 
     X = []
     Y = []
@@ -15,28 +15,31 @@ def add_measurements_to_gpr(gaussian_process,
         
         x = []
 
-        parameter_values = coordinate.as_tuple()
+        #TODO: only works for 2 parameters
+        if coordinate != Coordinate(float(eval_point[0]), float(eval_point[1])):
 
-        for j in range(len(parameter_values)):
+            parameter_values = coordinate.as_tuple()
 
-            temp = 0
+            for j in range(len(parameter_values)):
 
-            if len(normalization_factors) != 0:
-                temp = parameter_values[j] * normalization_factors[parameters[j]]
+                temp = 0
 
-            else:
-                temp = parameter_values[j]
-                while temp < 1:
-                    temp = temp * 10
-                    
-            x.append(temp)
+                if len(normalization_factors) != 0:
+                    temp = parameter_values[j] * normalization_factors[parameters[j]]
 
-        for measurement in measurements[(callpath, metric)]:
-            if measurement.coordinate == coordinate:
-                Y.append(measurement.mean)
-                break
-        
-        X.append(x)
+                else:
+                    temp = parameter_values[j]
+                    while temp < 1:
+                        temp = temp * 10
+                        
+                x.append(temp)
+
+            for measurement in measurements[(callpath, metric)]:
+                if measurement.coordinate == coordinate:
+                    Y.append(measurement.mean)
+                    break
+            
+            X.append(x)
 
     gaussian_process.fit(X, Y)
 
