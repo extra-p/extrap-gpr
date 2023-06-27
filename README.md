@@ -4,15 +4,17 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 
 ## Run the evaluation tool for the case studies:
 
-FASTEST: `python .\case_study.py --budget 20 --cube D:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --plot True --normalization True`
+FASTEST: `python .\case_study.py --cube E:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 30 --plot True --normalization True`
 
 Relearn: `python .\case_study.py --text .\relearn\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True`
 
-Kripke: ``
+Kripke: `python .\case_study.py --cube E:\kripke\ --processes 0 --parameters "p","d","g" --eval_point "32768","12","160" --filter 1 --budget 30 --plot True --normalization True`
 
-MiniFE: `python .\case_study.py --cube E:\minife\ --processes 0 --parameters "p","n" --eval_point "2048","100" --filter 1 --plot True --budget 20  --normalization True`
+MiniFE: `python .\case_study.py --cube E:\minife\ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --plot True --budget 20  --normalization True`
 
+LULESH: `python .\case_study.py --cube E:\lulesh\ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 0 --plot True --budget 30  --normalization True`
 
+Quicksilver: ``
 
 ## Run the evaluation tool for the synthetic evaluation:
 
@@ -24,13 +26,6 @@ MiniFE: `python .\case_study.py --cube E:\minife\ --processes 0 --parameters "p"
 2. `python setup.py sdist bdist_wheel`
 3. `cd ..`
 4. `pip install -e extrap-counter/`
-
-## Notes:
-
-* we need to identify how many and which points are available atm
-    * not enough for modeling -> advice finishing the lines of 5 points for each parameter
-    * enough for modeling -> advice additional points from the matrix of possible points (decide based on estimated cost from our created model)
-
 
 ### Generic Strategy
 
@@ -65,13 +60,3 @@ the sparse modeling technique.
 2. uses generic strategy until a swtiching_point is hit, e.g. 11 selected points (base points + additional points) for 2 parameters.
 3. then uses gpr strategy to select points
 4. continues selecting points with 2. and 3. until the given budget is exhausted
-
-
-### CLANG
-
-ml Stages/2022 GCC/11.2.0 ParaStationMPI/5.5.0-1 Clang/13.0.1 libtool/.2.4.6 Python/3.9.6
-
-export PATH=/p/project/deepsea/demorais1/scorep-llvm/build/install/bin/:$PATH
-export MPICH_CC=clang MPICH_CXX=clang++
-mpicxx --version
-export SCOREP_TIMER=logical_basicblocks

@@ -312,7 +312,7 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
 
-    #TODO: make sure the code works for all case studies: FASTEST, Kripke, Lulesh, Minife, Quicksilver
+    #TODO: make sure the code works for all case studies: Kripke, Quicksilver
     
     budget = int(args.budget)
     print("budget:",budget)
@@ -363,24 +363,56 @@ def main():
                 logging.error("The given file path is not valid.")
                 sys.exit(1)
 
+        # find the runtime metric first
+        temp_metric_id = -1
+        for o in range(len(experiment.metrics)):
+            if str(experiment.metrics[o]) == "runtime" or str(experiment.metrics[o]) == "time":
+                temp_metric_id = o
+                break
+
         # make sure the evaluation point is not used for modeling
         measurements_backup = copy.deepcopy(experiment.measurements)
+        #print("DEBUG:",measurements_backup)
+        #measurements_backup2 = []
         measurement_evaluation = copy.deepcopy(experiment.measurements)
         #coordinate_evaluation = copy.deepcopy(experiment.coordinates)
         experiment.measurements = None
-        for o in range(len(experiment.metrics)):
-            for k in range(len(experiment.callpaths)):
-                for i in range(len(experiment.coordinates)):
-                    cord = measurements_backup[experiment.callpaths[k], experiment.metrics[o]][i].coordinate
-                    if cord == Coordinate(float(eval_point[0]),float(eval_point[1])):
-                        measurements_backup[experiment.callpaths[k], experiment.metrics[o]].pop(i)
+        #print("len(experiment.coordinates):",len(experiment.coordinates))
+        #print("experiment.coordinates:",experiment.coordinates)
+        for k in range(len(experiment.callpaths)):
+            temp = []
+            for i in range(len(experiment.coordinates)):
+                #print("measurements_backup:",measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]])
+                #print("i:",i)
+                cord = measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]][i].coordinate
+                if cord == Coordinate(float(eval_point[0]),float(eval_point[1])):
+                    pass
+                    #measurements_backup2.append(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]][i])
+                    #measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]].pop(i)
+                else:
+                    temp.append(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]][i])
+            measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]] = temp
+            #print("len(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]]):",len(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]]))
+        """for k in range(len(experiment.callpaths)):
+            for i in range(len(ids_to_delete)):
+                id_to_delete = ids_to_delete[i]
+                measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]].pop(id_to_delete)"""
+        #measurements_backup = measurements_backup2
+
         experiment.measurements = measurements_backup
         coordinate_evaluation = []
+        temp = []
+        #print("experiment.coordinates:",experiment.coordinates)
+        #print("len(experiment.coordinates):",len(experiment.coordinates))
         for i in range(len(experiment.coordinates)):
             coordinate_evaluation.append(experiment.coordinates[i])
         for i in range(len(experiment.coordinates)):
             if experiment.coordinates[i] == Coordinate(float(eval_point[0]),float(eval_point[1])):
-                experiment.coordinates.pop(i)
+                pass
+                #experiment.coordinates.pop(i)
+            else:
+                temp.append(experiment.coordinates[i])
+        experiment.coordinates = temp
 
         # initialize model generator
         model_generator = ModelGenerator(
@@ -757,6 +789,10 @@ def main():
                 elif parameters[0] == "p" and parameters[1] == "n":
                     p = int(eval_point[0])
                     n = int(eval_point[1])
+                elif parameters[0] == "p" and parameters[1] == "s":
+                    p = int(eval_point[0])
+                    s = int(eval_point[1])
+
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
@@ -973,6 +1009,9 @@ def main():
                 elif parameters[0] == "p" and parameters[1] == "n":
                     p = int(eval_point[0])
                     n = int(eval_point[1])
+                elif parameters[0] == "p" and parameters[1] == "s":
+                    p = int(eval_point[0])
+                    s = int(eval_point[1])
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
@@ -1186,6 +1225,9 @@ def main():
                 elif parameters[0] == "p" and parameters[1] == "n":
                     p = int(eval_point[0])
                     n = int(eval_point[1])
+                elif parameters[0] == "p" and parameters[1] == "s":
+                    p = int(eval_point[0])
+                    s = int(eval_point[1])
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
