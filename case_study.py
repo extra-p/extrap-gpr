@@ -312,7 +312,7 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
 
-    #TODO: make sure the code works for all case studies: Kripke, Quicksilver
+    #TODO: make sure the code works for all case studies: Quicksilver
     
     budget = int(args.budget)
     print("budget:",budget)
@@ -602,103 +602,260 @@ def main():
                 remaining_points = copy.deepcopy(cost)
             
                 # select points with generic strategy
+
+                if len(experiment.parameters) == 2:
                 
-                # find the cheapest line of 5 points for x
-                #TODO: works only for 2 parameters like that...
-                y_lines = {}
-                for i in range(len(experiment.coordinates)):
-                    cord_values = experiment.coordinates[i].as_tuple()
-                    x = cord_values[0]
-                    y = []
-                    for j in range(len(experiment.coordinates)):
-                        cord_values2 = experiment.coordinates[j].as_tuple()
-                        if cord_values2[0] == x:
-                            y.append(cord_values2[1])
-                    if len(y) == 5:
-                        #print("x:",x)
-                        #print("y:",y)
-                        if x not in y_lines:
-                            y_lines[x] = y
-                #print("y_lines:",y_lines)
-                # calculate the cost of each of the lines
-                line_costs = {}
-                for key, value in y_lines.items():
-                    line_cost = 0
-                    for i in range(len(value)):
-                        point_cost = sum(cost[Coordinate(key, value[i])])
-                        line_cost += point_cost
-                    line_costs[key] = line_cost
-                #print("line_costs:",line_costs)
-                x_value = min(line_costs, key=line_costs.get)
-                y_values = y_lines[min(line_costs, key=line_costs.get)]
-                #print("y_values:",y_values)
+                    # find the cheapest line of 5 points for y
+                    y_lines = {}
+                    for i in range(len(experiment.coordinates)):
+                        cord_values = experiment.coordinates[i].as_tuple()
+                        x = cord_values[0]
+                        y = []
+                        for j in range(len(experiment.coordinates)):
+                            cord_values2 = experiment.coordinates[j].as_tuple()
+                            if cord_values2[0] == x:
+                                y.append(cord_values2[1])
+                        if len(y) == 5:
+                            #print("x:",x)
+                            #print("y:",y)
+                            if x not in y_lines:
+                                y_lines[x] = y
+                    #print("y_lines:",y_lines)
+                    # calculate the cost of each of the lines
+                    line_costs = {}
+                    for key, value in y_lines.items():
+                        line_cost = 0
+                        for i in range(len(value)):
+                            point_cost = sum(cost[Coordinate(key, value[i])])
+                            line_cost += point_cost
+                        line_costs[key] = line_cost
+                    #print("line_costs:",line_costs)
+                    x_value = min(line_costs, key=line_costs.get)
+                    y_values = y_lines[min(line_costs, key=line_costs.get)]
+                    #print("y_values:",y_values)
 
-                # remove these points from the list of remaining points
-                for j in range(len(y_values)):
-                    try:
-                        cord = Coordinate(x_value, y_values[j])
-                        remaining_points.pop(cord)
-                    except KeyError:
-                        pass
+                    # remove these points from the list of remaining points
+                    for j in range(len(y_values)):
+                        try:
+                            cord = Coordinate(x_value, y_values[j])
+                            remaining_points.pop(cord)
+                        except KeyError:
+                            pass
 
-                # add these points to the list of selected points
-                selected_points = []
-                for i in range(len(y_values)):
-                    cord = Coordinate(x_value, y_values[i])
-                    selected_points.append(cord)
-
-                #print("selected_points:",selected_points)
-
-                # find the cheapest line of 5 points for y
-                #TODO: works only for 2 parameters like that...
-                x_lines = {}
-                for i in range(len(experiment.coordinates)):
-                    cord_values = experiment.coordinates[i].as_tuple()
-                    y = cord_values[1]
-                    x = []
-                    for j in range(len(experiment.coordinates)):
-                        cord_values2 = experiment.coordinates[j].as_tuple()
-                        if cord_values2[1] == y:
-                            x.append(cord_values2[0])
-                    if len(x) == 5:
-                        #print("x:",x)
-                        #print("y:",y)
-                        if y not in x_lines:
-                            x_lines[y] = x
-                #print("x_lines:",x_lines)
-                # calculate the cost of each of the lines
-                line_costs = {}
-                for key, value in x_lines.items():
-                    line_cost = 0
-                    for i in range(len(value)):
-                        point_cost = sum(cost[Coordinate(value[i], key)])
-                        line_cost += point_cost
-                    line_costs[key] = line_cost
-                #print("line_costs:",line_costs)
-                y_value = min(line_costs, key=line_costs.get)
-                x_values = x_lines[min(line_costs, key=line_costs.get)]
-                #print("x_values:",x_values)
-
-                # remove these points from the list of remaining points
-                for j in range(len(x_values)):
-                    try:
-                        cord = Coordinate(x_values[j], y_value)
-                        remaining_points.pop(cord)
-                    except KeyError:
-                        pass
-
-                # add these points to the list of selected points
-                for i in range(len(x_values)):
-                    cord = Coordinate(x_values[i], y_value)
-                    exists = False
-                    for j in range(len(selected_points)):
-                        if selected_points[j] == cord:
-                            exists = True
-                            break
-                    if exists == False:
+                    # add these points to the list of selected points
+                    selected_points = []
+                    for i in range(len(y_values)):
+                        cord = Coordinate(x_value, y_values[i])
                         selected_points.append(cord)
 
-                #print("selected_points:",selected_points)
+                    #print("selected_points:",selected_points)
+
+                    # find the cheapest line of 5 points for x
+                    x_lines = {}
+                    for i in range(len(experiment.coordinates)):
+                        cord_values = experiment.coordinates[i].as_tuple()
+                        y = cord_values[1]
+                        x = []
+                        for j in range(len(experiment.coordinates)):
+                            cord_values2 = experiment.coordinates[j].as_tuple()
+                            if cord_values2[1] == y:
+                                x.append(cord_values2[0])
+                        if len(x) == 5:
+                            #print("x:",x)
+                            #print("y:",y)
+                            if y not in x_lines:
+                                x_lines[y] = x
+                    #print("x_lines:",x_lines)
+                    # calculate the cost of each of the lines
+                    line_costs = {}
+                    for key, value in x_lines.items():
+                        line_cost = 0
+                        for i in range(len(value)):
+                            point_cost = sum(cost[Coordinate(value[i], key)])
+                            line_cost += point_cost
+                        line_costs[key] = line_cost
+                    #print("line_costs:",line_costs)
+                    y_value = min(line_costs, key=line_costs.get)
+                    x_values = x_lines[min(line_costs, key=line_costs.get)]
+                    #print("x_values:",x_values)
+
+                    # remove these points from the list of remaining points
+                    for j in range(len(x_values)):
+                        try:
+                            cord = Coordinate(x_values[j], y_value)
+                            remaining_points.pop(cord)
+                        except KeyError:
+                            pass
+
+                    # add these points to the list of selected points
+                    for i in range(len(x_values)):
+                        cord = Coordinate(x_values[i], y_value)
+                        exists = False
+                        for j in range(len(selected_points)):
+                            if selected_points[j] == cord:
+                                exists = True
+                                break
+                        if exists == False:
+                            selected_points.append(cord)
+
+                elif len(experiment.parameters) == 3:
+                    
+                    # find the cheapest line of 5 points for y
+                    y_lines = {}
+                    for i in range(len(experiment.coordinates)):
+                        cord_values = experiment.coordinates[i].as_tuple()
+                        x = cord_values[0]
+                        y = []
+                        z = cord_values[2]
+                        for j in range(len(experiment.coordinates)):
+                            cord_values2 = experiment.coordinates[j].as_tuple()
+                            if cord_values2[0] == x and cord_values2[2] == z:
+                                y.append(cord_values2[1])
+                        #print("y:",y)
+                        if len(y) >= 5:
+                            #print("x:",x)
+                            #print("y:",y)
+                            #print("z:",z)
+                            if (x,z) not in y_lines:
+                                y_lines[(x,z)] = y
+                    #print("y_lines:",y_lines)
+                    # calculate the cost of each of the lines
+                    line_costs = {}
+                    for key, value in y_lines.items():
+                        line_cost = 0
+                        for i in range(len(value)):
+                            point_cost = sum(cost[Coordinate(key[0], value[i], key[1])])
+                            line_cost += point_cost
+                        line_costs[key] = line_cost
+                    #print("line_costs:",line_costs)
+                    x_value, z_value = min(line_costs, key=line_costs.get)
+                    y_values = y_lines[min(line_costs, key=line_costs.get)]
+                    #print("values:",x_value, z_value)
+                    #print("y_values:",y_values)
+
+                    # remove these points from the list of remaining points
+                    for j in range(len(y_values)):
+                        try:
+                            cord = Coordinate(x_value, y_values[j], z_value)
+                            remaining_points.pop(cord)
+                        except KeyError:
+                            pass
+
+                    # add these points to the list of selected points
+                    selected_points = []
+                    for i in range(len(y_values)):
+                        cord = Coordinate(x_value, y_values[i], z_value)
+                        selected_points.append(cord)
+
+                    #print("selected_points:",selected_points)
+
+                    # find the cheapest line of 5 points for x
+                    x_lines = {}
+                    for i in range(len(experiment.coordinates)):
+                        cord_values = experiment.coordinates[i].as_tuple()
+                        y = cord_values[1]
+                        x = []
+                        z = cord_values[2]
+                        for j in range(len(experiment.coordinates)):
+                            cord_values2 = experiment.coordinates[j].as_tuple()
+                            if cord_values2[1] == y and cord_values2[2] == z:
+                                x.append(cord_values2[0])
+                        if len(x) >= 5:
+                            #print("x:",x)
+                            #print("y:",y)
+                            if (y,z) not in x_lines:
+                                x_lines[(y,z)] = x
+                    #print("x_lines:",x_lines)
+                    # calculate the cost of each of the lines
+                    line_costs = {}
+                    for key, value in x_lines.items():
+                        line_cost = 0
+                        for i in range(len(value)):
+                            point_cost = sum(cost[Coordinate(value[i], key[0], key[1])])
+                            line_cost += point_cost
+                        line_costs[key] = line_cost
+                    #print("line_costs:",line_costs)
+                    y_value, z_value = min(line_costs, key=line_costs.get)
+                    x_values = x_lines[min(line_costs, key=line_costs.get)]
+                    #print("x_values:",x_values)
+
+                    # remove these points from the list of remaining points
+                    for j in range(len(x_values)):
+                        try:
+                            cord = Coordinate(x_values[j], y_value, z_value)
+                            remaining_points.pop(cord)
+                        except KeyError:
+                            pass
+
+                    # add these points to the list of selected points
+                    for i in range(len(x_values)):
+                        cord = Coordinate(x_values[i], y_value, z_value)
+                        exists = False
+                        for j in range(len(selected_points)):
+                            if selected_points[j] == cord:
+                                exists = True
+                                break
+                        if exists == False:
+                            selected_points.append(cord)
+
+                    #print("selected_points:",selected_points)
+
+                    # find the cheapest line of 5 points for z
+                    z_lines = {}
+                    for i in range(len(experiment.coordinates)):
+                        cord_values = experiment.coordinates[i].as_tuple()
+                        x = cord_values[0]
+                        z = []
+                        y = cord_values[1]
+                        for j in range(len(experiment.coordinates)):
+                            cord_values2 = experiment.coordinates[j].as_tuple()
+                            if cord_values2[0] == x and cord_values2[1] == y:
+                                z.append(cord_values2[2])
+                        if len(z) >= 5:
+                            #print("z:",z)
+                            #print("y:",y)
+                            #print("x:",x)
+                            if (x,y) not in z_lines:
+                                z_lines[(x,y)] = z
+                    #print("z_lines:",z_lines)
+                    # calculate the cost of each of the lines
+                    line_costs = {}
+                    for key, value in z_lines.items():
+                        line_cost = 0
+                        for i in range(len(value)):
+                            point_cost = sum(cost[Coordinate(key[0], key[1], value[i])])
+                            line_cost += point_cost
+                        line_costs[key] = line_cost
+                    #print("line_costs:",line_costs)
+                    x_value, y_value = min(line_costs, key=line_costs.get)
+                    z_values = z_lines[min(line_costs, key=line_costs.get)]
+                    #print("z_values:",z_values)
+
+                    # remove these points from the list of remaining points
+                    for j in range(len(z_values)):
+                        try:
+                            cord = Coordinate(x_value, y_value, z_values[j])
+                            remaining_points.pop(cord)
+                        except KeyError:
+                            pass
+
+                    # add these points to the list of selected points
+                    for i in range(len(z_values)):
+                        cord = Coordinate(x_value, y_value, z_values[i])
+                        exists = False
+                        for j in range(len(selected_points)):
+                            if selected_points[j] == cord:
+                                exists = True
+                                break
+                        if exists == False:
+                            selected_points.append(cord)
+
+                    #print("selected_points:",selected_points)
+
+                else:
+                    return 1
+
+                print("selected_points:",selected_points)
 
                 # calculate the cost for the selected base points
                 base_point_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
@@ -782,7 +939,6 @@ def main():
                 
                 # create model using full matrix of points
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
-                #TODO: needs to be extended for other case studies...
                 if parameters[0] == "p" and parameters[1] == "size":
                     p = int(eval_point[0])
                     size = int(eval_point[1])
@@ -792,7 +948,14 @@ def main():
                 elif parameters[0] == "p" and parameters[1] == "s":
                     p = int(eval_point[0])
                     s = int(eval_point[1])
-
+                elif parameters[0] == "p" and parameters[1] == "d" and parameters[2] == "g":
+                    p = int(eval_point[0])
+                    d = int(eval_point[1])
+                    g = int(eval_point[2])
+                elif parameters[0] == "p" and parameters[1] == "m" and parameters[2] == "n":
+                    p = int(eval_point[0])
+                    m = int(eval_point[1])
+                    n = int(eval_point[2])
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
@@ -801,13 +964,22 @@ def main():
 
                 # get the actual measured value
                 eval_measurement = None
-                #TODO: only works for 2 parameters
-                for o in range(len(coordinate_evaluation)):
-                    parameter_values = coordinate_evaluation[o].as_tuple()
-                    #print("parameter_values:",parameter_values)
-                    if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
-                        eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
-                        break
+                if len(experiment.parameters) == 2:
+                    for o in range(len(coordinate_evaluation)):
+                        parameter_values = coordinate_evaluation[o].as_tuple()
+                        #print("parameter_values:",parameter_values)
+                        if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
+                            eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
+                            break
+                elif len(experiment.parameters) == 3:
+                    for o in range(len(coordinate_evaluation)):
+                        parameter_values = coordinate_evaluation[o].as_tuple()
+                        #print("parameter_values:",parameter_values)
+                        if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]) and parameter_values[2] == float(eval_point[2]):
+                            eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
+                            break
+                else:
+                    return 1
 
                 #print("eval_measurement:",eval_measurement)
                 actual = eval_measurement.mean
@@ -853,13 +1025,13 @@ def main():
                     print("normalization_factors:",normalization_factors)
                 
                 # do an noise analysis on the existing points
-                m = experiment.measurements
-                #print("DEBUG:",m)
-                n = m[(callpath, metric)]
-                #print("DEBUG:",n)
+                mm = experiment.measurements
+                #print("DEBUG:",mm)
+                nn = mm[(callpath, metric)]
+                #print("DEBUG:",nn)
                 temp = []
                 for cord in selected_points:
-                    for meas in n:
+                    for meas in nn:
                         if meas.coordinate == cord:
                             temp.append(meas)
                             break
@@ -1002,7 +1174,6 @@ def main():
                 
                 # create model using full matrix of points
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
-                #TODO: needs to be extended for other case studies...
                 if parameters[0] == "p" and parameters[1] == "size":
                     p = int(eval_point[0])
                     size = int(eval_point[1])
@@ -1012,6 +1183,14 @@ def main():
                 elif parameters[0] == "p" and parameters[1] == "s":
                     p = int(eval_point[0])
                     s = int(eval_point[1])
+                elif parameters[0] == "p" and parameters[1] == "d" and parameters[2] == "g":
+                    p = int(eval_point[0])
+                    d = int(eval_point[1])
+                    g = int(eval_point[2])
+                elif parameters[0] == "p" and parameters[1] == "m" and parameters[2] == "n":
+                    p = int(eval_point[0])
+                    m = int(eval_point[1])
+                    n = int(eval_point[2])
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
@@ -1020,13 +1199,22 @@ def main():
 
                 # get the actual measured value
                 eval_measurement = None
-                #TODO: only works for 2 parameters
-                for o in range(len(coordinate_evaluation)):
-                    parameter_values = coordinate_evaluation[o].as_tuple()
-                    #print("parameter_values:",parameter_values)
-                    if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
-                        eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
-                        break
+                if len(experiment.parameters) == 2:
+                    for o in range(len(coordinate_evaluation)):
+                        parameter_values = coordinate_evaluation[o].as_tuple()
+                        #print("parameter_values:",parameter_values)
+                        if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
+                            eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
+                            break
+                elif len(experiment.parameters) == 3:
+                    for o in range(len(coordinate_evaluation)):
+                        parameter_values = coordinate_evaluation[o].as_tuple()
+                        #print("parameter_values:",parameter_values)
+                        if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]) and parameter_values[2] == float(eval_point[2]):
+                            eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
+                            break
+                else:
+                    return 1
 
                 #print("eval_measurement:",eval_measurement)
                 actual = eval_measurement.mean
@@ -1044,13 +1232,13 @@ def main():
                 #####################
 
                 # do an noise analysis on the existing points
-                m = experiment.measurements
-                #print("DEBUG:",m)
-                n = m[(callpath, metric)]
-                #print("DEBUG:",n)
+                mm = experiment.measurements
+                #print("DEBUG:",mm)
+                nn = mm[(callpath, metric)]
+                #print("DEBUG:",nn)
                 temp = []
                 for cord in selected_points:
-                    for meas in n:
+                    for meas in nn:
                         if meas.coordinate == cord:
                             temp.append(meas)
                             break
@@ -1218,7 +1406,6 @@ def main():
                 
                 # create model using full matrix of points
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
-                #TODO: needs to be extended for other case studies...
                 if parameters[0] == "p" and parameters[1] == "size":
                     p = int(eval_point[0])
                     size = int(eval_point[1])
@@ -1228,6 +1415,14 @@ def main():
                 elif parameters[0] == "p" and parameters[1] == "s":
                     p = int(eval_point[0])
                     s = int(eval_point[1])
+                elif parameters[0] == "p" and parameters[1] == "d" and parameters[2] == "g":
+                    p = int(eval_point[0])
+                    d = int(eval_point[1])
+                    g = int(eval_point[2])
+                elif parameters[0] == "p" and parameters[1] == "m" and parameters[2] == "n":
+                    p = int(eval_point[0])
+                    m = int(eval_point[1])
+                    n = int(eval_point[2])
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
@@ -1236,13 +1431,22 @@ def main():
 
                 # get the actual measured value
                 eval_measurement = None
-                #TODO: only works for 2 parameters
-                for o in range(len(coordinate_evaluation)):
-                    parameter_values = coordinate_evaluation[o].as_tuple()
-                    #print("parameter_values:",parameter_values)
-                    if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
-                        eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
-                        break
+                if len(experiment.parameters) == 2:
+                    for o in range(len(coordinate_evaluation)):
+                        parameter_values = coordinate_evaluation[o].as_tuple()
+                        #print("parameter_values:",parameter_values)
+                        if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
+                            eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
+                            break
+                elif len(experiment.parameters) == 3:
+                    for o in range(len(coordinate_evaluation)):
+                        parameter_values = coordinate_evaluation[o].as_tuple()
+                        #print("parameter_values:",parameter_values)
+                        if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]) and parameter_values[2] == float(eval_point[2]):
+                            eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
+                            break
+                else:
+                    return 1
 
                 #print("eval_measurement:",eval_measurement)
                 actual = eval_measurement.mean
