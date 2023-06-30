@@ -12,9 +12,9 @@ Kripke: `python .\case_study.py --cube E:\kripke\ --processes 0 --parameters "p"
 
 MiniFE: `python .\case_study.py --cube E:\minife\ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --plot True --budget 20  --normalization True`
 
-LULESH: `python .\case_study.py --cube E:\lulesh\ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 0 --plot True --budget 30  --normalization True`
+LULESH: `python .\case_study.py --cube E:\lulesh\ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --plot True --budget 30  --normalization True`
 
-Quicksilver: ``
+Quicksilver: `python .\case_study.py --cube E:\quicksilver\ --processes 0 --parameters "p","m","n" --eval_point "512","20","60" --filter 1 --plot True --budget 30  --normalization True`
 
 ## Run the evaluation tool for the synthetic evaluation:
 
