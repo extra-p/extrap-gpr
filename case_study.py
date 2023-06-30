@@ -1470,44 +1470,58 @@ def main():
         #print("acurracy_bucket_counter_gpr:",acurracy_bucket_counter_gpr)
         #print("acurracy_bucket_counter_hybrid:",acurracy_bucket_counter_hybrid)
 
+        json_out = {}
+
         # calculate the percentages for each accuracy bucket
         percentage_bucket_counter_full = calculate_percentage_of_buckets(acurracy_bucket_counter_full, kernels_used)
-        #print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
+        print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
+        json_out["percentage_bucket_counter_full"] = percentage_bucket_counter_full
         percentage_bucket_counter_generic = calculate_percentage_of_buckets(acurracy_bucket_counter_generic, kernels_used)
-        #print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
+        print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
+        json_out["percentage_bucket_counter_generic"] = percentage_bucket_counter_generic
         percentage_bucket_counter_gpr = calculate_percentage_of_buckets(acurracy_bucket_counter_gpr, kernels_used)
-        #print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
+        print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
+        json_out["percentage_bucket_counter_gpr"] = percentage_bucket_counter_gpr
         percentage_bucket_counter_hybrid = calculate_percentage_of_buckets(acurracy_bucket_counter_hybrid, kernels_used)
-        #print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
+        print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
+        json_out["percentage_bucket_counter_hybrid"] = percentage_bucket_counter_hybrid
 
         # plot the results of the model accuracy analysis
         if plot == True:
             plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid)
         
         print("budget:",budget,"%")
+        json_out["budget"] = budget
 
         mean_budget_generic = np.nanmean(percentage_cost_generic_container)
         print("mean_budget_generic:",mean_budget_generic)
+        json_out["mean_budget_generic"] = mean_budget_generic
 
         mean_add_points_generic = np.nanmean(add_points_generic_container)
         print("mean_add_points_generic:",mean_add_points_generic)
+        json_out["mean_add_points_generic"] = mean_add_points_generic
 
         mean_budget_gpr = np.nanmean(percentage_cost_gpr_container)
         print("mean_budget_gpr:",mean_budget_gpr)
+        json_out["mean_budget_gpr"] = mean_budget_gpr
 
         mean_add_points_gpr = np.nanmean(add_points_gpr_container)
         print("mean_add_points_gpr:",mean_add_points_gpr)
+        json_out["mean_add_points_gpr"] = mean_add_points_gpr
 
         mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container)
         print("mean_budget_hybrid:",mean_budget_hybrid)
+        json_out["mean_budget_hybrid"] = mean_budget_hybrid
 
         mean_add_points_hybrid = np.nanmean(add_points_hybrid_container)
         print("mean_add_points_hybrid:",mean_add_points_hybrid)
+        json_out["mean_add_points_hybrid"] = mean_add_points_hybrid
 
         used_costs = {
             "base points": np.array([base_point_cost, base_point_cost, base_point_cost, base_point_cost]),
             "additional points": np.array([100-base_point_cost, mean_budget_generic-base_point_cost, mean_budget_gpr-base_point_cost, mean_budget_hybrid-base_point_cost]),
         }
+        json_out["base_point_cost"] = base_point_cost
 
         # plot the analysis result for the costs and budgets
         if plot == True:
@@ -1517,10 +1531,20 @@ def main():
             "base points": np.array([min_points, min_points, min_points, min_points]),
             "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
+        json_out["min_points"] = min_points
+        json_out["filter"] = filter
 
         # plot the analysis result for the additional measurement point numbers
         if plot == True:
             plot_measurement_point_number(add_points, min_points)
+
+        # write results to file
+        import json
+        json_object = json.dumps(json_out, indent=4)
+ 
+        # Writing to sample.json
+        with open("result.budget."+str(budget)+".json", "w") as outfile:
+            outfile.write(json_object)
 
     else:
         logging.error("No file path given to load files.")
