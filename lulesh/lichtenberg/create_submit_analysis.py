@@ -2,11 +2,11 @@ def main():
 
     text = ""
 
-    file = open("submit_jobs.sh","w")
+    file = open("submit_analysis_jobs.sh","w")
 
     counter = 14
 
-    while counter < 100:
+    while counter <= 100:
 
         text += "echo \"submitting job with n="+str(counter)+"\"\nsbatch analysis_job_b"+str(counter)+".sh\n"
 

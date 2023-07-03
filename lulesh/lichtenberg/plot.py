@@ -39,6 +39,7 @@ def plot_lines2(x_values, y_values_list, labels):
 def plot_lines3(x_values, y_values_list, labels):
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label)
+        #print("DEBUG:",label)
     plt.xlabel('Number of additional points used for modelnig')
     plt.ylabel('Used Budget [%]')
     plt.legend()
@@ -61,6 +62,7 @@ def main():
     
     folder_path = "analysis_results/"
     files = find_files(folder_path)
+    #print("DEBUG:",len(files))
 
     budget_values = []
     full_values = []
@@ -77,6 +79,7 @@ def main():
     points_hybrid = []
 
     files = natsorted(files)
+    #print("DEBUG:",len(files))
 
     for i in range(len(files)):
         json_file_path = files[i]
@@ -119,6 +122,8 @@ def main():
     plot_lines(budget_values, y_values_list, labels, bucket)
     plot_lines2(budget_values, y_values_list2, labels2)
     plot_lines3(budget_values, y_values_list3, labels2)
+
+    #print("DEBUG:",labels2)
 
     
 
