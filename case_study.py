@@ -967,14 +967,14 @@ def main():
                 if len(experiment.parameters) == 2:
                     for o in range(len(coordinate_evaluation)):
                         parameter_values = coordinate_evaluation[o].as_tuple()
-                        print("parameter_values:",parameter_values)
+                        #print("parameter_values:",parameter_values)
                         if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
                             eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
                             break
                 elif len(experiment.parameters) == 3:
                     for o in range(len(coordinate_evaluation)):
                         parameter_values = coordinate_evaluation[o].as_tuple()
-                        print("parameter_values:",parameter_values)
+                        #print("parameter_values:",parameter_values)
                         if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]) and parameter_values[2] == float(eval_point[2]):
                             eval_measurement = measurement_evaluation[experiment.callpaths[callpath_id], experiment.metrics[metric_id]][o]
                             break
