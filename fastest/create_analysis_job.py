@@ -24,7 +24,7 @@ ml restore lulesh
 
 SECONDS=0;
 
-python ../case_study.py --cube ../../data/fastest/ --processes 0 --parameters "p","size" --eval_point "512","65636" --filter 0 --budget """+str(counter)+""" --normalization True
+python ../case_study.py --cube ../../data/fastest/ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 0 --budget """+str(counter)+""" --normalization True
 
 echo $SECONDS"""
 

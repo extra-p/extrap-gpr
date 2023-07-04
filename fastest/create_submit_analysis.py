@@ -8,7 +8,7 @@ def main():
 
     while counter <= 100:
 
-        text += "echo \"submitting job with n="+str(counter)+"\"\nsbatch analysis_job_b"+str(counter)+".sh\n"
+        text += "echo \"submitting job with b="+str(counter)+"\"\nsbatch analysis_job_b"+str(counter)+".sh\n"
 
         counter += 1
     
