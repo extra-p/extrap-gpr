@@ -665,6 +665,7 @@ class SyntheticBenchmark():
 
         shared_dict[counter] = result_container
 
+
     def run(self):
 
         function_dict = self.generate_synthetic_functions()
@@ -673,14 +674,12 @@ class SyntheticBenchmark():
 
         if self.nr_parameters == 2:
 
-            #min_points = 9
+            min_points = 9
 
             # parallelize reading all measurement_files in one folder
             manager = Manager()
             shared_dict = manager.dict()
             cpu_count = mp.cpu_count()
-
-            #print("test:",function_dict[0].function)
 
             inputs = []
             for i in range(self.nr_functions):
@@ -691,9 +690,7 @@ class SyntheticBenchmark():
 
             result_dict = copy.deepcopy(shared_dict)
 
-            percentage_cost_generic_container = []
-            add_points_generic_container = []
-            
+            # full
             acurracy_bucket_counter_full = {}
             acurracy_bucket_counter_full["rest"] = 0
             acurracy_bucket_counter_full["5"] = 0
@@ -701,12 +698,41 @@ class SyntheticBenchmark():
             acurracy_bucket_counter_full["15"] = 0
             acurracy_bucket_counter_full["20"] = 0
 
+            # generic
             acurracy_bucket_counter_generic = {}
             acurracy_bucket_counter_generic["rest"] = 0
             acurracy_bucket_counter_generic["5"] = 0
             acurracy_bucket_counter_generic["10"] = 0
             acurracy_bucket_counter_generic["15"] = 0
             acurracy_bucket_counter_generic["20"] = 0
+
+            percentage_cost_generic_container = []
+            add_points_generic_container = []
+
+            # gpr
+            acurracy_bucket_counter_gpr = {}
+            acurracy_bucket_counter_gpr["rest"] = 0
+            acurracy_bucket_counter_gpr["5"] = 0
+            acurracy_bucket_counter_gpr["10"] = 0
+            acurracy_bucket_counter_gpr["15"] = 0
+            acurracy_bucket_counter_gpr["20"] = 0
+
+            percentage_cost_gpr_container = []
+            add_points_gpr_container = []
+
+            # hybrid
+            acurracy_bucket_counter_hybrid = {}
+            acurracy_bucket_counter_hybrid["rest"] = 0
+            acurracy_bucket_counter_hybrid["5"] = 0
+            acurracy_bucket_counter_hybrid["10"] = 0
+            acurracy_bucket_counter_hybrid["15"] = 0
+            acurracy_bucket_counter_hybrid["20"] = 0
+
+            percentage_cost_hybrid_container = []
+            add_points_hybrid_container = []
+
+
+
 
             for i in range(len(result_dict)):
                 add_points_generic_container.append(result_dict[i]["add_points_generic"])
@@ -825,6 +851,8 @@ class SyntheticBenchmark():
             pass
         elif self.nr_parameters == 4:
             pass
+        else:
+            min_points = 9
 
 
        

@@ -25,7 +25,7 @@ def main():
     modelers_list = list(set(k.lower() for k in
                              chain(single_parameter.all_modelers.keys(), multi_parameter.all_modelers.keys())))
     parser = argparse.ArgumentParser(description="Run synthetic benchmark.")
-    parser.add_argument("--nr-parameters", type=int, choices=[1, 2, 3, 4], required=True,
+    parser.add_argument("--nr-parameters", type=int, choices=[2, 3, 4], required=True,
                         help="Number of parameters for the synthetic benchmark. Must be 2, 3, or 4.")
     parser.add_argument("--nr-functions", type=int, default=1000, required=True,
                         help="Number of synthetic functions used for the evaluation. Must be an integer value.")
