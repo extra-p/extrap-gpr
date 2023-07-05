@@ -858,13 +858,62 @@ class SyntheticBenchmark():
         current_cost_percent = current_cost / (total_cost / 100)
 
         if self.mode == "budget":
-            pass
+
+            if current_cost_percent <= self.budget:
+                while True:
+                    # find another point for selection
+                    remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
+
+                    # calculate selected point cost
+                    current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, 0, 0)
+                    current_cost_percent = current_cost / (total_cost / 100)
+
+                    # current cost exceeds budget so break the loop
+                    if current_cost_percent >= self.budget:
+                        break
+
+                    # add the new found point
+                    else:
+
+                        # increment counter value, because a new measurement point was added
+                        added_points_generic += 1
+
+                        # create new model
+                        experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+                        #_, models = get_extrap_model(experiment_generic_base, args)
+                        #hypothesis = None
+                        #for model in models.values():
+                        #    hypothesis = model.hypothesis
+
+                        selected_coord_list_base = selected_coord_list_new
+                        remaining_points_base = remaining_points_new
+
+                    # if there are no points remaining that can be selected break the loop
+                    if len(remaining_points_base) == 0:
+                        break
+
+            else:
+                pass
 
         elif self.mode == "free":
             pass
-        
+
         else:
             return 1
+
+        # calculate selected point cost
+        selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
+
+        # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
+        percentage_cost_generic = selected_cost / (total_cost / 100)
+        percentage_cost_generic_container.append(percentage_cost_generic)
+
+        # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
+        #add_points_generic = len(selected_coord_list_base) - min_points
+        add_points_generic_container.append(added_points_generic)
+        
+        # create model using point selection of generic strategy
+        model_generic, _ = get_extrap_model(experiment_generic_base, args)
 
 
 
