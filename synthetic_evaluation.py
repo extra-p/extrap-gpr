@@ -25,6 +25,12 @@ def main():
     modelers_list = list(set(k.lower() for k in
                              chain(single_parameter.all_modelers.keys(), multi_parameter.all_modelers.keys())))
     parser = argparse.ArgumentParser(description="Run synthetic benchmark.")
+    parser.add_argument("--plot", type=bool, required=False, default=False,
+                        help="Set if the plots should be shown after running the anlysis.")
+    parser.add_argument("--mode", type=str, required=False, default="free", choices=["free", "budget"],
+                        help="Set the analysis mode. If budget is used, strategies are only allowed to add more points until budget is reached. If free is set they choose until no improvement is made anymore.")
+    parser.add_argument("--budget", type=int, required=False, default=30,
+                        help="Set the allowed budget for the measurement points of the anlysis.")
     parser.add_argument("--nr-parameters", type=int, choices=[2, 3, 4], required=True,
                         help="Number of parameters for the synthetic benchmark. Must be 2, 3, or 4.")
     parser.add_argument("--nr-functions", type=int, default=1000, required=True,

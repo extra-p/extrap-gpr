@@ -21,8 +21,9 @@ from extrap.modelers.model_generator import ModelGenerator
 from extrap.util.options_parser import SINGLE_PARAMETER_MODELER_KEY, SINGLE_PARAMETER_OPTIONS_KEY
 from extrap.util.progress_bar import ProgressBar
 import numpy as np
-
+from plotting import plot_measurement_point_number, plot_model_accuracy, plot_costs
 from generic_strategy import add_additional_point_generic
+from case_study import calculate_selected_point_cost
 
 
 class SyntheticBenchmark():
@@ -31,6 +32,9 @@ class SyntheticBenchmark():
         self.nr_parameters = args.nr_parameters
         self.nr_functions = args.nr_functions
         self.nr_repetitions = args.nr_repetitions
+        self.plot = args.plot
+        self.mode = args.mode
+        self.budget = args.budget
         self.args = args
         self.parameter_placeholders = ["a","b","c","d"]
         self.parameter_values_a = [4,8,16,32,64]
@@ -217,12 +221,16 @@ class SyntheticBenchmark():
         
         return function_dict
     
+    #TODO
     def simulate(self, inputs):
+
+        # get the values from the parallel input dict
         counter = inputs[0]
         shared_dict = inputs[1]
         basline_function = inputs[2]
         result_container = {}
 
+        # prepare dicts for saving the accuracy analysis data
         acurracy_bucket_counter_full = {}
         acurracy_bucket_counter_full["rest"] = 0
         acurracy_bucket_counter_full["5"] = 0
@@ -237,27 +245,48 @@ class SyntheticBenchmark():
         acurracy_bucket_counter_generic["15"] = 0
         acurracy_bucket_counter_generic["20"] = 0
 
+        acurracy_bucket_counter_gpr = {}
+        acurracy_bucket_counter_gpr["rest"] = 0
+        acurracy_bucket_counter_gpr["5"] = 0
+        acurracy_bucket_counter_gpr["10"] = 0
+        acurracy_bucket_counter_gpr["15"] = 0
+        acurracy_bucket_counter_gpr["20"] = 0
+
+        acurracy_bucket_counter_hybrid = {}
+        acurracy_bucket_counter_hybrid["rest"] = 0
+        acurracy_bucket_counter_hybrid["5"] = 0
+        acurracy_bucket_counter_hybrid["10"] = 0
+        acurracy_bucket_counter_hybrid["15"] = 0
+        acurracy_bucket_counter_hybrid["20"] = 0
+
         # logic for setting the number of min points required by the modeler
-        if self.nr_parameters == 1:
-            min_points = 5
-        elif self.nr_parameters == 2:
+        if self.nr_parameters == 2:
             min_points = 9
         elif self.nr_parameters == 3:
             min_points = 13
         elif self.nr_parameters == 4:
             min_points = 17
         else:
-            min_points = 5
+            return 1
         
         cost = {}
         total_cost = 0
+
+        # create a new extra-p experiment
         experiment = Experiment()
+        
+        # add the parameters to the experiment
         for j in range(self.nr_parameters):
             experiment.add_parameter(Parameter(self.parameter_placeholders[j]))
+        
+        # add a dummy callpath to the experiment
         callpath = Callpath("main")
         experiment.add_callpath(callpath)
+        
+        # add a dummy metric to the experiment
         metric = Metric("runtime")
         experiment.add_metric(metric)
+
         for j in range(len(self.parameter_values_a)):
             
             function = basline_function
@@ -439,6 +468,13 @@ class SyntheticBenchmark():
 
         #print("Selected points:",selected_coord_list)
 
+        # calculate the cost for the selected base points
+        base_point_cost = calculate_selected_point_cost(selected_coord_list, experiment, 0, 0)
+        base_point_cost = base_point_cost / (total_cost / 100)
+        #print("base_point_cost %:",base_point_cost)
+
+
+
         #NOTE: (generic, RL-strategy...)
         # select x cheapest measurement(s) that are not part of the list so far
         # continue doing this until there is no improvement in smape value on measured points for a delta of X iterations
@@ -507,94 +543,6 @@ class SyntheticBenchmark():
         #print("added_points:",added_points)
         #print("len selected_coord_list_new:",len(selected_coord_list_base),len(selected_coord_list_new),added_points)
 
-
-        """add_measurements = 1
-        #added_points = 0
-        while True:
-            if added_points == add_measurements:
-                break
-
-            point_costs = {}
-            for key, value in remaining_points.items():
-                try:
-                    min_value = min(value)
-                except ValueError:
-                    min_value = math.inf
-                #print("min_value:",min_value)
-                point_costs[key] = min_value
-            temp = min(point_costs, key=point_costs.get)
-            #print("x:",temp)
-            #print("x2:",point_costs[temp])
-
-            # check if point was already selected
-            # make sure this point was not selected yet
-            exists = False
-            for k in range(len(selected_coord_list)):
-                if temp == selected_coord_list[k]:
-                    exists = True
-                    break
-
-            # if point was selected already, delete it
-            if exists == True:
-                try:
-                    remaining_points[temp].remove(point_costs[temp])
-                except ValueError:
-                    pass
-            
-            # if point was not selected yet, use it
-            else:
-                # add the point to the selected list
-                selected_coord_list.append(temp)
-
-                # add measurement value to the list
-                coordinate_id = -1
-                for j in range(len(experiment.coordinates)):
-                    if temp == experiment.coordinates[j]:
-                        coordinate_id = j
-                measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
-                value_id = -1
-                for j in range(len(measurement_temp.values)):
-                    runtime = measurement_temp.values[j]
-                    nr_processes = temp.as_tuple()[0]
-                    core_hours = runtime * nr_processes
-                    if core_hours == point_costs[temp]:
-                        value_id = j
-                        break
-                #print("measurement_temp:",measurement_temp.values[value_id])
-                selected_measurement_values[temp] = measurement_temp.values[value_id]
-
-                # remove this point from the remaining points list
-                try:
-                    remaining_points[temp].remove(point_costs[temp])
-                except ValueError:
-                    pass
-    
-                # increment counter value, because a new measurement point was added
-                added_points += 1"""
-
-        """# create new experiment with only the selected measurements and points as coordinates and measurements
-        experiment_generic = Experiment()
-        for j in range(self.nr_parameters):
-            experiment_generic.add_parameter(Parameter(self.parameter_placeholders[j]))
-        callpath = Callpath("main")
-        experiment_generic.add_callpath(callpath)
-        metric = Metric("runtime")
-        experiment_generic.add_metric(metric)
-        for j in range(len(selected_coord_list)):
-            coordinate = selected_coord_list[j]
-            experiment_generic.add_coordinate(coordinate)
-
-            coordinate_id = -1
-            for k in range(len(experiment.coordinates)):
-                if coordinate == experiment.coordinates[k]:
-                    coordinate_id = k
-            measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
-            #print("haha:",measurement_temp.values)
-
-            #value = selected_measurement_values[selected_coord_list[j]] 
-            #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
-            experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))"""
-
         # calculate selected point cost
         selected_cost = 0
         for j in range(len(selected_coord_list)):
@@ -619,26 +567,49 @@ class SyntheticBenchmark():
 
         # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
         add_points_generic = len(selected_coord_list) - min_points
-        #add_points_generic_container.append(add_points_generic)
         #print("add_points_generic:",add_points_generic)
-
-        # create model using point selection of generic strategy
-        model_generic, _ = self.get_extrap_model(experiment_generic_new)
-        #print("model_generic:",model_generic)
-        #container["model_generic"] = model_generic
 
         # create model using full matrix of points
         model_full, _ = self.get_extrap_model(experiment)
         #print("model_full:",model_full)
-        #container["model_full"] = model_full
+
+        # create model using point selection of generic strategy
+        model_generic, _ = self.get_extrap_model(experiment_generic_new)
+        #print("model_generic:",model_generic)
+
+        # create model using point selection of generic strategy
+        model_gpr, _ = self.get_extrap_model(experiment_gpr_new)
+        #print("model_gpr:",model_gpr)
+
+        # create model using point selection of generic strategy
+        model_hybrid, _ = self.get_extrap_model(experiment_hybrid_new)
+        #print("model_hybrid:",model_hybrid)
+
+        # set the measurement point values for the evaluation of the prediction
+        if self.nr_parameters == 2:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+        elif self.nr_parameters == 3:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+        elif self.nr_parameters == 4:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            d = self.parameter_values_d_val[0]
+        else:
+            return 1
 
         # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
         prediction_full = eval(model_full)
         #print("prediction_full:",prediction_full)
         prediction_generic = eval(model_generic)
         #print("prediction_generic:",prediction_generic)
+        prediction_gpr = eval(model_gpr)
+        #print("prediction_gpr:",prediction_gpr)
+        prediction_hybrid = eval(model_hybrid)
+        #print("prediction_hybrid:",prediction_hybrid)
 
         #basline_function = function_dict[i].function
         actual = eval(basline_function)
@@ -648,9 +619,17 @@ class SyntheticBenchmark():
         error_full = abs(self.percentage_error(actual, prediction_full))
         #print("error_full:",error_full)
 
-        # get the percentage error for the full matrix of points
+        # get the percentage error for the generic strategy
         error_generic = abs(self.percentage_error(actual, prediction_generic))
         #print("error_generic:",error_generic)
+
+        # get the percentage error for the gpr strategy
+        error_gpr = abs(self.percentage_error(actual, prediction_gpr))
+        #print("error_gpr:",error_gpr)
+
+        # get the percentage error for the hybrid strategy
+        error_hybrid = abs(self.percentage_error(actual, prediction_hybrid))
+        #print("error_hybrid:",error_hybrid)
 
         # increment accuracy bucket for full matrix of points
         acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
@@ -658,223 +637,259 @@ class SyntheticBenchmark():
         # increment accuracy bucket for generic strategy
         acurracy_bucket_counter_generic = self.increment_accuracy_bucket(acurracy_bucket_counter_generic, error_generic)
 
+        # increment accuracy bucket for gpr strategy
+        acurracy_bucket_counter_gpr = self.increment_accuracy_bucket(acurracy_bucket_counter_gpr, error_gpr)
+
+        # increment accuracy bucket for hybrid strategy
+        acurracy_bucket_counter_hybrid = self.increment_accuracy_bucket(acurracy_bucket_counter_hybrid, error_hybrid)
+
+        result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
+
         result_container["add_points_generic"] = add_points_generic
         result_container["percentage_cost_generic"] = percentage_cost_generic
-        result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
         result_container["acurracy_bucket_counter_generic"] = acurracy_bucket_counter_generic
 
-        shared_dict[counter] = result_container
+        result_container["add_points_gpr"] = add_points_gpr
+        result_container["percentage_cost_gpr"] = percentage_cost_gpr
+        result_container["acurracy_bucket_counter_gpr"] = acurracy_bucket_counter_gpr
 
+        result_container["add_points_hybrid"] = add_points_hybrid
+        result_container["percentage_cost_hybrid"] = percentage_cost_hybrid
+        result_container["acurracy_bucket_counter_hybrid"] = acurracy_bucket_counter_hybrid
+
+        result_container["base_point_cost"] = base_point_cost
+
+        shared_dict[counter] = result_container
 
     def run(self):
 
         function_dict = self.generate_synthetic_functions()
-       
-        #data = {}
 
-        if self.nr_parameters == 2:
-
+        # set the minimum number of points required for modeling with the sparse modeler
+        min_points = 0
+        if self.nr_parameters == 1:
+            min_points = 5
+        elif self.nr_parameters == 2:
             min_points = 9
-
-            # parallelize reading all measurement_files in one folder
-            manager = Manager()
-            shared_dict = manager.dict()
-            cpu_count = mp.cpu_count()
-
-            inputs = []
-            for i in range(self.nr_functions):
-                inputs.append([i, shared_dict, function_dict[i].function])
-
-            with Pool(cpu_count) as pool:
-                _ = list(tqdm(pool.imap(self.simulate, inputs), total=self.nr_functions))
-
-            result_dict = copy.deepcopy(shared_dict)
-
-            # full
-            acurracy_bucket_counter_full = {}
-            acurracy_bucket_counter_full["rest"] = 0
-            acurracy_bucket_counter_full["5"] = 0
-            acurracy_bucket_counter_full["10"] = 0
-            acurracy_bucket_counter_full["15"] = 0
-            acurracy_bucket_counter_full["20"] = 0
-
-            # generic
-            acurracy_bucket_counter_generic = {}
-            acurracy_bucket_counter_generic["rest"] = 0
-            acurracy_bucket_counter_generic["5"] = 0
-            acurracy_bucket_counter_generic["10"] = 0
-            acurracy_bucket_counter_generic["15"] = 0
-            acurracy_bucket_counter_generic["20"] = 0
-
-            percentage_cost_generic_container = []
-            add_points_generic_container = []
-
-            # gpr
-            acurracy_bucket_counter_gpr = {}
-            acurracy_bucket_counter_gpr["rest"] = 0
-            acurracy_bucket_counter_gpr["5"] = 0
-            acurracy_bucket_counter_gpr["10"] = 0
-            acurracy_bucket_counter_gpr["15"] = 0
-            acurracy_bucket_counter_gpr["20"] = 0
-
-            percentage_cost_gpr_container = []
-            add_points_gpr_container = []
-
-            # hybrid
-            acurracy_bucket_counter_hybrid = {}
-            acurracy_bucket_counter_hybrid["rest"] = 0
-            acurracy_bucket_counter_hybrid["5"] = 0
-            acurracy_bucket_counter_hybrid["10"] = 0
-            acurracy_bucket_counter_hybrid["15"] = 0
-            acurracy_bucket_counter_hybrid["20"] = 0
-
-            percentage_cost_hybrid_container = []
-            add_points_hybrid_container = []
-
-
-
-
-            for i in range(len(result_dict)):
-                add_points_generic_container.append(result_dict[i]["add_points_generic"])
-                percentage_cost_generic_container.append(result_dict[i]["percentage_cost_generic"])
-                b_full = result_dict[i]["acurracy_bucket_counter_full"]
-                b_generic = result_dict[i]["acurracy_bucket_counter_generic"]
-
-                if b_full["rest"] == 1:
-                    acurracy_bucket_counter_full["rest"] += 1
-                if b_full["5"] == 1:
-                    acurracy_bucket_counter_full["5"] += 1
-                if b_full["10"] == 1:
-                    acurracy_bucket_counter_full["10"] += 1
-                if b_full["15"] == 1:
-                    acurracy_bucket_counter_full["15"] += 1
-                if b_full["20"] == 1:
-                    acurracy_bucket_counter_full["20"] += 1
-
-                if b_generic["rest"] == 1:
-                    acurracy_bucket_counter_generic["rest"] += 1
-                if b_generic["5"] == 1:
-                    acurracy_bucket_counter_generic["5"] += 1
-                if b_generic["10"] == 1:
-                    acurracy_bucket_counter_generic["10"] += 1
-                if b_generic["15"] == 1:
-                    acurracy_bucket_counter_generic["15"] += 1
-                if b_generic["20"] == 1:
-                    acurracy_bucket_counter_generic["20"] += 1
-
-            print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
-            print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
-
-            # calculate the percentages for each accuracy bucket
-            percentage_bucket_counter_full = self.calculate_percentage_of_buckets(acurracy_bucket_counter_full)
-            print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
-            percentage_bucket_counter_generic = self.calculate_percentage_of_buckets(acurracy_bucket_counter_generic)
-            print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
-
-            import matplotlib.pyplot as plt
-            import numpy as np
-
-            X = ['+-5%','+-10%','+-15%','+-20%']
-            full = [percentage_bucket_counter_full["5"], 
-                    percentage_bucket_counter_full["10"], 
-                    percentage_bucket_counter_full["15"], 
-                    percentage_bucket_counter_full["20"]]
-            generic = [percentage_bucket_counter_generic["5"],
-                       percentage_bucket_counter_generic["10"],
-                       percentage_bucket_counter_generic["15"],
-                       percentage_bucket_counter_generic["20"]]
-
-            X_axis = np.arange(len(X))
-
-            b1 = plt.bar(X_axis - 0.2, full, 0.4, label = 'Full matrix points')
-            b2 = plt.bar(X_axis + 0.2, generic, 0.4, label = 'Generic Strategy')
-
-            plt.bar_label(b1, label_type='edge')
-            plt.bar_label(b2, label_type='edge')
-            
-            plt.xticks(X_axis, X)
-            plt.xlabel("Accuracy Buckets")
-            plt.ylabel("Percentage of models")
-            plt.title("Percentage of Models in each Accuracy Bucket")
-            plt.legend()
-            plt.savefig('accuracy.png')
-            plt.show()
-            
-            mean_budget_generic = np.mean(percentage_cost_generic_container)
-            print("mean_budget_generic:",mean_budget_generic)
-
-            mean_add_points_generic = np.mean(add_points_generic_container)
-            print("mean_add_points_generic:",mean_add_points_generic)
-
-            #TODO: calculate this mean_budget_gpr
-            mean_budget_gpr = 10
-
-            #TODO: calculate this mean_budget_hybrid
-            mean_budget_hybrid = 15
-
-            langs = ["generic", "gpr", "hybrid"]
-            cost = [mean_budget_generic, mean_budget_gpr, mean_budget_hybrid]
-            
-            b1 = plt.bar(langs, cost, 0.4)
-            
-            plt.bar_label(b1, label_type='edge')
-            
-            plt.xticks(np.arange(len(langs)), langs)
-            plt.xlabel("Measurement Point selection strategy")
-            plt.ylabel("Percentage of budget")
-            plt.title("Modeling Budget used by each strategy to achieve outlined accuracy")
-            plt.savefig('cost.png')
-            plt.show()
-
-            #TODO: calculate this mean_budget_gpr
-            mean_add_points_gpr = 10
-
-            #TODO: calculate this mean_budget_hybrid
-            mean_add_points_hybrid = 15
-
-            add_points = [mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]
-            
-            b1 = plt.bar(langs, add_points, 0.4)
-            
-            plt.bar_label(b1, label_type='edge')
-            
-            plt.xticks(np.arange(len(langs)), langs)
-            plt.xlabel("Measurement Point selection strategy")
-            plt.ylabel("Additional measurement points")
-            plt.title("Additional measurement points used by each strategy to achieve outlined accuracy")
-            plt.savefig('additional_points.png')
-            plt.show()
-           
-
-
         elif self.nr_parameters == 3:
-            pass
+            min_points = 13
         elif self.nr_parameters == 4:
-            pass
+            min_points = 17
         else:
-            min_points = 9
+            min_points = 5
+        
+        # full
+        acurracy_bucket_counter_full = {}
+        acurracy_bucket_counter_full["rest"] = 0
+        acurracy_bucket_counter_full["5"] = 0
+        acurracy_bucket_counter_full["10"] = 0
+        acurracy_bucket_counter_full["15"] = 0
+        acurracy_bucket_counter_full["20"] = 0
 
+        # generic
+        acurracy_bucket_counter_generic = {}
+        acurracy_bucket_counter_generic["rest"] = 0
+        acurracy_bucket_counter_generic["5"] = 0
+        acurracy_bucket_counter_generic["10"] = 0
+        acurracy_bucket_counter_generic["15"] = 0
+        acurracy_bucket_counter_generic["20"] = 0
+
+        percentage_cost_generic_container = []
+        add_points_generic_container = []
+
+        # gpr
+        acurracy_bucket_counter_gpr = {}
+        acurracy_bucket_counter_gpr["rest"] = 0
+        acurracy_bucket_counter_gpr["5"] = 0
+        acurracy_bucket_counter_gpr["10"] = 0
+        acurracy_bucket_counter_gpr["15"] = 0
+        acurracy_bucket_counter_gpr["20"] = 0
+
+        percentage_cost_gpr_container = []
+        add_points_gpr_container = []
+
+        # hybrid
+        acurracy_bucket_counter_hybrid = {}
+        acurracy_bucket_counter_hybrid["rest"] = 0
+        acurracy_bucket_counter_hybrid["5"] = 0
+        acurracy_bucket_counter_hybrid["10"] = 0
+        acurracy_bucket_counter_hybrid["15"] = 0
+        acurracy_bucket_counter_hybrid["20"] = 0
+
+        percentage_cost_hybrid_container = []
+        add_points_hybrid_container = []
+
+        base_point_costs = []
+       
+        # parallelize reading all measurement_files in one folder
+        manager = Manager()
+        shared_dict = manager.dict()
+        cpu_count = mp.cpu_count()
+
+        inputs = []
+        for i in range(self.nr_functions):
+            inputs.append([i, shared_dict, function_dict[i].function])
+
+        with Pool(cpu_count) as pool:
+            _ = list(tqdm(pool.imap(self.simulate, inputs), total=self.nr_functions))
+
+        result_dict = copy.deepcopy(shared_dict)
+
+        # analyze results
+        for i in range(len(result_dict)):
+            
+            add_points_generic_container.append(result_dict[i]["add_points_generic"])
+            percentage_cost_generic_container.append(result_dict[i]["percentage_cost_generic"])
+            add_points_gpr_container.append(result_dict[i]["add_points_gpr"])
+            percentage_cost_gpr_container.append(result_dict[i]["percentage_cost_gpr"])
+            add_points_hybrid_container.append(result_dict[i]["add_points_hybrid"])
+            percentage_cost_hybrid_container.append(result_dict[i]["percentage_cost_hybrid"])
+            base_point_costs.append(result_dict[i]["base_point_cost"])
+            
+            b_full = result_dict[i]["acurracy_bucket_counter_full"]
+            b_generic = result_dict[i]["acurracy_bucket_counter_generic"]
+            b_gpr = result_dict[i]["acurracy_bucket_counter_gpr"]
+            b_hybrid = result_dict[i]["acurracy_bucket_counter_hybrid"]
+
+            if b_full["rest"] == 1:
+                acurracy_bucket_counter_full["rest"] += 1
+            if b_full["5"] == 1:
+                acurracy_bucket_counter_full["5"] += 1
+            if b_full["10"] == 1:
+                acurracy_bucket_counter_full["10"] += 1
+            if b_full["15"] == 1:
+                acurracy_bucket_counter_full["15"] += 1
+            if b_full["20"] == 1:
+                acurracy_bucket_counter_full["20"] += 1
+
+            if b_generic["rest"] == 1:
+                acurracy_bucket_counter_generic["rest"] += 1
+            if b_generic["5"] == 1:
+                acurracy_bucket_counter_generic["5"] += 1
+            if b_generic["10"] == 1:
+                acurracy_bucket_counter_generic["10"] += 1
+            if b_generic["15"] == 1:
+                acurracy_bucket_counter_generic["15"] += 1
+            if b_generic["20"] == 1:
+                acurracy_bucket_counter_generic["20"] += 1
+
+            if b_gpr["rest"] == 1:
+                acurracy_bucket_counter_gpr["rest"] += 1
+            if b_gpr["5"] == 1:
+                acurracy_bucket_counter_gpr["5"] += 1
+            if b_gpr["10"] == 1:
+                acurracy_bucket_counter_gpr["10"] += 1
+            if b_gpr["15"] == 1:
+                acurracy_bucket_counter_gpr["15"] += 1
+            if b_gpr["20"] == 1:
+                acurracy_bucket_counter_gpr["20"] += 1
+
+            if b_hybrid["rest"] == 1:
+                acurracy_bucket_counter_hybrid["rest"] += 1
+            if b_hybrid["5"] == 1:
+                acurracy_bucket_counter_hybrid["5"] += 1
+            if b_hybrid["10"] == 1:
+                acurracy_bucket_counter_hybrid["10"] += 1
+            if b_hybrid["15"] == 1:
+                acurracy_bucket_counter_hybrid["15"] += 1
+            if b_hybrid["20"] == 1:
+                acurracy_bucket_counter_hybrid["20"] += 1
+
+        #print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
+        #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
+        #print("acurracy_bucket_counter_gpr:",acurracy_bucket_counter_gpr)
+        #print("acurracy_bucket_counter_hybrid:",acurracy_bucket_counter_hybrid)
+
+        json_out = {}
+
+        # calculate the percentages for each accuracy bucket
+        percentage_bucket_counter_full = self.calculate_percentage_of_buckets(acurracy_bucket_counter_full)
+        print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
+        json_out["percentage_bucket_counter_full"] = percentage_bucket_counter_full
+
+        percentage_bucket_counter_generic = self.calculate_percentage_of_buckets(acurracy_bucket_counter_generic)
+        print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
+        json_out["percentage_bucket_counter_generic"] = percentage_bucket_counter_generic
+        
+        percentage_bucket_counter_gpr = self.calculate_percentage_of_buckets(acurracy_bucket_counter_gpr)
+        print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
+        json_out["percentage_bucket_counter_gpr"] = percentage_bucket_counter_gpr
+        
+        percentage_bucket_counter_hybrid = self.calculate_percentage_of_buckets(acurracy_bucket_counter_hybrid)
+        print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
+        json_out["percentage_bucket_counter_hybrid"] = percentage_bucket_counter_hybrid
+
+        mean_budget_generic = np.nanmean(percentage_cost_generic_container)
+        print("mean_budget_generic:",mean_budget_generic)
+        json_out["mean_budget_generic"] = mean_budget_generic
+
+        mean_add_points_generic = np.nanmean(add_points_generic_container)
+        print("mean_add_points_generic:",mean_add_points_generic)
+        json_out["mean_add_points_generic"] = mean_add_points_generic
+
+        mean_budget_gpr = np.nanmean(percentage_cost_gpr_container)
+        print("mean_budget_gpr:",mean_budget_gpr)
+        json_out["mean_budget_gpr"] = mean_budget_gpr
+
+        mean_add_points_gpr = np.nanmean(add_points_gpr_container)
+        print("mean_add_points_gpr:",mean_add_points_gpr)
+        json_out["mean_add_points_gpr"] = mean_add_points_gpr
+
+        mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container)
+        print("mean_budget_hybrid:",mean_budget_hybrid)
+        json_out["mean_budget_hybrid"] = mean_budget_hybrid
+
+        mean_add_points_hybrid = np.nanmean(add_points_hybrid_container)
+        print("mean_add_points_hybrid:",mean_add_points_hybrid)
+        json_out["mean_add_points_hybrid"] = mean_add_points_hybrid
+
+        mean_base_point_cost = np.nanmean(base_point_costs)
+        print("mean_base_point_cost:",mean_base_point_cost)
+
+        ####################
+        # Plot the results #
+        ####################
+
+        # plot the results of the model accuracy analysis
+        if self.plot == True:
+            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid)
+        
+        used_costs = {
+            "base points": np.array([mean_base_point_cost, mean_base_point_cost, mean_base_point_cost, mean_base_point_cost]),
+            "additional points": np.array([100-mean_base_point_cost, mean_budget_generic-mean_base_point_cost, mean_budget_gpr-mean_base_point_cost, mean_budget_hybrid-mean_base_point_cost]),
+        }
+        json_out["base_point_cost"] = mean_base_point_cost
+        json_out["min_points"] = min_points
+        json_out["budget"] = self.budget
+
+        # plot the analysis result for the costs and budgets
+        if self.plot == True:
+            plot_costs(used_costs, mean_base_point_cost)
+
+        add_points = {
+            "base points": np.array([min_points, min_points, min_points, min_points]),
+            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
+        }
+
+        # plot the analysis result for the additional measurement point numbers
+        if self.plot == True:
+            plot_measurement_point_number(add_points, min_points)
+
+        ##############################
+        # Write results to json file #
+        ##############################
+
+        # write results to file
+        #TODO: need to same stuff differently based on the mode...
+        import json
+        json_object = json.dumps(json_out, indent=4)
+
+        with open("result.budget."+str(self.budget)+".json", "w") as outfile:
+            outfile.write(json_object)
+        
 
        
-        #TODO: check which functions I generate, compared to old evaluatino approach
+        #TODO: check which functions I generate, compared to old evaluation approach
         # check exponents coefficients, function types, how I checked the term contribution...
         # check modeler configuration, number of terms, exponents available, ...
         
-
-        ######################################################################################
-
-        #TODO: create models using the gpr strategy
-
-        #TODO: calculate the cost of the points used by the gpr strategy and the number of additional points
-
-        #TODO: create models using the hybrid strategy
-
-        #TODO: calculate the cost of the points used by the hybrid strategy and the number of additional points
-
-        #TODO: add same functionality for 3,4 parameters...
-
-       
-        
-        
-        
-    

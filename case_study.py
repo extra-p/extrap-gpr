@@ -860,7 +860,6 @@ def main():
                 # calculate the cost for the selected base points
                 base_point_cost = calculate_selected_point_cost(selected_points, experiment, callpath_id, metric_id)
                 base_point_cost = base_point_cost / (total_cost / 100)
-
                 #print("base_point_cost %:",base_point_cost)
 
                 # add some additional single points
@@ -1542,7 +1541,6 @@ def main():
         import json
         json_object = json.dumps(json_out, indent=4)
  
-        # Writing to sample.json
         with open("result.budget."+str(budget)+".json", "w") as outfile:
             outfile.write(json_object)
 
