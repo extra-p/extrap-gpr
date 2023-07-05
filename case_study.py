@@ -601,7 +601,9 @@ def main():
                 # create copy of the cost dict
                 remaining_points = copy.deepcopy(cost)
             
-                # select points with generic strategy
+                ######################
+                ## Generic strategy ##
+                ######################
 
                 if len(experiment.parameters) == 2:
                 
@@ -862,10 +864,6 @@ def main():
                 base_point_cost = base_point_cost / (total_cost / 100)
                 #print("base_point_cost %:",base_point_cost)
 
-                # add some additional single points
-
-                # select x cheapest measurement(s) that are not part of the list so far
-                # continue doing this until there is no improvement in smape value on measured points for a delta of X iterations
                 added_points_generic = 0
 
                 #print("len selected_coord_list:",len(selected_coord_list))
