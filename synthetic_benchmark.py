@@ -142,9 +142,9 @@ class SyntheticBenchmark():
             if value is not None:
                 setattr(modeler, name, value)
 
-        with ProgressBar(desc='Generating models') as pbar:
-            # create models from data
-            model_generator.model_all(pbar)
+        #with ProgressBar(desc='Generating models') as pbar:
+        # create models from data
+        model_generator.model_all()
 
         modeler = experiment.modelers[0]
         models = modeler.models
@@ -623,10 +623,12 @@ class SyntheticBenchmark():
                         x1_lines[(x2,x3,x4)] = x1
             # calculate the cost of each of the lines
             line_costs = {}
+            #print("x1_lines:",x1_lines)
+
             for key, value in x1_lines.items():
                 line_cost = 0
                 for i in range(len(value)):
-                    point_cost = sum(cost[Coordinate(value[i], key[1], key[2], key[3])])
+                    point_cost = sum(cost[Coordinate(value[i], key[0], key[1], key[2])])
                     line_cost += point_cost
                 line_costs[key] = line_cost
             x2_value, x3_value, x4_value = min(line_costs, key=line_costs.get)
@@ -643,7 +645,7 @@ class SyntheticBenchmark():
             # add these points to the list of selected points
             selected_points = []
             for i in range(len(x1_values)):
-                cord = Coordinate(x1_values[j], x2_value, x3_value, x4_value)
+                cord = Coordinate(x1_values[i], x2_value, x3_value, x4_value)
                 selected_points.append(cord)
 
             #print("selected_points:",selected_points)
@@ -668,7 +670,7 @@ class SyntheticBenchmark():
             for key, value in x2_lines.items():
                 line_cost = 0
                 for i in range(len(value)):
-                    point_cost = sum(cost[Coordinate(key[0], value[i], key[2], key[3])])
+                    point_cost = sum(cost[Coordinate(key[0], value[i], key[1], key[2])])
                     line_cost += point_cost
                 line_costs[key] = line_cost
             x1_value, x3_value, x4_value = min(line_costs, key=line_costs.get)
@@ -684,7 +686,7 @@ class SyntheticBenchmark():
 
             # add these points to the list of selected points
             for i in range(len(x2_values)):
-                cord = Coordinate(x1_value, x2_values[j], x3_value, x4_value)
+                cord = Coordinate(x1_value, x2_values[i], x3_value, x4_value)
                 exists = False
                 for j in range(len(selected_points)):
                     if selected_points[j] == cord:
@@ -715,7 +717,7 @@ class SyntheticBenchmark():
             for key, value in x3_lines.items():
                 line_cost = 0
                 for i in range(len(value)):
-                    point_cost = sum(cost[Coordinate(key[0], key[1], value[i], key[3])])
+                    point_cost = sum(cost[Coordinate(key[0], key[1], value[i], key[2])])
                     line_cost += point_cost
                 line_costs[key] = line_cost
             x1_value, x2_value, x4_value = min(line_costs, key=line_costs.get)
@@ -731,7 +733,7 @@ class SyntheticBenchmark():
 
             # add these points to the list of selected points
             for i in range(len(x3_values)):
-                cord = Coordinate(x1_value, x2_value, x3_values[j], x4_value)
+                cord = Coordinate(x1_value, x2_value, x3_values[i], x4_value)
                 exists = False
                 for j in range(len(selected_points)):
                     if selected_points[j] == cord:
@@ -753,7 +755,7 @@ class SyntheticBenchmark():
                 for j in range(len(experiment.coordinates)):
                     cord_values2 = experiment.coordinates[j].as_tuple()
                     if cord_values2[0] == x1 and cord_values2[1] == x2 and cord_values2[2] == x3:
-                        x3.append(cord_values2[2])
+                        x4.append(cord_values2[3])
                 if len(x4) >= 5:
                     if (x1,x2,x3) not in x4_lines:
                         x4_lines[(x1,x2,x3)] = x4
@@ -778,7 +780,7 @@ class SyntheticBenchmark():
 
             # add these points to the list of selected points
             for i in range(len(x4_values)):
-                cord = Coordinate(x1_value, x2_value, x3_value, x4_values[j])
+                cord = Coordinate(x1_value, x2_value, x3_value, x4_values[i])
                 exists = False
                 for j in range(len(selected_points)):
                     if selected_points[j] == cord:
@@ -1455,6 +1457,8 @@ class SyntheticBenchmark():
         manager = Manager()
         shared_dict = manager.dict()
         cpu_count = mp.cpu_count()
+        #if self.nr_functions <=100:
+        #    cpu_count = 1
 
         inputs = []
         for i in range(self.nr_functions):
