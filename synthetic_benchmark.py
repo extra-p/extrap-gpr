@@ -173,6 +173,7 @@ class SyntheticBenchmark():
         manager = Manager()
         shared_dict = manager.dict()
         cpu_count = mp.cpu_count()
+        cpu_count -= 4
 
         inputs = []
         for i in range(self.nr_functions):
@@ -1462,6 +1463,7 @@ class SyntheticBenchmark():
         manager = Manager()
         shared_dict = manager.dict()
         cpu_count = mp.cpu_count()
+        cpu_count -= 4
         #if self.nr_functions <=100:
         #    cpu_count = 1
 
@@ -1594,7 +1596,7 @@ class SyntheticBenchmark():
 
         # plot the results of the model accuracy analysis
         if self.plot == True:
-            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid)
+            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, self.budget, self.noise_percent)
         
         used_costs = {
             "base points": np.array([mean_base_point_cost, mean_base_point_cost, mean_base_point_cost, mean_base_point_cost]),
@@ -1606,7 +1608,7 @@ class SyntheticBenchmark():
 
         # plot the analysis result for the costs and budgets
         if self.plot == True:
-            plot_costs(used_costs, mean_base_point_cost)
+            plot_costs(used_costs, mean_base_point_cost, self.budget, self.noise_percent)
 
         add_points = {
             "base points": np.array([min_points, min_points, min_points, min_points]),
@@ -1615,7 +1617,7 @@ class SyntheticBenchmark():
 
         # plot the analysis result for the additional measurement point numbers
         if self.plot == True:
-            plot_measurement_point_number(add_points, min_points)
+            plot_measurement_point_number(add_points, min_points, self.budget, self.noise_percent)
 
         ##############################
         # Write results to json file #

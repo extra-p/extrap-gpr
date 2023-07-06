@@ -2,7 +2,7 @@ import math
 
 def main():
 
-    counter = 20
+    counter = 70
 
     while counter <= 100:
 
@@ -11,7 +11,7 @@ def main():
         text = """#!/bin/bash
 
 #SBATCH -A project02089
-#SBATCH -t 00:29:00
+#SBATCH -t 01:00:00
 #SBATCH --mem-per-cpu=1800
 #SBATCH -n 1
 #SBATCH --exclusive

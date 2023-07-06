@@ -18,7 +18,6 @@ Quicksilver: `python .\case_study.py --cube E:\quicksilver\ --processes 0 --para
 
 ## Run the evaluation tool for the synthetic evaluation:
 
-Using free mode: `python synthetic_evaluation.py --nr-parameters 2 --nr-functions 10 --nr-repetitions 5 --noise 1 --mode free --plot True --normalization True`
 Using budget mode: `python synthetic_evaluation.py --nr-parameters 2 --nr-functions 10 --nr-repetitions 5 --noise 1 --mode budget --budget 30 --plot True --normalization True`
 
 ## Bulding Extra-P from source
