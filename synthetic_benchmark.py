@@ -34,6 +34,7 @@ from sklearn.gaussian_process.kernels import WhiteKernel
 import warnings
 from sklearn.exceptions import ConvergenceWarning
 import sys
+import json
 
 
 class SyntheticBenchmark():
@@ -162,7 +163,11 @@ class SyntheticBenchmark():
         return extrap_function_string, models
 
     def generate_synthetic_functions(self):
-        generator = FunctionGenerator(self.parameter_values_a, self.parameter_values_b, self.parameter_values_c, self.parameter_values_d, nr_parameters=self.nr_parameters)
+        generator = FunctionGenerator(self.parameter_values_a, 
+                                      self.parameter_values_b, 
+                                      self.parameter_values_c, 
+                                      self.parameter_values_d, 
+                                      nr_parameters=self.nr_parameters)
         
         # parallelize reading all measurement_files in one folder
         manager = Manager()
@@ -272,10 +277,10 @@ class SyntheticBenchmark():
                         cost[coordinate] = []
                     for _ in range(5):
                         if random.randint(1, 2) == 1:
-                            noise = random.uniform(0, self.noise_percent)
+                            noise = random.uniform(0, self.noise_percent/2)
                             result *= ((100-noise)/100)
                         else:
-                            noise = random.uniform(0, self.noise_percent)
+                            noise = random.uniform(0, self.noise_percent/2)
                             result *= ((100+noise)/100)
                         runtime = result
                         nr_processes = self.parameter_values_a[j]
@@ -301,10 +306,10 @@ class SyntheticBenchmark():
                             cost[coordinate] = []
                         for _ in range(5):
                             if random.randint(1, 2) == 1:
-                                noise = random.uniform(0, self.noise_percent)
+                                noise = random.uniform(0, self.noise_percent/2)
                                 result *= ((100-noise)/100)
                             else:
-                                noise = random.uniform(0, self.noise_percent)
+                                noise = random.uniform(0, self.noise_percent/2)
                                 result *= ((100+noise)/100)
                             runtime = result
                             nr_processes = self.parameter_values_a[j]
@@ -332,10 +337,10 @@ class SyntheticBenchmark():
                                 cost[coordinate] = []
                             for _ in range(5):
                                 if random.randint(1, 2) == 1:
-                                    noise = random.uniform(0, self.noise_percent)
+                                    noise = random.uniform(0, self.noise_percent/2)
                                     result *= ((100-noise)/100)
                                 else:
-                                    noise = random.uniform(0, self.noise_percent)
+                                    noise = random.uniform(0, self.noise_percent/2)
                                     result *= ((100+noise)/100)
                                 runtime = result
                                 nr_processes = self.parameter_values_a[j]
@@ -1617,16 +1622,8 @@ class SyntheticBenchmark():
         ##############################
 
         # write results to file
-        #TODO: need to same stuff differently based on the mode...
-        import json
         json_object = json.dumps(json_out, indent=4)
 
         with open("result.budget."+str(self.budget)+".json", "w") as outfile:
             outfile.write(json_object)
-        
-
-       
-        #TODO: check which functions I generate, compared to old evaluation approach
-        # check exponents coefficients, function types, how I checked the term contribution...
-        # check modeler configuration, number of terms, exponents available, ...
         

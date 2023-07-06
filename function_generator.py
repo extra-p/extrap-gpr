@@ -15,7 +15,7 @@ class FunctionGenerator():
         self.reproducable = reproducable
         self.nr_parameters = nr_parameters
         self.log_exponents = [0,1,2]
-        self.poly_exponents = [0,1,2,3]
+        self.poly_exponents = [0,1/4,1/3,1/2,1,2/3,3/4,4/5,5/4,4/3,3/2,5/3,7/4,9/4,7/3,5/2,8/3,11/4,2,3]
         self.parameter_placeholders = ["a","b","c","d"]
         self.coefficient_min = coefficient_min
         self.coefficient_max = coefficient_max
