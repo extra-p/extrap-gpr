@@ -6,7 +6,8 @@ def add_measurements_to_gpr(gaussian_process,
                             callpath, 
                             metric,
                             normalization_factors,
-                            parameters, eval_point):
+                            parameters,
+                            eval_point):
 
     X = []
     Y = []
@@ -15,8 +16,17 @@ def add_measurements_to_gpr(gaussian_process,
         
         x = []
 
-        #TODO: only works for 2 parameters
-        if coordinate != Coordinate(float(eval_point[0]), float(eval_point[1])):
+        eval_cord = None
+        if len(parameters) == 2:
+            eval_cord = Coordinate(float(eval_point[0]), float(eval_point[1]))
+        elif len(parameters) == 3:
+            eval_cord = Coordinate(float(eval_point[0]), float(eval_point[1]), float(eval_point[2]))
+        elif len(parameters) == 4:
+            eval_cord = Coordinate(float(eval_point[0]), float(eval_point[1]), float(eval_point[2]), float(eval_point[3]))
+        else:
+            return 1
+
+        if coordinate != eval_cord:
 
             parameter_values = coordinate.as_tuple()
 
@@ -84,9 +94,3 @@ def add_measurement_to_gpr(gaussian_process,
     gaussian_process.fit(X, Y)
 
     return gaussian_process
-
-
-
-    
-
-

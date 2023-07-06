@@ -29,6 +29,8 @@ def main():
                         help="Set if the plots should be shown after running the anlysis.")
     parser.add_argument("--mode", type=str, required=False, default="free", choices=["free", "budget"],
                         help="Set the analysis mode. If budget is used, strategies are only allowed to add more points until budget is reached. If free is set they choose until no improvement is made anymore.")
+    parser.add_argument("--normalization", type=bool, default=False,
+                        help="Set if normalization of the measurement points parameter values is used for the gpr approach.")
     parser.add_argument("--budget", type=int, required=False, default=30,
                         help="Set the allowed budget for the measurement points of the anlysis.")
     parser.add_argument("--nr-parameters", type=int, choices=[2, 3, 4], required=True,

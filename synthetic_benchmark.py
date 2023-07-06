@@ -26,6 +26,14 @@ from generic_strategy import add_additional_point_generic
 from case_study import calculate_selected_point_cost
 from case_study import create_experiment
 from case_study import get_extrap_model
+from temp import add_measurements_to_gpr
+from temp import add_measurement_to_gpr
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import Matern
+from sklearn.gaussian_process.kernels import WhiteKernel
+import warnings
+from sklearn.exceptions import ConvergenceWarning
+import sys
 
 
 class SyntheticBenchmark():
@@ -34,6 +42,7 @@ class SyntheticBenchmark():
         self.nr_parameters = args.nr_parameters
         self.nr_functions = args.nr_functions
         self.nr_repetitions = args.nr_repetitions
+        self.normalization = args.normalization
         self.plot = args.plot
         self.mode = args.mode
         self.budget = args.budget
@@ -73,58 +82,6 @@ class SyntheticBenchmark():
             #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
             experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
         return experiment_generic
-
-    """def add_additional_point_generic(self, remaining_points, selected_coord_list):
-        while True:
-            point_costs = {}
-            for key, value in remaining_points.items():
-                try:
-                    min_value = min(value)
-                except ValueError:
-                    min_value = math.inf
-                point_costs[key] = min_value
-            try:
-                temp = min(point_costs, key=point_costs.get)
-            except Exception as e:
-                print(e)
-                #print("point_costs:",point_costs)
-                #print("remaining_points:",remaining_points)
-                return remaining_points, selected_coord_list
-        
-            # check if point was already selected
-            # make sure this point was not selected yet
-            exists = False
-            for k in range(len(selected_coord_list)):
-                if temp == selected_coord_list[k]:
-                    exists = True
-                    break
-            # if point was selected already, delete it
-            if exists == True:
-                try:
-                    #remaining_points[temp].remove(point_costs[temp])
-                    del remaining_points[temp]
-                except ValueError as e:
-                    print(e)
-                    print("temp:",temp)
-                    print("selected_coord_list:",selected_coord_list)
-                    print("remaining_points:",remaining_points)
-                    return 0
-            # if point was not selected yet, break the loop and add this point
-            else:
-                break
-
-        # if point was not selected yet, use it
-        # add the point to the selected list
-        selected_coord_list.append(temp)
-
-        # remove this point from the remaining points list
-        try:
-            #remaining_points[temp].remove(point_costs[temp])
-            del remaining_points[temp]
-        except ValueError as e:
-            print(e)
-
-        return remaining_points, selected_coord_list"""
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
@@ -223,8 +180,11 @@ class SyntheticBenchmark():
         
         return function_dict
     
-    #TODO
     def simulate(self, inputs):
+
+        # disable deprecation warnings...
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
+        warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
         # get the values from the parallel input dict
         counter = inputs[0]
@@ -247,6 +207,9 @@ class SyntheticBenchmark():
         acurracy_bucket_counter_generic["15"] = 0
         acurracy_bucket_counter_generic["20"] = 0
 
+        percentage_cost_generic_container = []
+        add_points_generic_container = []
+
         acurracy_bucket_counter_gpr = {}
         acurracy_bucket_counter_gpr["rest"] = 0
         acurracy_bucket_counter_gpr["5"] = 0
@@ -254,12 +217,18 @@ class SyntheticBenchmark():
         acurracy_bucket_counter_gpr["15"] = 0
         acurracy_bucket_counter_gpr["20"] = 0
 
+        percentage_cost_gpr_container = []
+        add_points_gpr_container = []
+
         acurracy_bucket_counter_hybrid = {}
         acurracy_bucket_counter_hybrid["rest"] = 0
         acurracy_bucket_counter_hybrid["5"] = 0
         acurracy_bucket_counter_hybrid["10"] = 0
         acurracy_bucket_counter_hybrid["15"] = 0
         acurracy_bucket_counter_hybrid["20"] = 0
+
+        percentage_cost_hybrid_container = []
+        add_points_hybrid_container = []
 
         # logic for setting the number of min points required by the modeler
         if self.nr_parameters == 2:
@@ -830,7 +799,7 @@ class SyntheticBenchmark():
 
         added_points_generic = 0
 
-        #print("len selected_coord_list:",len(selected_coord_list))
+        #print("len selected_points:",len(selected_points))
 
         # add the first additional point, this is mandatory for the generic strategy
         remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
@@ -880,10 +849,6 @@ class SyntheticBenchmark():
 
                         # create new model
                         experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
-                        #_, models = get_extrap_model(experiment_generic_base, args)
-                        #hypothesis = None
-                        #for model in models.values():
-                        #    hypothesis = model.hypothesis
 
                         selected_coord_list_base = selected_coord_list_new
                         remaining_points_base = remaining_points_new
@@ -902,7 +867,7 @@ class SyntheticBenchmark():
             return 1
 
         # calculate selected point cost
-        selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
+        selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, 0, 0)
 
         # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
         percentage_cost_generic = selected_cost / (total_cost / 100)
@@ -911,121 +876,14 @@ class SyntheticBenchmark():
         # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
         #add_points_generic = len(selected_coord_list_base) - min_points
         add_points_generic_container.append(added_points_generic)
+        add_points_generic = added_points_generic
         
         # create model using point selection of generic strategy
-        model_generic, _ = get_extrap_model(experiment_generic_base, args)
-
-
-
-        #NOTE: (generic, RL-strategy...)
-        # select x cheapest measurement(s) that are not part of the list so far
-        # continue doing this until there is no improvement in smape value on measured points for a delta of X iterations
-        added_points = 0
-
-        #print("len selected_points:",len(selected_points))
-
-        # add the first additional point, this is mandatory for the generic strategy
-        remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_coord_list)
-        # increment counter value, because a new measurement point was added
-        added_points += 1
-
-        #print("len selected_coord_list_base:",len(selected_coord_list_base))
-
-        #print("added_points:",added_points)
-
-        # create first model
-        experiment_generic_base = self.create_experiment(selected_coord_list_base, experiment)
-        _, models = self.get_extrap_model(experiment_generic_base)
-        hypothesis = None
-        for model in models.values():
-            hypothesis = model.hypothesis
-        rss_base = hypothesis.SMAPE
-        #ar2_base = hypothesis.AR2
-        #print("rss_base:",rss_base)
-        #print("ar2_base:",ar2_base)
-
-        stall_counter = 1
-        #TODO: find the best delta for 2,3,4 parameters...
-        delta = 1
-        while True:
-
-            # add another point
-            remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
-            # increment counter value, because a new measurement point was added
-            added_points += 1
-
-            if len(remaining_points_new) == 0:
-                #print("remaining_points_new:",len(remaining_points_new))
-                break
-
-            # create new model
-            experiment_generic_new = self.create_experiment(selected_coord_list_new, experiment)
-            model_generic_new, models = self.get_extrap_model(experiment_generic_new)
-            hypothesis = None
-            for model in models.values():
-                hypothesis = model.hypothesis
-            rss_new = hypothesis.SMAPE
-            #ar2_new = hypothesis.AR2
-            #print("rss_new:",rss_new)
-            #print("ar2_new:",ar2_new)
-
-            # if better continue, else stop after x steps without improvement...
-            if rss_new <= rss_base:
-                #print("new rss is smaller")
-                stall_counter = 1
-                rss_base = rss_new
-                selected_coord_list_base = selected_coord_list_new
-                remaining_points_base = remaining_points_new
-            else:
-                #print("new rss is larger")
-                if stall_counter == delta:
-                    break
-                stall_counter += 1
-
-        #print("added_points:",added_points)
-        #print("len selected_coord_list_new:",len(selected_coord_list_base),len(selected_coord_list_new),added_points)
-
-        # calculate selected point cost
-        selected_cost = 0
-        for j in range(len(selected_coord_list)):
-            coordinate = selected_coord_list[j]
-            coordinate_id = -1
-            for k in range(len(experiment.coordinates)):
-                if coordinate == experiment.coordinates[k]:
-                    coordinate_id = k
-            measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
-            coordinate_cost = 0
-            for k in range(len(measurement_temp.values)):
-                runtime = measurement_temp.values[k]
-                nr_processes = coordinate.as_tuple()[0]
-                core_hours = runtime * nr_processes
-                coordinate_cost += core_hours
-            selected_cost += coordinate_cost
-        #print("selected_cost:",selected_cost)
-
-        # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
-        percentage_cost_generic = selected_cost / (total_cost / 100)
-        #print("percentage_cost_generic:",percentage_cost_generic)
-
-        # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
-        add_points_generic = len(selected_coord_list) - min_points
-        #print("add_points_generic:",add_points_generic)
+        model_generic, _ = get_extrap_model(experiment_generic_base, self.args)
 
         # create model using full matrix of points
         model_full, _ = self.get_extrap_model(experiment)
         #print("model_full:",model_full)
-
-        # create model using point selection of generic strategy
-        model_generic, _ = self.get_extrap_model(experiment_generic_new)
-        #print("model_generic:",model_generic)
-
-        # create model using point selection of generic strategy
-        model_gpr, _ = self.get_extrap_model(experiment_gpr_new)
-        #print("model_gpr:",model_gpr)
-
-        # create model using point selection of generic strategy
-        model_hybrid, _ = self.get_extrap_model(experiment_hybrid_new)
-        #print("model_hybrid:",model_hybrid)
 
         # set the measurement point values for the evaluation of the prediction
         if self.nr_parameters == 2:
@@ -1048,10 +906,6 @@ class SyntheticBenchmark():
         #print("prediction_full:",prediction_full)
         prediction_generic = eval(model_generic)
         #print("prediction_generic:",prediction_generic)
-        prediction_gpr = eval(model_gpr)
-        #print("prediction_gpr:",prediction_gpr)
-        prediction_hybrid = eval(model_hybrid)
-        #print("prediction_hybrid:",prediction_hybrid)
 
         #basline_function = function_dict[i].function
         actual = eval(basline_function)
@@ -1065,26 +919,456 @@ class SyntheticBenchmark():
         error_generic = abs(self.percentage_error(actual, prediction_generic))
         #print("error_generic:",error_generic)
 
-        # get the percentage error for the gpr strategy
-        error_gpr = abs(self.percentage_error(actual, prediction_gpr))
-        #print("error_gpr:",error_gpr)
-
-        # get the percentage error for the hybrid strategy
-        error_hybrid = abs(self.percentage_error(actual, prediction_hybrid))
-        #print("error_hybrid:",error_hybrid)
-
         # increment accuracy bucket for full matrix of points
         acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
 
         # increment accuracy bucket for generic strategy
         acurracy_bucket_counter_generic = self.increment_accuracy_bucket(acurracy_bucket_counter_generic, error_generic)
 
+        ##################
+        ## GPR strategy ##
+        ##################
+
+        # GPR parameter-value normalization for each measurement point
+        normalization_factors = {}
+
+        if self.normalization:
+            
+            for i in range(len(experiment.parameters)):
+
+                param_value_max = -1
+
+                for coord in experiment.coordinates:
+
+                    temp = coord.as_tuple()[i]
+
+                    if param_value_max < temp:
+                        param_value_max = temp
+                    
+                param_value_max = 100 / param_value_max
+                normalization_factors[experiment.parameters[i]] = param_value_max
+                
+            #print("normalization_factors:",normalization_factors)
+        
+        # do an noise analysis on the existing points
+        mm = experiment.measurements
+        #print("DEBUG:",mm)
+        nn = mm[(callpath, metric)]
+        #print("DEBUG:",nn)
+        temp = []
+        for cord in selected_points:
+            for meas in nn:
+                if meas.coordinate == cord:
+                    temp.append(meas)
+                    break
+        #print("temp:",temp)
+        nns = []
+        for meas in temp:
+            #print("DEBUG:",meas.values)
+            mean_mes = np.mean(meas.values)
+            pps = []
+            for val in meas.values:
+                pp = abs((val / (mean_mes / 100)) - 100)
+                pps.append(pp)
+                #print(pp,"%")
+            nn = np.mean(pps)
+            nns.append(nn)
+        mean_noise = np.mean(nns)
+        #print("mean_noise:",mean_noise,"%")
+
+        # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
+        # matern kernel + white kernel to simulate actual noise found in the measurements
+        kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=mean_noise)
+
+        # create a gaussian process regressor
+        gaussian_process = GaussianProcessRegressor(
+            kernel=kernel, n_restarts_optimizer=20
+        )
+
+        eval_point = []
+        if self.nr_parameters == 2:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            eval_point.append(a)
+            eval_point.append(b)
+        elif self.nr_parameters == 3:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            eval_point.append(a)
+            eval_point.append(b)
+            eval_point.append(c)
+        elif self.nr_parameters == 4:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            d = self.parameter_values_d_val[0]
+            eval_point.append(a)
+            eval_point.append(b)
+            eval_point.append(c)
+            eval_point.append(d)
+        else:
+            return 1
+
+        # add all of the selected measurement points to the gaussian process
+        # as training data and train it for these points
+        gaussian_process = add_measurements_to_gpr(gaussian_process, 
+                        selected_points, 
+                        experiment.measurements, 
+                        callpath,
+                        metric,
+                        normalization_factors,
+                        experiment.parameters, eval_point)
+        
+        # add additional measurement points until break criteria is met
+        add_points_gpr = 0
+        budget_core_hours = self.budget * (total_cost / 100)
+
+        remaining_points_gpr = copy.deepcopy(remaining_points)
+        selected_points_gpr = copy.deepcopy(selected_points)
+
+        # create base model for gpr
+        experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
+        
+        if self.mode == "budget":
+
+            while True:
+
+                # identify all possible next points that would 
+                # still fit into the modeling budget in core hours
+                fitting_measurements = []
+                for key, value in remaining_points_gpr.items():
+
+                    current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
+                    new_cost = current_cost + np.sum(value)
+                    
+                    if new_cost <= budget_core_hours:
+                        fitting_measurements.append(key)
+
+                #print("fitting_measurements:",fitting_measurements)
+
+                # find the next best additional measurement point using the gpr
+                best_index = -1
+                best_rated = sys.float_info.max
+
+                for i in range(len(fitting_measurements)):
+                
+                    parameter_values = fitting_measurements[i].as_tuple()
+                    x = []
+                    
+                    for j in range(len(parameter_values)):
+                    
+                        if len(normalization_factors) != 0:
+                            x.append(parameter_values[j] * normalization_factors[experiment.parameters[j]])
+                    
+                        else:
+                            x.append(parameter_values[j])
+                    
+                    # term_1 is cost(t)^2
+                    term_1 = math.pow(np.sum(remaining_points_gpr[fitting_measurements[i]]), 2)
+                    # predict variance of input vector x with the gaussian process
+                    x = [x]
+                    _, y_cov = gaussian_process.predict(x, return_cov=True)
+                    y_cov = abs(y_cov)
+                    # term_2 is gp_cov(t,t)^2
+                    term_2 = math.pow(y_cov, 2)
+                    # rated is h(t)
+                    rated = term_1 / term_2
+
+                    if rated <= best_rated:
+                        best_rated = rated
+                        best_index = i    
+
+                # if there has been a point found that is suitable
+                if best_index != -1:
+
+                    # add the identified measurement point to the selected point list
+                    parameter_values = fitting_measurements[best_index].as_tuple()
+                    cord = Coordinate(parameter_values)
+                    selected_points_gpr.append(cord)
+                    
+                    # add the new point to the gpr and call fit()
+                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                            cord, 
+                            experiment.measurements, 
+                            callpath, 
+                            metric,
+                            normalization_factors,
+                            experiment.parameters)
+                    
+                    # remove the identified measurement point from the remaining point list
+                    try:
+                        remaining_points_gpr.pop(cord)
+                    except KeyError:
+                        pass
+
+                    # update the number of additional points used
+                    add_points_gpr += 1
+
+                    # add this point to the gpr experiment
+                    experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
+
+                # if there are no suitable measurement points found
+                # break the while True loop
+                else:
+                    break
+
+        elif self.mode == "free":
+            pass
+
+        else:
+            return 1
+
+        current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
+        current_cost_percent = current_cost / (total_cost / 100)
+        
+        # cost used of the gpr strategy
+        percentage_cost_gpr = current_cost_percent
+
+        # additionally used data points (exceeding the base requirement of the sparse modeler)
+        add_points_gpr_container.append(add_points_gpr)
+
+        # create model using point selection of gpr strategy
+        model_gpr, _ = get_extrap_model(experiment_gpr_base, self.args)
+
+        # set the measurement point values for the evaluation of the prediction
+        if self.nr_parameters == 2:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+        elif self.nr_parameters == 3:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+        elif self.nr_parameters == 4:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            d = self.parameter_values_d_val[0]
+        else:
+            return 1
+
+        prediction_gpr = eval(model_gpr)
+        #print("prediction_gpr:",prediction_gpr)
+
+        # get the percentage error for the gpr strategy
+        error_gpr = abs(self.percentage_error(actual, prediction_gpr))
+        #print("error_gpr:",error_gpr)
+
         # increment accuracy bucket for gpr strategy
         acurracy_bucket_counter_gpr = self.increment_accuracy_bucket(acurracy_bucket_counter_gpr, error_gpr)
 
+        #####################
+        ## Hybrid strategy ##
+        #####################
+
+        # do an noise analysis on the existing points
+        mm = experiment.measurements
+        #print("DEBUG:",mm)
+        nn = mm[(callpath, metric)]
+        #print("DEBUG:",nn)
+        temp = []
+        for cord in selected_points:
+            for meas in nn:
+                if meas.coordinate == cord:
+                    temp.append(meas)
+                    break
+        #print("temp:",temp)
+        nns = []
+        for meas in temp:
+            #print("DEBUG:",meas.values)
+            mean_mes = np.mean(meas.values)
+            pps = []
+            for val in meas.values:
+                pp = abs((val / (mean_mes / 100)) - 100)
+                pps.append(pp)
+                #print(pp,"%")
+            nn = np.mean(pps)
+            nns.append(nn)
+        mean_noise = np.mean(nns)
+        #print("mean_noise:",mean_noise,"%")
+
+        # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
+        # matern kernel + white kernel to simulate actual noise found in the measurements
+        kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=mean_noise)
+
+        # create a gaussian process regressor
+        gaussian_process_hybrid = GaussianProcessRegressor(
+            kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
+        )
+
+        # add all of the selected measurement points to the gaussian process
+        # as training data and train it for these points
+        gaussian_process_hybrid = add_measurements_to_gpr(gaussian_process_hybrid, 
+                        selected_points, 
+                        experiment.measurements, 
+                        callpath, 
+                        metric,
+                        normalization_factors,
+                        experiment.parameters, eval_point)
+        
+        # add additional measurement points until break criteria is met
+        add_points_hybrid = 0
+        budget_core_hours = self.budget * (total_cost / 100)
+
+        remaining_points_hybrid = copy.deepcopy(remaining_points)
+        selected_points_hybrid = copy.deepcopy(selected_points)
+
+        # create base model for gpr hybrid
+        experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
+
+        if self.mode == "budget":
+
+            while True:
+                # identify all possible next points that would 
+                # still fit into the modeling budget in core hours
+                fitting_measurements = []
+                for key, value in remaining_points_hybrid.items():
+
+                    current_cost = calculate_selected_point_cost(selected_points_hybrid, experiment, 0, 0)
+                    new_cost = current_cost + np.sum(value)
+                    
+                    if new_cost <= budget_core_hours:
+                        fitting_measurements.append(key)
+
+                #print("fitting_measurements:",fitting_measurements)
+
+                # determine the switching point between gpr and hybrid strategy
+                swtiching_point = 0
+                if len(experiment.parameters) == 2:
+                    swtiching_point = 11
+                elif len(experiment.parameters) == 3:
+                    swtiching_point = 18
+                elif len(experiment.parameters) == 4:
+                    swtiching_point = 25
+                else:
+                    swtiching_point = 11
+
+                best_index = -1
+                
+                # find the next best additional measurement point using the gpr strategy
+                if add_points_hybrid + min_points > swtiching_point:
+                    best_rated = sys.float_info.max
+
+                    for i in range(len(fitting_measurements)):
+                
+                        parameter_values = fitting_measurements[i].as_tuple()
+                        x = []
+                        
+                        for j in range(len(parameter_values)):
+                        
+                            if len(normalization_factors) != 0:
+                                x.append(parameter_values[j] * normalization_factors[experiment.parameters[j]])
+                        
+                            else:
+                                x.append(parameter_values[j])
+                        
+                        # term_1 is cost(t)^2
+                        term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
+                        # predict variance of input vector x with the gaussian process
+                        x = [x]
+                        _, y_cov = gaussian_process_hybrid.predict(x, return_cov=True)
+                        y_cov = abs(y_cov)
+                        # term_2 is gp_cov(t,t)^2
+                        term_2 = math.pow(y_cov, 2)
+                        # rated is h(t)
+                        rated = term_1 / term_2
+
+                        if rated <= best_rated:
+                            best_rated = rated
+                            best_index = i 
+
+                # find the next best additional measurement point using the generic strategy
+                else:
+                    lowest_cost = sys.float_info.max
+                    for i in range(len(fitting_measurements)):
+                        
+                        # get the cost of the measurement point
+                        cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
+                    
+                        if cost < lowest_cost:
+                            lowest_cost = cost
+                            best_index = i
+
+                # if there has been a point found that is suitable
+                if best_index != -1:
+
+                    # add the identified measurement point to the experiment, selected point list
+                    parameter_values = fitting_measurements[best_index].as_tuple()
+                    cord = Coordinate(parameter_values)
+                    selected_points_hybrid.append(cord)
+                    
+                    # add the new point to the gpr and call fit()
+                    gaussian_process_hybrid = add_measurement_to_gpr(gaussian_process_hybrid, 
+                            cord, 
+                            experiment.measurements, 
+                            callpath, 
+                            metric,
+                            normalization_factors,
+                            experiment.parameters)
+                    
+                    # remove the identified measurement point from the remaining point list
+                    try:
+                        remaining_points_hybrid.pop(cord)
+                    except KeyError:
+                        pass
+
+                    # update the number of additional points used
+                    add_points_hybrid += 1
+
+                    # add this point to the hybrid experiment
+                    experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
+
+                # if there are no suitable measurement points found
+                # break the while True loop
+                else:
+                    break
+
+        elif self.mode == "free":
+            pass
+
+        else:
+            return 1
+
+        current_cost = calculate_selected_point_cost(selected_points_hybrid, experiment, 0, 0)
+        current_cost_percent = current_cost / (total_cost / 100)
+
+        # cost used of the hybrid strategy
+        percentage_cost_hybrid = current_cost_percent
+
+        # additionally used data points (exceeding the base requirement of the sparse modeler)
+        add_points_hybrid_container.append(add_points_hybrid)
+
+        # create model using point selection of hybrid strategy
+        model_hybrid, _ = get_extrap_model(experiment_hybrid_base, self.args)
+        
+        # set the measurement point values for the evaluation of the prediction
+        if self.nr_parameters == 2:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+        elif self.nr_parameters == 3:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+        elif self.nr_parameters == 4:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            d = self.parameter_values_d_val[0]
+        else:
+            return 1
+
+        prediction_hybrid = eval(model_hybrid)
+        #print("prediction_hybrid:",prediction_hybrid)
+
+        # get the percentage error for the hybrid strategy
+        error_hybrid = abs(self.percentage_error(actual, prediction_hybrid))
+        #print("error_hybrid:",error_hybrid)
+        
         # increment accuracy bucket for hybrid strategy
         acurracy_bucket_counter_hybrid = self.increment_accuracy_bucket(acurracy_bucket_counter_hybrid, error_hybrid)
 
+
+        # save the results of this worker to return them to the main process
         result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
 
         result_container["add_points_generic"] = add_points_generic
@@ -1100,6 +1384,8 @@ class SyntheticBenchmark():
         result_container["acurracy_bucket_counter_hybrid"] = acurracy_bucket_counter_hybrid
 
         result_container["base_point_cost"] = base_point_cost
+
+        result_container["len_coordinates"] = len(experiment.coordinates)
 
         shared_dict[counter] = result_container
 
@@ -1162,6 +1448,8 @@ class SyntheticBenchmark():
         add_points_hybrid_container = []
 
         base_point_costs = []
+        
+        len_coordinates = None
        
         # parallelize reading all measurement_files in one folder
         manager = Manager()
@@ -1187,6 +1475,9 @@ class SyntheticBenchmark():
             add_points_hybrid_container.append(result_dict[i]["add_points_hybrid"])
             percentage_cost_hybrid_container.append(result_dict[i]["percentage_cost_hybrid"])
             base_point_costs.append(result_dict[i]["base_point_cost"])
+
+            if i == 0:
+                len_coordinates = result_dict[i]["len_coordinates"]
             
             b_full = result_dict[i]["acurracy_bucket_counter_full"]
             b_generic = result_dict[i]["acurracy_bucket_counter_generic"]
@@ -1310,7 +1601,7 @@ class SyntheticBenchmark():
 
         add_points = {
             "base points": np.array([min_points, min_points, min_points, min_points]),
-            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
+            "additional points": np.array([len_coordinates-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
 
         # plot the analysis result for the additional measurement point numbers

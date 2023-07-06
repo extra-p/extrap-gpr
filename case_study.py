@@ -905,10 +905,6 @@ def main():
 
                             # create new model
                             experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
-                            #_, models = get_extrap_model(experiment_generic_base, args)
-                            #hypothesis = None
-                            #for model in models.values():
-                            #    hypothesis = model.hypothesis
 
                             selected_coord_list_base = selected_coord_list_new
                             remaining_points_base = remaining_points_new
@@ -934,7 +930,6 @@ def main():
                 # create model using point selection of generic strategy
                 model_generic, _ = get_extrap_model(experiment_generic_base, args)
                 
-                # create model using full matrix of points
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
                 if parameters[0] == "p" and parameters[1] == "size":
                     p = int(eval_point[0])
@@ -1019,7 +1014,7 @@ def main():
                         param_value_max = 100 / param_value_max
                         normalization_factors[experiment.parameters[i]] = param_value_max
                         
-                    print("normalization_factors:",normalization_factors)
+                    #print("normalization_factors:",normalization_factors)
                 
                 # do an noise analysis on the existing points
                 mm = experiment.measurements
@@ -1167,7 +1162,7 @@ def main():
                 add_points_gpr_container.append(add_points_gpr)
 
                 # create model using point selection of gpr strategy
-                model_generic, _ = get_extrap_model(experiment_gpr_base, args)
+                model_gpr, _ = get_extrap_model(experiment_gpr_base, args)
                 
                 # create model using full matrix of points
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
@@ -1191,7 +1186,7 @@ def main():
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
-                prediction_gpr = eval(model_generic)
+                prediction_gpr = eval(model_gpr)
                 #print("prediction_gpr:",prediction_gpr)
 
                 # get the actual measured value
@@ -1399,7 +1394,7 @@ def main():
                 add_points_hybrid_container.append(add_points_hybrid)
 
                 # create model using point selection of hybrid strategy
-                model_generic, _ = get_extrap_model(experiment_hybrid_base, args)
+                model_hybrid, _ = get_extrap_model(experiment_hybrid_base, args)
                 
                 # create model using full matrix of points
                 # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
@@ -1423,7 +1418,7 @@ def main():
 
                 prediction_full = eval(all_points_functions_strings[callpath_string])
                 #print("prediction_full:",prediction_full)
-                prediction_hybrid = eval(model_generic)
+                prediction_hybrid = eval(model_hybrid)
                 #print("prediction_hybrid:",prediction_hybrid)
 
                 # get the actual measured value
