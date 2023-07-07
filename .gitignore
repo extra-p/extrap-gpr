@@ -1,3 +1,15 @@
+
+fastest/er_*
+fastest/out_*
+fastest/analysis_job_b*
+fastest/submit_analysis_jobs.sh
+minife/lichtenberg/er_*
+minife/lichtenberg/out_*
+minife/lichtenberg/analysis_job_b*
+minife/lichtenberg/submit_analysis_job.sh
+lulesh/lichtenberg/submit_analysis_jobs.sh
+lulesh/lichtenberg/submit_jobs.sh
+
 .vscode
 *.extra-p
 *.xcodeproj/

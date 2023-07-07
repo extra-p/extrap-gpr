@@ -1480,7 +1480,7 @@ def main():
 
         # plot the results of the model accuracy analysis
         if plot == True:
-            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid)
+            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, budget)
         
         print("budget:",budget,"%")
         json_out["budget"] = budget
@@ -1517,7 +1517,7 @@ def main():
 
         # plot the analysis result for the costs and budgets
         if plot == True:
-            plot_costs(used_costs, base_point_cost)
+            plot_costs(used_costs, base_point_cost, budget)
 
         add_points = {
             "base points": np.array([min_points, min_points, min_points, min_points]),
@@ -1528,7 +1528,7 @@ def main():
 
         # plot the analysis result for the additional measurement point numbers
         if plot == True:
-            plot_measurement_point_number(add_points, min_points)
+            plot_measurement_point_number(add_points, min_points, budget)
 
         # write results to file
         import json

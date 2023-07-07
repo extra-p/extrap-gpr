@@ -24,27 +24,30 @@ def plot_lines(x_values, y_values_list, labels, bucket):
     plt.xlabel('Modeling Budget [%]')
     plt.ylabel('Models in '+str(bucket)+'% accuracy bucket [%]')
     plt.legend()
-    plt.savefig('accuracy.png')
+    plt.savefig('accuracy_'+str(bucket)+'.png')
     plt.show()
+    plt.close()
 
-def plot_lines2(x_values, y_values_list, labels):
+def plot_lines2(x_values, y_values_list, labels, bucket):
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label)
     plt.xlabel('Modeling Budget [%]')
     plt.ylabel('Used Budget [%]')
     plt.legend()
-    plt.savefig('cost.png')
+    plt.savefig('cost_'+str(bucket)+'.png')
     plt.show()
+    plt.close()
 
-def plot_lines3(x_values, y_values_list, labels):
+def plot_lines3(x_values, y_values_list, labels, bucket):
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label)
         #print("DEBUG:",label)
     plt.xlabel('Number of additional points used for modelnig')
     plt.ylabel('Used Budget [%]')
     plt.legend()
-    plt.savefig('additional_points.png')
+    plt.savefig('additional_points_'+str(bucket)+'.png')
     plt.show()
+    plt.close()
 
 def main():
 
@@ -120,8 +123,8 @@ def main():
     labels2 = ['generic', 'gpr', 'hybrid']
 
     plot_lines(budget_values, y_values_list, labels, bucket)
-    plot_lines2(budget_values, y_values_list2, labels2)
-    plot_lines3(budget_values, y_values_list3, labels2)
+    plot_lines2(budget_values, y_values_list2, labels2, bucket)
+    plot_lines3(budget_values, y_values_list3, labels2, bucket)
 
     #print("DEBUG:",labels2)
 

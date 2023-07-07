@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 import numpy as np
 
-def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, budget, noise):
+def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, budget):
     X = ['+-5%','+-10%','+-15%','+-20%']
     full = [percentage_bucket_counter_full["5"], 
             percentage_bucket_counter_full["10"], 
@@ -38,10 +38,11 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
     plt.title("Percentage of models in each accuracy bucket")
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.tight_layout()
-    plt.savefig('accuracy_b'+str(budget)+'_n'+str(noise)+'.png')
+    plt.savefig('accuracy_b'+str(budget)+'.png')
     #plt.show()
+    plt.close()
 
-def plot_costs(used_costs, base_budget, budget, noise):
+def plot_costs(used_costs, base_budget, budget):
     """mean_budget_generic = float("{:.2f}".format(mean_budget_generic))
     mean_budget_gpr = float("{:.2f}".format(mean_budget_gpr))
     mean_budget_hybrid = float("{:.2f}".format(mean_budget_hybrid))
@@ -82,10 +83,11 @@ def plot_costs(used_costs, base_budget, budget, noise):
     plt.ylabel("percentage of budget [%]")
     plt.title("Modeling budget used by each strategy to achieve outlined accuracy")
     plt.tight_layout()
-    plt.savefig('cost_b'+str(budget)+'_n'+str(noise)+'.png')
+    plt.savefig('cost_b'+str(budget)+'.png')
     #plt.show()
+    plt.close()
 
-def plot_measurement_point_number(add_points, min_points, budget, noise):
+def plot_measurement_point_number(add_points, min_points, budget):
     langs = ["full", "generic", "gpr", "hybrid\n(generic+gpr)"]
     fig, ax = plt.subplots()
     bottom = np.zeros(4)
@@ -112,5 +114,6 @@ def plot_measurement_point_number(add_points, min_points, budget, noise):
     plt.ylabel("additional measurement points")
     plt.title("Number of measurement points used by each\n strategy to achieve outlined accuracy")
     plt.tight_layout()
-    plt.savefig('additional_points_b'+str(budget)+'_n'+str(noise)+'.png')
+    plt.savefig('additional_points_b'+str(budget)+'.png')
     #plt.show()
+    plt.close()
