@@ -311,8 +311,6 @@ def main():
     else:
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
-
-    #TODO: make sure the code works for all case studies: Quicksilver
     
     budget = int(args.budget)
     print("budget:",budget)
