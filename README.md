@@ -60,3 +60,8 @@ the sparse modeling technique.
 2. uses generic strategy until a swtiching_point is hit, e.g. 11 selected points (base points + additional points) for 2 parameters.
 3. then uses gpr strategy to select points
 4. continues selecting points with 2. and 3. until the given budget is exhausted
+
+### Notes
+
+* Term contribution: Checking the term contribution makes a difference, since the functions are easier to model then, but there is no difference between the strategies wheter I check it or not. Overall the model accuracy of our approach looks worse if we don't check it.
+* Function Building Blocks: Using different building blocks, e.g., (a+b) (a*b) (a*b+a) (a*b+b), for 2,3,4 parameters does also make an impact on the overall model accuracy of our approach, but not on the different strategies. This is the case because it makes the modeling problem harder with a bigger variety of functions to model.
