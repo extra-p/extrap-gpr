@@ -174,6 +174,8 @@ class SyntheticBenchmark():
         shared_dict = manager.dict()
         cpu_count = mp.cpu_count()
         cpu_count -= 4
+        if self.nr_functions < cpu_count:
+            cpu_count = self.nr_functions
 
         inputs = []
         for i in range(self.nr_functions):
@@ -809,10 +811,15 @@ class SyntheticBenchmark():
 
         #print("len selected_points:",len(selected_points))
 
-        # add the first additional point, this is mandatory for the generic strategy
-        remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
-        # increment counter value, because a new measurement point was added
-        added_points_generic += 1
+        # for each additional dimension add one additional point
+        for o in range(self.nr_parameters-1):
+
+            # add the first additional point, this is mandatory for the generic strategy
+            remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
+            remaining_points = remaining_points_base
+            selected_points = selected_coord_list_base
+            # increment counter value, because a new measurement point was added
+            added_points_generic += 1
 
         if self.nr_parameters == 2:
             parameters = ["a", "b"]
@@ -879,6 +886,7 @@ class SyntheticBenchmark():
 
         # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
         percentage_cost_generic = selected_cost / (total_cost / 100)
+        #print("percentage_cost_generic:",percentage_cost_generic)
         percentage_cost_generic_container.append(percentage_cost_generic)
 
         # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
@@ -1018,22 +1026,30 @@ class SyntheticBenchmark():
         else:
             return 1
 
-        # add all of the selected measurement points to the gaussian process
-        # as training data and train it for these points
-        gaussian_process = add_measurements_to_gpr(gaussian_process, 
-                        selected_points, 
-                        experiment.measurements, 
-                        callpath,
-                        metric,
-                        normalization_factors,
-                        experiment.parameters, eval_point)
-        
         # add additional measurement points until break criteria is met
         add_points_gpr = 0
         budget_core_hours = self.budget * (total_cost / 100)
 
         remaining_points_gpr = copy.deepcopy(remaining_points)
         selected_points_gpr = copy.deepcopy(selected_points)
+
+        # for each additional dimension add one additional point
+        for o in range(self.nr_parameters-1):
+
+            # add the first additional point, this is mandatory for the generic strategy
+            remaining_points_gpr, selected_points_gpr = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
+            # increment counter value, because a new measurement point was added
+            add_points_gpr += 1
+
+        # add all of the selected measurement points to the gaussian process
+        # as training data and train it for these points
+        gaussian_process = add_measurements_to_gpr(gaussian_process, 
+                        selected_points_gpr, 
+                        experiment.measurements, 
+                        callpath,
+                        metric,
+                        normalization_factors,
+                        experiment.parameters, eval_point)
 
         # create base model for gpr
         experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
@@ -1127,11 +1143,10 @@ class SyntheticBenchmark():
         else:
             return 1
 
-        current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
-        current_cost_percent = current_cost / (total_cost / 100)
-        
         # cost used of the gpr strategy
-        percentage_cost_gpr = current_cost_percent
+        current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
+        percentage_cost_gpr = current_cost / (total_cost / 100)
+        #print("percentage_cost_gpr:",percentage_cost_gpr)
 
         # additionally used data points (exceeding the base requirement of the sparse modeler)
         add_points_gpr_container.append(add_points_gpr)
@@ -1201,25 +1216,33 @@ class SyntheticBenchmark():
 
         # create a gaussian process regressor
         gaussian_process_hybrid = GaussianProcessRegressor(
-            kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
+            kernel=kernel, alpha=0.75**2, n_restarts_optimizer=20
         )
 
-        # add all of the selected measurement points to the gaussian process
-        # as training data and train it for these points
-        gaussian_process_hybrid = add_measurements_to_gpr(gaussian_process_hybrid, 
-                        selected_points, 
-                        experiment.measurements, 
-                        callpath, 
-                        metric,
-                        normalization_factors,
-                        experiment.parameters, eval_point)
-        
         # add additional measurement points until break criteria is met
         add_points_hybrid = 0
         budget_core_hours = self.budget * (total_cost / 100)
 
         remaining_points_hybrid = copy.deepcopy(remaining_points)
         selected_points_hybrid = copy.deepcopy(selected_points)
+
+        # for each additional dimension add one additional point
+        for o in range(self.nr_parameters-1):
+
+            # add the first additional point, this is mandatory for the generic strategy
+            remaining_points_hybrid, selected_points_hybrid = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
+            # increment counter value, because a new measurement point was added
+            add_points_hybrid += 1
+
+        # add all of the selected measurement points to the gaussian process
+        # as training data and train it for these points
+        gaussian_process_hybrid = add_measurements_to_gpr(gaussian_process_hybrid, 
+                        selected_points_hybrid, 
+                        experiment.measurements, 
+                        callpath, 
+                        metric,
+                        normalization_factors,
+                        experiment.parameters, eval_point)
 
         # create base model for gpr hybrid
         experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
@@ -1243,13 +1266,13 @@ class SyntheticBenchmark():
                 # determine the switching point between gpr and hybrid strategy
                 swtiching_point = 0
                 if len(experiment.parameters) == 2:
-                    swtiching_point = 11
+                    swtiching_point = 13
                 elif len(experiment.parameters) == 3:
                     swtiching_point = 18
                 elif len(experiment.parameters) == 4:
-                    swtiching_point = 25
+                    swtiching_point = 23
                 else:
-                    swtiching_point = 11
+                    swtiching_point = 13
 
                 best_index = -1
                 
@@ -1342,6 +1365,7 @@ class SyntheticBenchmark():
 
         # cost used of the hybrid strategy
         percentage_cost_hybrid = current_cost_percent
+        #print("percentage_cost_hybrid:",percentage_cost_hybrid)
 
         # additionally used data points (exceeding the base requirement of the sparse modeler)
         add_points_hybrid_container.append(add_points_hybrid)
@@ -1381,10 +1405,12 @@ class SyntheticBenchmark():
 
         result_container["add_points_generic"] = add_points_generic
         result_container["percentage_cost_generic"] = percentage_cost_generic
+        #print("DEBUG percentage_cost_generic:",percentage_cost_generic)
         result_container["acurracy_bucket_counter_generic"] = acurracy_bucket_counter_generic
 
         result_container["add_points_gpr"] = add_points_gpr
         result_container["percentage_cost_gpr"] = percentage_cost_gpr
+        #print("DEBUG percentage_cost_gpr:",percentage_cost_gpr)
         result_container["acurracy_bucket_counter_gpr"] = acurracy_bucket_counter_gpr
 
         result_container["add_points_hybrid"] = add_points_hybrid
@@ -1400,6 +1426,9 @@ class SyntheticBenchmark():
     def run(self):
 
         function_dict = self.generate_synthetic_functions()
+
+        #for key, value in function_dict.items():
+        #    print(key, value.function)
 
         # set the minimum number of points required for modeling with the sparse modeler
         min_points = 0
@@ -1464,8 +1493,8 @@ class SyntheticBenchmark():
         shared_dict = manager.dict()
         cpu_count = mp.cpu_count()
         cpu_count -= 4
-        #if self.nr_functions <=100:
-        #    cpu_count = 1
+        if self.nr_functions < cpu_count:
+            cpu_count = self.nr_functions
 
         inputs = []
         for i in range(self.nr_functions):
@@ -1563,6 +1592,7 @@ class SyntheticBenchmark():
         print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
         json_out["percentage_bucket_counter_hybrid"] = percentage_bucket_counter_hybrid
 
+        #print("percentage_cost_generic_container:",percentage_cost_generic_container)
         mean_budget_generic = np.nanmean(percentage_cost_generic_container)
         print("mean_budget_generic:",mean_budget_generic)
         json_out["mean_budget_generic"] = mean_budget_generic
@@ -1571,6 +1601,7 @@ class SyntheticBenchmark():
         print("mean_add_points_generic:",mean_add_points_generic)
         json_out["mean_add_points_generic"] = mean_add_points_generic
 
+        #print("percentage_cost_gpr_container:",percentage_cost_gpr_container)
         mean_budget_gpr = np.nanmean(percentage_cost_gpr_container)
         print("mean_budget_gpr:",mean_budget_gpr)
         json_out["mean_budget_gpr"] = mean_budget_gpr
@@ -1579,6 +1610,7 @@ class SyntheticBenchmark():
         print("mean_add_points_gpr:",mean_add_points_gpr)
         json_out["mean_add_points_gpr"] = mean_add_points_gpr
 
+        #print("percentage_cost_hybrid_container:",percentage_cost_hybrid_container)
         mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container)
         print("mean_budget_hybrid:",mean_budget_hybrid)
         json_out["mean_budget_hybrid"] = mean_budget_hybrid

@@ -1,12 +1,11 @@
 # TODO LIST:
 
-* find out why accuracy is same for all strategies in synthetic evaluation
-* synth analysis model types with differne building blocks for 2,3,4 parameters
-* term contribution check?
+* adjust strategies in case studies same way as I did in synth analysis
 
-* download measurement from quicksilver when they are done
+* run synthetic analysis for 2,3,4 parameters with different budgets and noise levels and make the plots
+
 * make sure case study code works for quicksilver
-* wait until fastest analysis is done, create plots
+
 * do kripke analysis
 * create kripke plots
 * make quicksilver analysis

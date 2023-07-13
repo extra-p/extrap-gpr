@@ -201,7 +201,7 @@ def main():
 
     positional_args = parser.add_argument_group("Positional args")
 
-    parser.add_argument("--budget", type=int, required=True, default=100,
+    parser.add_argument("--budget", type=float, required=True, default=100,
                         help="Percentage of total cost of all points that can be used by the selection strategies. Positive integer value between 0-100.")
     
     parser.add_argument("--plot", type=bool, required=False, default=False,
@@ -216,7 +216,7 @@ def main():
     parser.add_argument("--eval_point", type=str, required=True,
                         help="Set the measurement point that will be used for the evaluation of the predictive power of the models. String list of the parameter values of the measurement point.")
     
-    parser.add_argument("--filter", type=int, required=True,
+    parser.add_argument("--filter", type=float, required=True,
                         help="Set a integer value as percentage filter for callpaths. Sets how much they need to contribute to ovarll runtime to be used for analysis.")
     
     parser.add_argument("--normalization", type=bool, default=False,
@@ -868,10 +868,15 @@ def main():
 
                 #print("len selected_coord_list:",len(selected_coord_list))
 
-                # add the first additional point, this is mandatory for the generic strategy
-                remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
-                # increment counter value, because a new measurement point was added
-                added_points_generic += 1
+                # for each additional dimension add one additional point
+                for o in range(len(experiment.parameters)-1):
+
+                    # add the first additional point, this is mandatory for the generic strategy
+                    remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
+                    remaining_points = remaining_points_base
+                    selected_points = selected_coord_list_base
+                    # increment counter value, because a new measurement point was added
+                    added_points_generic += 1
 
                 # create first model
                 experiment_generic_base = create_experiment(selected_coord_list_base, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
@@ -1051,22 +1056,29 @@ def main():
                     kernel=kernel, n_restarts_optimizer=20
                 )
 
-                # add all of the selected measurement points to the gaussian process
-                # as training data and train it for these points
-                gaussian_process = add_measurements_to_gpr(gaussian_process, 
-                                selected_points, 
-                                experiment.measurements, 
-                                callpath, 
-                                metric,
-                                normalization_factors,
-                                experiment.parameters, eval_point)
-                
                 # add additional measurement points until break criteria is met
                 add_points_gpr = 0
                 budget_core_hours = budget * (total_cost / 100)
 
                 remaining_points_gpr = copy.deepcopy(remaining_points)
                 selected_points_gpr = copy.deepcopy(selected_points)
+
+                # for each additional dimension add one additional point
+                for o in range(len(experiment.parameters)-1):
+                    # add the first additional point, this is mandatory for the generic strategy
+                    remaining_points_gpr, selected_points_gpr = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
+                    # increment counter value, because a new measurement point was added
+                    add_points_gpr += 1
+
+                # add all of the selected measurement points to the gaussian process
+                # as training data and train it for these points
+                gaussian_process = add_measurements_to_gpr(gaussian_process, 
+                                selected_points_gpr, 
+                                experiment.measurements, 
+                                callpath, 
+                                metric,
+                                normalization_factors,
+                                experiment.parameters, eval_point)
 
                 # create base model for gpr
                 experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
@@ -1255,25 +1267,32 @@ def main():
 
                 # create a gaussian process regressor
                 gaussian_process_hybrid = GaussianProcessRegressor(
-                    kernel=kernel, alpha=0.75**2, n_restarts_optimizer=9
+                    kernel=kernel, alpha=0.75**2, n_restarts_optimizer=20
                 )
 
-                # add all of the selected measurement points to the gaussian process
-                # as training data and train it for these points
-                gaussian_process_hybrid = add_measurements_to_gpr(gaussian_process_hybrid, 
-                                selected_points, 
-                                experiment.measurements, 
-                                callpath, 
-                                metric,
-                                normalization_factors,
-                                experiment.parameters, eval_point)
-                
                 # add additional measurement points until break criteria is met
                 add_points_hybrid = 0
                 budget_core_hours = budget * (total_cost / 100)
 
                 remaining_points_hybrid = copy.deepcopy(remaining_points)
                 selected_points_hybrid = copy.deepcopy(selected_points)
+
+                # for each additional dimension add one additional point
+                for o in range(len(experiment.parameters)-1):
+                     # add the first additional point, this is mandatory for the generic strategy
+                    remaining_points_hybrid, selected_points_hybrid = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
+                    # increment counter value, because a new measurement point was added
+                    add_points_hybrid += 1
+
+                # add all of the selected measurement points to the gaussian process
+                # as training data and train it for these points
+                gaussian_process_hybrid = add_measurements_to_gpr(gaussian_process_hybrid, 
+                                selected_points_hybrid, 
+                                experiment.measurements, 
+                                callpath, 
+                                metric,
+                                normalization_factors,
+                                experiment.parameters, eval_point)
 
                 # create base model for gpr hybrid
                 experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
@@ -1296,13 +1315,13 @@ def main():
                     # determine the switching point between gpr and hybrid strategy
                     swtiching_point = 0
                     if len(experiment.parameters) == 2:
-                        swtiching_point = 11
+                        swtiching_point = 13
                     elif len(experiment.parameters) == 3:
                         swtiching_point = 18
                     elif len(experiment.parameters) == 4:
-                        swtiching_point = 25
+                        swtiching_point = 23
                     else:
-                        swtiching_point = 11
+                        swtiching_point = 13
 
                     best_index = -1
                     

@@ -95,3 +95,196 @@ class FunctionGenerator():
                     valid_function = True
             shared_dict[counter] = f
         
+
+    def generate_function_debug(self, inputs):
+
+        counter = inputs[0]
+        shared_dict = inputs[1]
+
+        if self.nr_parameters == 2:
+
+            options = ["a*b", "a+b", "a*b+a", "a*b+b"]
+            selected = random.choice(options)
+
+            if selected == "a+b":
+                valid_function = False
+                while valid_function != True:
+                    f = Function("")
+                    function = ""
+                    c_0 = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    function += c_0
+                    
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*a**"+e_poly+"*math.log2(a)**"+e_log
+                    function += "+"+term
+                    f.add_term(term)
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*b**"+e_poly+"*math.log2(b)**"+e_log
+                    function += "+"+term
+                    f.add_term(term)
+
+                    f.set_function(function)
+
+                    valid_function = True
+
+                    """if self.nr_parameters > 1:
+                        valid_function_min = analyze_term_contribution_additive(f, self.epsilon, a=min(self.parameter_values_a), b=min(self.parameter_values_b), c=min(self.parameter_values_c), d=min(self.parameter_values_d))
+                        valid_function_max = analyze_term_contribution_additive(f, self.epsilon, a=max(self.parameter_values_a), b=max(self.parameter_values_b), c=max(self.parameter_values_c), d=max(self.parameter_values_d))
+                        if valid_function_min == True and valid_function_max == True:
+                            valid_function = True
+                        else:
+                            valid_function = False
+                    else:
+                        valid_function = True"""
+
+                shared_dict[counter] = f
+
+            elif selected == "a*b":
+                valid_function = False
+                while valid_function != True:
+                    f = Function("")
+                    function = ""
+                    c_0 = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    function += c_0
+                    
+
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*a**"+e_poly+"*math.log2(a)**"+e_log
+                    function += "+"+term
+                    f.add_term(term)
+                    
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*b**"+e_poly+"*math.log2(b)**"+e_log
+                    function += "*"+term
+                    f.add_term(term)
+                    
+                    f.set_function(function)
+
+                    valid_function = True
+
+                    """if self.nr_parameters > 1:
+                        valid_function_min = analyze_term_contribution_additive(f, self.epsilon, a=min(self.parameter_values_a), b=min(self.parameter_values_b), c=min(self.parameter_values_c), d=min(self.parameter_values_d))
+                        valid_function_max = analyze_term_contribution_additive(f, self.epsilon, a=max(self.parameter_values_a), b=max(self.parameter_values_b), c=max(self.parameter_values_c), d=max(self.parameter_values_d))
+                        if valid_function_min == True and valid_function_max == True:
+                            valid_function = True
+                        else:
+                            valid_function = False
+                    else:
+                        valid_function = True"""
+
+                shared_dict[counter] = f
+
+            elif selected == "a*b+a":
+
+                valid_function = False
+                while valid_function != True:
+                    f = Function("")
+                    function = ""
+                    c_0 = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    function += c_0
+                    
+
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*a**"+e_poly+"*math.log2(a)**"+e_log
+                    function += "+"+term
+                    f.add_term(term)
+                    
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*b**"+e_poly+"*math.log2(b)**"+e_log
+                    function += "*"+term
+                    f.add_term(term)
+
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*a**"+e_poly+"*math.log2(a)**"+e_log
+                    function += "+"+term
+                    f.add_term(term)
+                    
+                    f.set_function(function)
+
+                    valid_function = True
+
+                    """if self.nr_parameters > 1:
+                        valid_function_min = analyze_term_contribution_additive(f, self.epsilon, a=min(self.parameter_values_a), b=min(self.parameter_values_b), c=min(self.parameter_values_c), d=min(self.parameter_values_d))
+                        valid_function_max = analyze_term_contribution_additive(f, self.epsilon, a=max(self.parameter_values_a), b=max(self.parameter_values_b), c=max(self.parameter_values_c), d=max(self.parameter_values_d))
+                        if valid_function_min == True and valid_function_max == True:
+                            valid_function = True
+                        else:
+                            valid_function = False
+                    else:
+                        valid_function = True"""
+
+                shared_dict[counter] = f
+
+            elif selected == "a*b+b":
+
+                valid_function = False
+                while valid_function != True:
+                    f = Function("")
+                    function = ""
+                    c_0 = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    function += c_0
+                    
+
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*a**"+e_poly+"*math.log2(a)**"+e_log
+                    function += "+"+term
+                    f.add_term(term)
+                    
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*b**"+e_poly+"*math.log2(b)**"+e_log
+                    function += "*"+term
+                    f.add_term(term)
+
+                    c_k = str(format(random.uniform(self.coefficient_min, self.coefficient_max), '.3f'))
+                    e_poly = str(random.choice(self.poly_exponents))
+                    e_log = str(random.choice(self.log_exponents))
+                    term = c_k+"*b**"+e_poly+"*math.log2(b)**"+e_log
+                    function += "+"+term
+                    f.add_term(term)
+                    
+                    f.set_function(function)
+
+                    valid_function = True
+
+                    """if self.nr_parameters > 1:
+                        valid_function_min = analyze_term_contribution_additive(f, self.epsilon, a=min(self.parameter_values_a), b=min(self.parameter_values_b), c=min(self.parameter_values_c), d=min(self.parameter_values_d))
+                        valid_function_max = analyze_term_contribution_additive(f, self.epsilon, a=max(self.parameter_values_a), b=max(self.parameter_values_b), c=max(self.parameter_values_c), d=max(self.parameter_values_d))
+                        if valid_function_min == True and valid_function_max == True:
+                            valid_function = True
+                        else:
+                            valid_function = False
+                    else:
+                        valid_function = True"""
+
+                shared_dict[counter] = f
+
+        
+        elif self.nr_parameters == 3:
+
+            pass
+
+        elif self.nr_parameters == 4:
+
+            pass
+
+        else:
+            return 1
+
