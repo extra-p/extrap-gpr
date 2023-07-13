@@ -1596,7 +1596,7 @@ class SyntheticBenchmark():
 
         # plot the results of the model accuracy analysis
         if self.plot == True:
-            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, self.budget, self.noise_percent)
+            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, self.budget)
         
         used_costs = {
             "base points": np.array([mean_base_point_cost, mean_base_point_cost, mean_base_point_cost, mean_base_point_cost]),
@@ -1608,7 +1608,7 @@ class SyntheticBenchmark():
 
         # plot the analysis result for the costs and budgets
         if self.plot == True:
-            plot_costs(used_costs, mean_base_point_cost, self.budget, self.noise_percent)
+            plot_costs(used_costs, mean_base_point_cost, self.budget)
 
         add_points = {
             "base points": np.array([min_points, min_points, min_points, min_points]),
@@ -1617,7 +1617,7 @@ class SyntheticBenchmark():
 
         # plot the analysis result for the additional measurement point numbers
         if self.plot == True:
-            plot_measurement_point_number(add_points, min_points, self.budget, self.noise_percent)
+            plot_measurement_point_number(add_points, min_points, self.budget)
 
         ##############################
         # Write results to json file #
