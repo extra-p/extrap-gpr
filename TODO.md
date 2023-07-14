@@ -2,8 +2,6 @@
 
 * run synthetic analysis for 2,3,4 parameters with different budgets and noise levels and make the plots
 
-* make sure case study code works for quicksilver
-
 * do kripke analysis
 * create kripke plots
 * make quicksilver analysis
