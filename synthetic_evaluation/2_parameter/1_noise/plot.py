@@ -18,32 +18,43 @@ def find_files(folder_path):
             file_list.append(file_path)
     return file_list
 
-def plot_lines(x_values, y_values_list, labels, bucket):
+def plot_accuracy(x_values, y_values_list, labels, bucket):
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label)
-    plt.xlabel('Modeling Budget [%]')
+    plt.xlabel('Allowed Modeling Budget [%]')
     plt.ylabel('Models in '+str(bucket)+'% accuracy bucket [%]')
     plt.legend()
     plt.savefig('accuracy_'+str(bucket)+'.png')
     plt.show()
     plt.close()
 
-def plot_lines2(x_values, y_values_list, labels, bucket):
+def plot_cost(x_values, y_values_list, labels, bucket):
+    min_y_values = []
+    max_y_values = []
     for y_values, label in zip(y_values_list, labels):
-        plt.plot(x_values, y_values, label=label)
-    plt.xlabel('Modeling Budget [%]')
-    plt.ylabel('Used Budget [%]')
+        plt.plot(x_values, y_values, label=label, alpha=0.7)
+        min_y_values.append(np.min(y_values))
+        max_y_values.append(np.max(y_values))
+    min_y_value = np.min(min_y_values)
+    max_y_value = np.max(max_y_values)
+    temp = list(plt.yticks()[0])
+    temp.append(min_y_value)
+    temp.append(max_y_value)
+    plt.yticks(temp)
+    #plt.yticks(list(plt.yticks()[0]) + max_y_value)
+    plt.ylim(0,100)
+    plt.xlabel('Allowed Modeling Budget [%]')
+    plt.ylabel('Used Modeling Budget [%]')
     plt.legend()
     plt.savefig('cost_'+str(bucket)+'.png')
     plt.show()
     plt.close()
 
-def plot_lines3(x_values, y_values_list, labels, bucket):
+def plot_selected_points(x_values, y_values_list, labels, bucket):
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label)
-        #print("DEBUG:",label)
-    plt.xlabel('Number of additional points used for modelnig')
-    plt.ylabel('Used Budget [%]')
+    plt.ylabel('Number of Additional Points Used for Modelnig')
+    plt.xlabel('Allowed Modeling Budget [%]')
     plt.legend()
     plt.savefig('additional_points_'+str(bucket)+'.png')
     plt.show()
@@ -81,6 +92,9 @@ def main():
     points_gpr = []
     points_hybrid = []
 
+    base_point_costs = []
+    base_points = []
+
     files = natsorted(files)
     #print("DEBUG:",len(files))
 
@@ -102,6 +116,10 @@ def main():
         points_gpr.append(json_data["mean_add_points_gpr"])
         points_hybrid.append(json_data["mean_add_points_hybrid"])
 
+        base_point_costs.append(json_data["base_point_cost"])
+
+        base_points.append(json_data["min_points"])
+
     # Example usage
     y_values_list = [
         full_values,
@@ -112,19 +130,22 @@ def main():
     y_values_list2 = [
         generic_costs,
         gpr_costs,
-        hybrid_costs
+        hybrid_costs,
+        base_point_costs
     ]
     y_values_list3 = [
         points_generic,
         points_gpr,
-        points_hybrid
+        points_hybrid,
+        base_points
     ]
     labels = ['full', 'generic', 'gpr', 'hybrid']
-    labels2 = ['generic', 'gpr', 'hybrid']
+    labels2 = ['generic', 'gpr', 'hybrid', 'base point cost']
+    labels3 = ['generic', 'gpr', 'hybrid', 'base points']
 
-    plot_lines(budget_values, y_values_list, labels, bucket)
-    plot_lines2(budget_values, y_values_list2, labels2, bucket)
-    plot_lines3(budget_values, y_values_list3, labels2, bucket)
+    plot_accuracy(budget_values, y_values_list, labels, bucket)
+    plot_cost(budget_values, y_values_list2, labels2, bucket)
+    plot_selected_points(budget_values, y_values_list3, labels3, bucket)
 
     #print("DEBUG:",labels2)
 
