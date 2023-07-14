@@ -19,8 +19,12 @@ def find_files(folder_path):
     return file_list
 
 def plot_accuracy(x_values, y_values_list, labels, bucket):
+    ls=['-','--',':','-']
+    lw = [2,3,5,2]
+    style_counter = 0
     for y_values, label in zip(y_values_list, labels):
-        plt.plot(x_values, y_values, label=label)
+        plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
+        style_counter += 1
     plt.xlabel('Allowed Modeling Budget [%]')
     plt.ylabel('Models in '+str(bucket)+'% accuracy bucket [%]')
     plt.legend()
@@ -31,10 +35,14 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
 def plot_cost(x_values, y_values_list, labels, bucket):
     min_y_values = []
     max_y_values = []
+    ls=['-','--',':','-']
+    lw = [2,3,5,3]
+    style_counter = 0
     for y_values, label in zip(y_values_list, labels):
-        plt.plot(x_values, y_values, label=label, alpha=0.7)
+        plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
         min_y_values.append(np.min(y_values))
         max_y_values.append(np.max(y_values))
+        style_counter += 1
     min_y_value = np.min(min_y_values)
     max_y_value = np.max(max_y_values)
     temp = list(plt.yticks()[0])
@@ -51,8 +59,12 @@ def plot_cost(x_values, y_values_list, labels, bucket):
     plt.close()
 
 def plot_selected_points(x_values, y_values_list, labels, bucket):
+    ls=['-','--',':','-']
+    lw = [2,3,5,2]
+    style_counter = 0
     for y_values, label in zip(y_values_list, labels):
-        plt.plot(x_values, y_values, label=label)
+        plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
+        style_counter += 1
     plt.ylabel('Number of Additional Points Used for Modelnig')
     plt.xlabel('Allowed Modeling Budget [%]')
     plt.legend()
