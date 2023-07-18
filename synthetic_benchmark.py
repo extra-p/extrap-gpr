@@ -1433,10 +1433,10 @@ class SyntheticBenchmark():
     def run(self):
 
         import pickle
-        function_dict = self.generate_synthetic_functions()
-        file = open("functions", "wb")
-        pickle.dump(function_dict, file)
-        file.close()
+        #function_dict = self.generate_synthetic_functions()
+        #file = open("functions", "wb")
+        #pickle.dump(function_dict, file)
+        #file.close()
 
         file = open("functions", "rb")
         function_dict = pickle.load(file)
