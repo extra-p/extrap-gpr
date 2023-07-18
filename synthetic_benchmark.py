@@ -266,6 +266,9 @@ class SyntheticBenchmark():
         metric = Metric("runtime")
         experiment.add_metric(metric)
 
+        # set a random seed so that the amount of noise generated is the same for experiment with different budgets
+        random.seed(10)
+
         if self.nr_parameters == 2:
             # create and add the coordinates and measurements to experiment
             for j in range(len(self.parameter_values_a)):
@@ -1425,10 +1428,20 @@ class SyntheticBenchmark():
 
     def run(self):
 
-        function_dict = self.generate_synthetic_functions()
+        import pickle
+        #function_dict = self.generate_synthetic_functions()
+        #file = open("functions", "wb")
+        #pickle.dump(function_dict, file)
+        #file.close()
 
+        file = open("functions", "rb")
+        function_dict = pickle.load(file)
+        file.close()
+        
         #for key, value in function_dict.items():
         #    print(key, value.function)
+
+        #return 0
 
         # set the minimum number of points required for modeling with the sparse modeler
         min_points = 0

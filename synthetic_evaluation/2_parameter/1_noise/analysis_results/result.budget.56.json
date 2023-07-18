@@ -1,39 +1,39 @@
 {
     "percentage_bucket_counter_full": {
         "rest": 100.0,
-        "5": 86.0,
-        "10": 94.65,
-        "15": 97.74000000000001,
-        "20": 99.92
+        "5": 85.7,
+        "10": 96.25,
+        "15": 97.89999999999999,
+        "20": 99.98
     },
     "percentage_bucket_counter_generic": {
         "rest": 100.0,
-        "5": 84.22,
-        "10": 93.26,
-        "15": 96.89,
-        "20": 99.41
+        "5": 83.8,
+        "10": 93.86,
+        "15": 97.02,
+        "20": 99.5
     },
     "percentage_bucket_counter_gpr": {
         "rest": 100.0,
-        "5": 84.22,
-        "10": 93.25,
-        "15": 96.89,
-        "20": 99.4
+        "5": 83.8,
+        "10": 93.8,
+        "15": 96.96000000000001,
+        "20": 99.44
     },
     "percentage_bucket_counter_hybrid": {
         "rest": 100.0,
-        "5": 84.22,
-        "10": 93.25,
-        "15": 96.89,
-        "20": 99.4
+        "5": 83.8,
+        "10": 93.8,
+        "15": 96.96000000000001,
+        "20": 99.44
     },
-    "mean_budget_generic": 46.87128958162862,
-    "mean_add_points_generic": 13.5068,
-    "mean_budget_gpr": 46.87071447540145,
-    "mean_add_points_gpr": 12.505,
-    "mean_budget_hybrid": 46.87111000479684,
-    "mean_add_points_hybrid": 12.5068,
-    "base_point_cost": 8.796660453579657,
+    "mean_budget_generic": 46.8306648020176,
+    "mean_add_points_generic": 13.4942,
+    "mean_budget_gpr": 46.830286625270254,
+    "mean_add_points_gpr": 12.4929,
+    "mean_budget_hybrid": 46.82975958638108,
+    "mean_add_points_hybrid": 12.4942,
+    "base_point_cost": 8.86752797890495,
     "min_points": 9,
     "budget": 56
 }
