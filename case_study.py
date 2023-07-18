@@ -866,38 +866,39 @@ def main():
 
                 #print("len selected_coord_list:",len(selected_coord_list))
 
+                remaining_points_generic = copy.deepcopy(remaining_points)
+                selected_points_generic = copy.deepcopy(selected_points)
+
                 # for each additional dimension add one additional point
                 for o in range(len(experiment.parameters)-1):
 
                     # add the first additional point, this is mandatory for the generic strategy
-                    remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
-                    remaining_points = remaining_points_base
-                    selected_points = selected_coord_list_base
+                    remaining_points_generic, selected_points_generic = add_additional_point_generic(remaining_points_generic, selected_points_generic)
                     # increment counter value, because a new measurement point was added
                     added_points_generic += 1
 
                 # create first model
-                experiment_generic_base = create_experiment(selected_coord_list_base, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
+                experiment_generic_base = create_experiment(selected_points_generic, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
                 _, models = get_extrap_model(experiment_generic_base, args)
                 hypothesis = None
                 for model in models.values():
                     hypothesis = model.hypothesis
 
                 # calculate selected point cost
-                current_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
+                current_cost = calculate_selected_point_cost(selected_points_generic, experiment, callpath_id, metric_id)
                 current_cost_percent = current_cost / (total_cost / 100)
                 
                 if current_cost_percent <= budget:
                     while True:
                         # find another point for selection
-                        remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
+                        remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_generic, selected_points_generic)
 
                         # calculate selected point cost
                         current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, callpath_id, metric_id)
                         current_cost_percent = current_cost / (total_cost / 100)
 
                         # current cost exceeds budget so break the loop
-                        if current_cost_percent >= budget:
+                        if current_cost_percent > budget:
                             break
 
                         # add the new found point
@@ -909,25 +910,25 @@ def main():
                             # create new model
                             experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, metric_id, callpath_id)
 
-                            selected_coord_list_base = selected_coord_list_new
-                            remaining_points_base = remaining_points_new
+                            selected_points_generic = selected_coord_list_new
+                            remaining_points_generic = remaining_points_new
 
                         # if there are no points remaining that can be selected break the loop
-                        if len(remaining_points_base) == 0:
+                        if len(remaining_points_generic) == 0:
                             break
 
                 else:
                     pass
 
                 # calculate selected point cost
-                selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, callpath_id, metric_id)
+                selected_cost = calculate_selected_point_cost(selected_points_generic, experiment, callpath_id, metric_id)
 
                 # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
                 percentage_cost_generic = selected_cost / (total_cost / 100)
                 percentage_cost_generic_container.append(percentage_cost_generic)
 
                 # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
-                #add_points_generic = len(selected_coord_list_base) - min_points
+                #add_points_generic = len(selected_points_generic) - min_points
                 add_points_generic_container.append(added_points_generic)
                 
                 # create model using point selection of generic strategy

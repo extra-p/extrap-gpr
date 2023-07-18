@@ -814,13 +814,13 @@ class SyntheticBenchmark():
 
         #print("len selected_points:",len(selected_points))
 
+        remaining_points_generic = copy.deepcopy(remaining_points)
+        selected_points_generic = copy.deepcopy(selected_points)
+
         # for each additional dimension add one additional point
         for o in range(self.nr_parameters-1):
 
-            # add the first additional point, this is mandatory for the generic strategy
-            remaining_points_base, selected_coord_list_base = add_additional_point_generic(remaining_points, selected_points)
-            remaining_points = remaining_points_base
-            selected_points = selected_coord_list_base
+            remaining_points_generic, selected_points_generic = add_additional_point_generic(remaining_points_generic, selected_points_generic)
             # increment counter value, because a new measurement point was added
             added_points_generic += 1
 
@@ -834,14 +834,14 @@ class SyntheticBenchmark():
             return 1
 
         # create first model
-        experiment_generic_base = create_experiment(selected_coord_list_base, experiment, len(experiment.parameters), parameters, 0, 0)
+        experiment_generic_base = create_experiment(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
         _, models = get_extrap_model(experiment_generic_base, self.args)
         hypothesis = None
         for model in models.values():
             hypothesis = model.hypothesis
 
         # calculate selected point cost
-        current_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, 0, 0)
+        current_cost = calculate_selected_point_cost(selected_points_generic, experiment, 0, 0)
         current_cost_percent = current_cost / (total_cost / 100)
 
         if self.mode == "budget":
@@ -849,14 +849,14 @@ class SyntheticBenchmark():
             if current_cost_percent <= self.budget:
                 while True:
                     # find another point for selection
-                    remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_base, selected_coord_list_base)
+                    remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_generic, selected_points_generic)
 
                     # calculate selected point cost
                     current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, 0, 0)
                     current_cost_percent = current_cost / (total_cost / 100)
 
                     # current cost exceeds budget so break the loop
-                    if current_cost_percent >= self.budget:
+                    if current_cost_percent > self.budget:
                         break
 
                     # add the new found point
@@ -868,11 +868,11 @@ class SyntheticBenchmark():
                         # create new model
                         experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
 
-                        selected_coord_list_base = selected_coord_list_new
-                        remaining_points_base = remaining_points_new
+                        selected_points_generic = selected_coord_list_new
+                        remaining_points_generic = remaining_points_new
 
                     # if there are no points remaining that can be selected break the loop
-                    if len(remaining_points_base) == 0:
+                    if len(remaining_points_generic) == 0:
                         break
 
             else:
@@ -885,7 +885,7 @@ class SyntheticBenchmark():
             return 1
 
         # calculate selected point cost
-        selected_cost = calculate_selected_point_cost(selected_coord_list_base, experiment, 0, 0)
+        selected_cost = calculate_selected_point_cost(selected_points_generic, experiment, 0, 0)
 
         # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
         percentage_cost_generic = selected_cost / (total_cost / 100)
@@ -893,7 +893,7 @@ class SyntheticBenchmark():
         percentage_cost_generic_container.append(percentage_cost_generic)
 
         # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
-        #add_points_generic = len(selected_coord_list_base) - min_points
+        #add_points_generic = len(selected_points_generic) - min_points
         add_points_generic_container.append(added_points_generic)
         add_points_generic = added_points_generic
         
@@ -1036,6 +1036,8 @@ class SyntheticBenchmark():
         remaining_points_gpr = copy.deepcopy(remaining_points)
         selected_points_gpr = copy.deepcopy(selected_points)
 
+        #print("DEBUG: selected_points_gpr:",len(selected_points_gpr))
+
         # for each additional dimension add one additional point
         for o in range(self.nr_parameters-1):
 
@@ -1043,6 +1045,8 @@ class SyntheticBenchmark():
             remaining_points_gpr, selected_points_gpr = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
             # increment counter value, because a new measurement point was added
             add_points_gpr += 1
+
+        #print("DEBUG: selected_points_gpr2:",len(selected_points_gpr))
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
@@ -1429,10 +1433,10 @@ class SyntheticBenchmark():
     def run(self):
 
         import pickle
-        #function_dict = self.generate_synthetic_functions()
-        #file = open("functions", "wb")
-        #pickle.dump(function_dict, file)
-        #file.close()
+        function_dict = self.generate_synthetic_functions()
+        file = open("functions", "wb")
+        pickle.dump(function_dict, file)
+        file.close()
 
         file = open("functions", "rb")
         function_dict = pickle.load(file)
