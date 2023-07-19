@@ -1056,6 +1056,10 @@ class SyntheticBenchmark():
         remaining_points_gpr = copy.deepcopy(remaining_points)
         selected_points_gpr = copy.deepcopy(selected_points)
 
+        #DEBUG
+        remaining_points_gpr_training = copy.deepcopy(remaining_points)
+        selected_points_gpr_training = copy.deepcopy(selected_points)
+
         #print("DEBUG: selected_points_gpr:",len(selected_points_gpr))
 
         # for each additional dimension add one additional point
@@ -1066,12 +1070,26 @@ class SyntheticBenchmark():
             # increment counter value, because a new measurement point was added
             #add_points_gpr += 1
 
+        #DEBUG
+        # for each additional dimension add one additional point
+        temp1 = len(selected_points_gpr_training)
+        #print(temp1)
+        temp2 = 25 - temp1
+        for o in range(temp2):
+
+            # add the first additional point, this is mandatory for the generic strategy
+            remaining_points_gpr_training, selected_points_gpr_training = add_additional_point_generic(remaining_points_gpr_training, selected_points_gpr_training)
+            # increment counter value, because a new measurement point was added
+            #add_points_gpr += 1
+        print(len(selected_points_gpr_training))
+
         #print("DEBUG: selected_points_gpr2:",len(selected_points_gpr))
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
+        #DEBUG
         gaussian_process = add_measurements_to_gpr(gaussian_process, 
-                        selected_points_gpr, 
+                        selected_points_gpr_training, 
                         experiment.measurements, 
                         callpath,
                         metric,
@@ -1149,14 +1167,15 @@ class SyntheticBenchmark():
                     cord = Coordinate(parameter_values)
                     selected_points_gpr.append(cord)
                     
+                    #DEBUG
                     # add the new point to the gpr and call fit()
-                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
-                            cord, 
-                            experiment.measurements, 
-                            callpath, 
-                            metric,
-                            normalization_factors,
-                            experiment.parameters)
+                    #gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                    #        cord, 
+                    #        experiment.measurements, 
+                    #        callpath, 
+                    #        metric,
+                    #        normalization_factors,
+                    #        experiment.parameters)
                     
                     # remove the identified measurement point from the remaining point list
                     try:
@@ -1457,7 +1476,7 @@ class SyntheticBenchmark():
         result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
 
         result_container["add_points_generic"] = add_points_generic
-        print("add_points_generic:",add_points_generic)
+        #print("add_points_generic:",add_points_generic)
         result_container["percentage_cost_generic"] = percentage_cost_generic
         #print("DEBUG percentage_cost_generic:",percentage_cost_generic)
         result_container["acurracy_bucket_counter_generic"] = acurracy_bucket_counter_generic
