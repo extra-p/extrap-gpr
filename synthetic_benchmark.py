@@ -1457,6 +1457,7 @@ class SyntheticBenchmark():
         result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
 
         result_container["add_points_generic"] = add_points_generic
+        print("add_points_generic:",add_points_generic)
         result_container["percentage_cost_generic"] = percentage_cost_generic
         #print("DEBUG percentage_cost_generic:",percentage_cost_generic)
         result_container["acurracy_bucket_counter_generic"] = acurracy_bucket_counter_generic
