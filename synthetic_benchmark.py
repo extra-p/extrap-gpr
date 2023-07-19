@@ -817,13 +817,6 @@ class SyntheticBenchmark():
         remaining_points_generic = copy.deepcopy(remaining_points)
         selected_points_generic = copy.deepcopy(selected_points)
 
-        # for each additional dimension add one additional point
-        for o in range(self.nr_parameters-1):
-
-            remaining_points_generic, selected_points_generic = add_additional_point_generic(remaining_points_generic, selected_points_generic)
-            # increment counter value, because a new measurement point was added
-            added_points_generic += 1
-
         if self.nr_parameters == 2:
             parameters = ["a", "b"]
         elif self.nr_parameters == 3:
@@ -843,9 +836,23 @@ class SyntheticBenchmark():
         # calculate selected point cost
         current_cost = calculate_selected_point_cost(selected_points_generic, experiment, 0, 0)
         current_cost_percent = current_cost / (total_cost / 100)
+        #print("current_cost_percent:",current_cost_percent)
+        #print("self.budget:",self.budget)
+
+        # check if the cost of the base points is higher than the allowed budget
+        #print("current_cost_percent <= self.budget 11:", current_cost_percent, self.budget)
+        #if current_cost_percent <= self.budget:
+
+            # start by adding for each additional dimension one additional point
+            #for o in range(self.nr_parameters-1):
+
+                #remaining_points_generic, selected_points_generic = add_additional_point_generic(remaining_points_generic, selected_points_generic)
+                # increment counter value, because a new measurement point was added
+                #added_points_generic += 1
 
         if self.mode == "budget":
 
+            #print("current_cost_percent <= self.budget:", current_cost_percent, self.budget)
             if current_cost_percent <= self.budget:
                 while True:
                     # find another point for selection
@@ -856,6 +863,14 @@ class SyntheticBenchmark():
                     current_cost_percent = current_cost / (total_cost / 100)
 
                     # current cost exceeds budget so break the loop
+                    #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                    # to make sure no mistakes occur here
+                    # sometimes the numbers do not perfectly add up to the target budget
+                    # but to 100.00001
+                    # this is the fix for this case
+                    current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                    #print("current_cost_percent:",current_cost_percent)
+
                     if current_cost_percent > self.budget:
                         break
 
@@ -889,13 +904,18 @@ class SyntheticBenchmark():
 
         # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
         percentage_cost_generic = selected_cost / (total_cost / 100)
-        #print("percentage_cost_generic:",percentage_cost_generic)
+        if percentage_cost_generic >= 99.9:
+            percentage_cost_generic = 100
+        #if percentage_cost_generic < 100:
+        #    print("percentage_cost_generic:",percentage_cost_generic)
         percentage_cost_generic_container.append(percentage_cost_generic)
 
         # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
         #add_points_generic = len(selected_points_generic) - min_points
         add_points_generic_container.append(added_points_generic)
         add_points_generic = added_points_generic
+        #if percentage_cost_generic < 100:
+        #    print("add_points_generic:",add_points_generic)
         
         # create model using point selection of generic strategy
         model_generic, _ = get_extrap_model(experiment_generic_base, self.args)
@@ -1039,12 +1059,12 @@ class SyntheticBenchmark():
         #print("DEBUG: selected_points_gpr:",len(selected_points_gpr))
 
         # for each additional dimension add one additional point
-        for o in range(self.nr_parameters-1):
+        #for o in range(self.nr_parameters-1):
 
             # add the first additional point, this is mandatory for the generic strategy
-            remaining_points_gpr, selected_points_gpr = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
+            #remaining_points_gpr, selected_points_gpr = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
             # increment counter value, because a new measurement point was added
-            add_points_gpr += 1
+            #add_points_gpr += 1
 
         #print("DEBUG: selected_points_gpr2:",len(selected_points_gpr))
 
@@ -1072,8 +1092,19 @@ class SyntheticBenchmark():
 
                     current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
                     new_cost = current_cost + np.sum(value)
+                    cost_percent = new_cost / (total_cost / 100)
                     
-                    if new_cost <= budget_core_hours:
+                    #if new_cost > budget_core_hours:
+                    #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                    #if cost_percent > 100:
+                    #    print("cost percent <= budget percent:", cost_percent, self.budget)
+                    # to make sure no mistakes occur here
+                    # sometimes the numbers do not perfectly add up to the target budget
+                    # but to 100.00001
+                    # this is the fix for this case
+                    cost_percent = float("{0:.2f}".format(cost_percent))
+
+                    if cost_percent <= self.budget:
                         fitting_measurements.append(key)
 
                 #print("fitting_measurements:",fitting_measurements)
@@ -1153,6 +1184,8 @@ class SyntheticBenchmark():
         # cost used of the gpr strategy
         current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
         percentage_cost_gpr = current_cost / (total_cost / 100)
+        if percentage_cost_gpr >= 99.9:
+            percentage_cost_gpr = 100
         #print("percentage_cost_gpr:",percentage_cost_gpr)
 
         # additionally used data points (exceeding the base requirement of the sparse modeler)
@@ -1234,12 +1267,12 @@ class SyntheticBenchmark():
         selected_points_hybrid = copy.deepcopy(selected_points)
 
         # for each additional dimension add one additional point
-        for o in range(self.nr_parameters-1):
+        #for o in range(self.nr_parameters-1):
 
             # add the first additional point, this is mandatory for the generic strategy
-            remaining_points_hybrid, selected_points_hybrid = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
+            #remaining_points_hybrid, selected_points_hybrid = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
             # increment counter value, because a new measurement point was added
-            add_points_hybrid += 1
+            #add_points_hybrid += 1
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
@@ -1264,8 +1297,19 @@ class SyntheticBenchmark():
 
                     current_cost = calculate_selected_point_cost(selected_points_hybrid, experiment, 0, 0)
                     new_cost = current_cost + np.sum(value)
+                    cost_percent = new_cost / (total_cost / 100)
                     
-                    if new_cost <= budget_core_hours:
+                    #if new_cost > budget_core_hours:
+                    #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                    #if cost_percent > 100:
+                    #    print("cost percent <= budget percent:", cost_percent, self.budget)
+                    # to make sure no mistakes occur here
+                    # sometimes the numbers do not perfectly add up to the target budget
+                    # but to 100.00001
+                    # this is the fix for this case
+                    cost_percent = float("{0:.2f}".format(cost_percent))
+
+                    if cost_percent <= self.budget:
                         fitting_measurements.append(key)
 
                 #print("fitting_measurements:",fitting_measurements)
@@ -1372,6 +1416,8 @@ class SyntheticBenchmark():
 
         # cost used of the hybrid strategy
         percentage_cost_hybrid = current_cost_percent
+        if percentage_cost_hybrid >= 99.9:
+            percentage_cost_hybrid = 100
         #print("percentage_cost_hybrid:",percentage_cost_hybrid)
 
         # additionally used data points (exceeding the base requirement of the sparse modeler)
