@@ -805,6 +805,26 @@ class SyntheticBenchmark():
         else:
             return 1
 
+        # create a map to store which data points where selected after each other
+        point_map_generic = {}
+        selection_point_counter = 1
+        #print("DEBUG:",len(experiment.coordinates))
+        for cord in experiment.coordinates:
+            point_map_generic[cord] = -1
+            #print("cord:",cord)
+        #print("point_map_generic:",point_map_generic)
+        copy_point_map_generic = {}
+        for cord in experiment.coordinates:
+            copy_point_map_generic[cord] = 0
+            #print("cord:",cord)
+
+        # update the map with the numbers of already selected points
+        for point in selected_points:
+            point_map_generic[point] = selection_point_counter
+            selection_point_counter += 1
+            #print("point:",point)
+        #print("point_map_generic:",point_map_generic)
+
         # calculate the cost for the selected base points
         base_point_cost = calculate_selected_point_cost(selected_points, experiment, 0, 0)
         base_point_cost = base_point_cost / (total_cost / 100)
@@ -846,7 +866,7 @@ class SyntheticBenchmark():
             # start by adding for each additional dimension one additional point
             #for o in range(self.nr_parameters-1):
 
-                #remaining_points_generic, selected_points_generic = add_additional_point_generic(remaining_points_generic, selected_points_generic)
+                #remaining_points_generic, selected_points_generic, _ = add_additional_point_generic(remaining_points_generic, selected_points_generic)
                 # increment counter value, because a new measurement point was added
                 #added_points_generic += 1
 
@@ -856,7 +876,7 @@ class SyntheticBenchmark():
             if current_cost_percent <= self.budget:
                 while True:
                     # find another point for selection
-                    remaining_points_new, selected_coord_list_new = add_additional_point_generic(remaining_points_generic, selected_points_generic)
+                    remaining_points_new, selected_coord_list_new, new_point = add_additional_point_generic(remaining_points_generic, selected_points_generic)
 
                     # calculate selected point cost
                     current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, 0, 0)
@@ -876,6 +896,12 @@ class SyntheticBenchmark():
 
                     # add the new found point
                     else:
+
+                        # update the map with the numbers of already selected points
+                        point_map_generic[new_point] = selection_point_counter
+                        selection_point_counter += 1
+                        #print("point:",point)
+                        #print("point_map_generic:",point_map_generic)
 
                         # increment counter value, because a new measurement point was added
                         added_points_generic += 1
@@ -1066,7 +1092,7 @@ class SyntheticBenchmark():
         #for o in range(self.nr_parameters-1):
 
             # add the first additional point, this is mandatory for the generic strategy
-            #remaining_points_gpr, selected_points_gpr = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
+            #remaining_points_gpr, selected_points_gpr, _ = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
             # increment counter value, because a new measurement point was added
             #add_points_gpr += 1
 
@@ -1078,10 +1104,10 @@ class SyntheticBenchmark():
         for o in range(temp2):
 
             # add the first additional point, this is mandatory for the generic strategy
-            remaining_points_gpr_training, selected_points_gpr_training = add_additional_point_generic(remaining_points_gpr_training, selected_points_gpr_training)
+            remaining_points_gpr_training, selected_points_gpr_training, _ = add_additional_point_generic(remaining_points_gpr_training, selected_points_gpr_training)
             # increment counter value, because a new measurement point was added
             #add_points_gpr += 1
-        print(len(selected_points_gpr_training))
+        #print(len(selected_points_gpr_training))
 
         #print("DEBUG: selected_points_gpr2:",len(selected_points_gpr))
 
@@ -1289,7 +1315,7 @@ class SyntheticBenchmark():
         #for o in range(self.nr_parameters-1):
 
             # add the first additional point, this is mandatory for the generic strategy
-            #remaining_points_hybrid, selected_points_hybrid = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
+            #remaining_points_hybrid, selected_points_hybrid, _ = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
             # increment counter value, because a new measurement point was added
             #add_points_hybrid += 1
 
@@ -1494,6 +1520,9 @@ class SyntheticBenchmark():
 
         result_container["len_coordinates"] = len(experiment.coordinates)
 
+        result_container["point_map_generic"] = point_map_generic
+        result_container["copy_point_map_generic"] = copy_point_map_generic
+
         shared_dict[counter] = result_container
 
     def run(self):
@@ -1544,6 +1573,7 @@ class SyntheticBenchmark():
 
         percentage_cost_generic_container = []
         add_points_generic_container = []
+        copy_point_map_generic = None
 
         # gpr
         acurracy_bucket_counter_gpr = {}
@@ -1601,6 +1631,7 @@ class SyntheticBenchmark():
 
             if i == 0:
                 len_coordinates = result_dict[i]["len_coordinates"]
+                copy_point_map_generic = result_dict[i]["copy_point_map_generic"]
             
             b_full = result_dict[i]["acurracy_bucket_counter_full"]
             b_generic = result_dict[i]["acurracy_bucket_counter_generic"]
@@ -1656,6 +1687,27 @@ class SyntheticBenchmark():
         #print("acurracy_bucket_counter_gpr:",acurracy_bucket_counter_gpr)
         #print("acurracy_bucket_counter_hybrid:",acurracy_bucket_counter_hybrid)
 
+        # analyze results
+        selected_copy_point_map_generic = copy.deepcopy(copy_point_map_generic)
+        for i in range(len(result_dict)):
+            point_map_generic = result_dict[i]["point_map_generic"]
+
+            for key, value in point_map_generic.items():
+                if value != -1:
+                    copy_point_map_generic[key] += value
+                    selected_copy_point_map_generic[key] += 1
+        #print("selected_copy_point_map_generic:",selected_copy_point_map_generic)
+        for key, value in copy_point_map_generic.items():
+            if value != -1:
+                if selected_copy_point_map_generic[key] != 0:
+                    value = value / selected_copy_point_map_generic[key]
+                    value = '{0:.0f}'.format(value)
+                    copy_point_map_generic[key] = value
+        #print("copy_point_map_generic:",copy_point_map_generic)
+        point_map_generic = {}
+        for key, value in copy_point_map_generic.items():
+            point_map_generic[str(key)] = value
+
         json_out = {}
 
         # calculate the percentages for each accuracy bucket
@@ -1704,6 +1756,8 @@ class SyntheticBenchmark():
 
         mean_base_point_cost = np.nanmean(base_point_costs)
         print("mean_base_point_cost:",mean_base_point_cost)
+
+        json_out["point_map_generic"] = point_map_generic
 
         ####################
         # Plot the results #

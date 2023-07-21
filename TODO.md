@@ -4,6 +4,8 @@
 
 I need to analyze that...
 
+* put the bug back in to reproduce results
+
 * make sure that the mean_budget for the strategies can not be bigger than the allowed budget
 
 * if for a function no model can be created with budget x, do not consider it in the average calculation...

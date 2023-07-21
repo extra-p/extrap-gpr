@@ -53,4 +53,4 @@ def add_additional_point_generic(remaining_points, selected_coord_list):
     except ValueError as e:
         print(e)
 
-    return remaining_points, selected_coord_list
+    return remaining_points, selected_coord_list, temp
