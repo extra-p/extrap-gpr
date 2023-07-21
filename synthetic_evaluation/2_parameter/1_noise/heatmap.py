@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import argparse
 from natsort import natsorted
+import copy
 
 def read_json_file(file_path):
     with open(file_path, 'r') as file:
@@ -24,12 +25,13 @@ def plot_heatmap(x1, x2, data, strategy):
 
     strat = strategy
 
-    #generic_point_map = np.array(data)
-    generic_point_map = np.array([[9, 0, 0, 0, 0],
+    generic_point_map = np.array(data)
+    print("generic_point_map:",generic_point_map)
+    """generic_point_map = np.array([[9, 0, 0, 0, 0],
                         [8, 0, 0, 0, 0],
                         [7, 0, 0, 0, 0],
                         [6, 10, 0, 0, 0],
-                        [1, 2, 3, 4, 5],])
+                        [1, 2, 3, 4, 5],])"""
 
     fig, ax = plt.subplots()
     im = ax.imshow(generic_point_map)
@@ -56,7 +58,7 @@ def main():
     x2 = [50,40,30,20,10]
     x1 = [4,8,16,32,64]
     
-    """folder_path = "analysis_results/"
+    folder_path = "analysis_results/"
     files = find_files(folder_path)
     #print("DEBUG:",len(files))
 
@@ -76,32 +78,48 @@ def main():
         temp2.append(x_line)
         temp3.append(x_line2)
 
-    print("temp:",temp)
-    print("temp2:",temp2)
-    print("temp3:",temp3)
+    #print("temp:",temp)
+    #print("temp2:",temp2)
+    #print("temp3:",temp3)
+
+    temp4 = copy.deepcopy(temp)
 
     for i in range(len(files)):
         json_file_path = files[i]
         json_data = read_json_file(json_file_path)
 
-        temp = json_data["point_map_generic"]
+        point_map = json_data["point_map_generic"]
 
-        for key, value in temp.items():
-            temp[key] += value
+        for key, value in point_map.items():
+            key = key.replace("(", "")
+            key = key.replace(")", "")
+            keys = key.split(",")
+            keykey = ()
+            for key in keys:
+                keykey = keykey + (int(key),)
+            temp[keykey] += int(value)
+            if int(value) > 0:
+                temp4[keykey] += 1
         
     for key, value in temp.items():
-        value = value / len(files)
+        value = int(value) / temp4[key]
         temp[key] = value
 
     for key, value in temp.items():
         for i in range(len(temp2)):
-            if temp2[i] == key:
-                temp3[i] = value
+            for j in range(len(temp2[i])):
+                if temp2[i][j] == key:
+                    print(value)
+                    value = '{0:.2f}'.format(value)
+                    print(value)
+                    temp3[i][j] = float(value)
 
-    print("temp3:",temp3)"""
+    #print("temp:",temp)
+
+    #print("temp3:",temp3)
 
 
-    plot_heatmap(x1, x2, [], "GPR")
+    plot_heatmap(x1, x2, temp3, "GPR")
 
 
 if __name__ == '__main__':

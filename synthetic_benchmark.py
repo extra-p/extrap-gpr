@@ -1701,12 +1701,16 @@ class SyntheticBenchmark():
             if value != -1:
                 if selected_copy_point_map_generic[key] != 0:
                     value = value / selected_copy_point_map_generic[key]
-                    value = '{0:.0f}'.format(value)
+                    #print(value)
+                    #value = '{0:.0f}'.format(value)
+                    #print(value)
                     copy_point_map_generic[key] = value
         #print("copy_point_map_generic:",copy_point_map_generic)
         point_map_generic = {}
         for key, value in copy_point_map_generic.items():
             point_map_generic[str(key)] = value
+
+        print("point_map_generic:",point_map_generic)
 
         json_out = {}
 
