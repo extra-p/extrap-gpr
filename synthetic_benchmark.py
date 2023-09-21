@@ -1651,9 +1651,7 @@ class SyntheticBenchmark():
                     acurracy_bucket_counter_full["15"] += 1
                 if b_full["20"] == 1:
                     acurracy_bucket_counter_full["20"] += 1
-                
-            #print("DEBUG:",result_dict[i]["percentage_cost_generic"])
-
+            
             if result_dict[i]["percentage_cost_generic"] <= self.budget:
                 if b_generic["rest"] == 1:
                     acurracy_bucket_counter_generic["rest"] += 1
@@ -1677,17 +1675,18 @@ class SyntheticBenchmark():
                     acurracy_bucket_counter_gpr["15"] += 1
                 if b_gpr["20"] == 1:
                     acurracy_bucket_counter_gpr["20"] += 1
-
-            if b_hybrid["rest"] == 1:
-                acurracy_bucket_counter_hybrid["rest"] += 1
-            if b_hybrid["5"] == 1:
-                acurracy_bucket_counter_hybrid["5"] += 1
-            if b_hybrid["10"] == 1:
-                acurracy_bucket_counter_hybrid["10"] += 1
-            if b_hybrid["15"] == 1:
-                acurracy_bucket_counter_hybrid["15"] += 1
-            if b_hybrid["20"] == 1:
-                acurracy_bucket_counter_hybrid["20"] += 1
+                    
+            if result_dict[i]["percentage_cost_hybrid"] <= self.budget:
+                if b_hybrid["rest"] == 1:
+                    acurracy_bucket_counter_hybrid["rest"] += 1
+                if b_hybrid["5"] == 1:
+                    acurracy_bucket_counter_hybrid["5"] += 1
+                if b_hybrid["10"] == 1:
+                    acurracy_bucket_counter_hybrid["10"] += 1
+                if b_hybrid["15"] == 1:
+                    acurracy_bucket_counter_hybrid["15"] += 1
+                if b_hybrid["20"] == 1:
+                    acurracy_bucket_counter_hybrid["20"] += 1
 
         #print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
         #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
@@ -1721,7 +1720,6 @@ class SyntheticBenchmark():
 
         json_out = {}
 
-        print("DEBUG:",acurracy_bucket_counter_full)
         # calculate the percentages for each accuracy bucket
         percentage_bucket_counter_full = self.calculate_percentage_of_buckets(acurracy_bucket_counter_full)
         print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
@@ -1788,18 +1786,26 @@ class SyntheticBenchmark():
         ##############
 
         percentage_cost_hybrid_container_filtered = []
-        for x in percentage_cost_hybrid_container:
-            if x <= self.budget:
-                percentage_cost_hybrid_container_filtered.append(x)
+        add_points_hybrid_container_filtered = []
+        for i in range(len(percentage_cost_hybrid_container)):
+            if percentage_cost_hybrid_container[i] <= self.budget:
+                percentage_cost_hybrid_container_filtered.append(percentage_cost_hybrid_container[i])
+                add_points_hybrid_container_filtered.append(add_points_hybrid_container[i])
         #print("percentage_cost_hybrid_container:",percentage_cost_hybrid_container)
         #mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container)
+        
         mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container_filtered)
         print("mean_budget_hybrid:",mean_budget_hybrid)
         json_out["mean_budget_hybrid"] = mean_budget_hybrid
 
-        mean_add_points_hybrid = np.nanmean(add_points_hybrid_container)
+        #mean_add_points_hybrid = np.nanmean(add_points_hybrid_container)
+        mean_add_points_hybrid = np.nanmean(add_points_hybrid_container_filtered)
         print("mean_add_points_hybrid:",mean_add_points_hybrid)
         json_out["mean_add_points_hybrid"] = mean_add_points_hybrid
+
+        ###################
+        ### Base Points ###
+        ###################
 
         base_point_costs_filtered = []
         for x in base_point_costs:
@@ -1820,8 +1826,8 @@ class SyntheticBenchmark():
             plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, self.budget)
         
         used_costs = {
-            "base points": np.array([mean_base_point_cost, mean_base_point_cost, mean_base_point_cost, mean_base_point_cost]),
-            "additional points": np.array([100-mean_base_point_cost, mean_budget_generic-mean_base_point_cost, mean_budget_gpr-mean_base_point_cost, mean_budget_hybrid-mean_base_point_cost]),
+            "Base points": np.array([mean_base_point_cost, mean_base_point_cost, mean_base_point_cost, mean_base_point_cost]),
+            "Additional points": np.array([100-mean_base_point_cost, mean_budget_generic-mean_base_point_cost, mean_budget_gpr-mean_base_point_cost, mean_budget_hybrid-mean_base_point_cost]),
         }
         json_out["base_point_cost"] = mean_base_point_cost
         json_out["min_points"] = min_points
@@ -1832,8 +1838,8 @@ class SyntheticBenchmark():
             plot_costs(used_costs, mean_base_point_cost, self.budget)
 
         add_points = {
-            "base points": np.array([min_points, min_points, min_points, min_points]),
-            "additional points": np.array([len_coordinates-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
+            "Base points": np.array([min_points, min_points, min_points, min_points]),
+            "Additional points": np.array([len_coordinates-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
 
         # plot the analysis result for the additional measurement point numbers

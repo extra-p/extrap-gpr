@@ -24,10 +24,10 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
     
     plt.figure(figsize=(10,6))
 
-    b1 = plt.bar(X_axis - 0.3, full, 0.2, label = 'Full matrix points (budget=100%)')
-    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'Generic strategy (budget='+str(budget)+'%)')
-    b3 = plt.bar(X_axis+0.1, gpr, 0.2, label = 'GPR strategy (budget='+str(budget)+'%)')
-    b4 = plt.bar(X_axis + 0.3, hybrid, 0.2, label = 'Hybrid strategy (budget='+str(budget)+'%)')
+    b1 = plt.bar(X_axis - 0.3, full, 0.2, label = 'Full matrix points (budget=100%)', hatch="\\\\", edgecolor='black',)
+    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'Generic strategy (budget='+str(budget)+'%)', edgecolor='black',)
+    b3 = plt.bar(X_axis+0.1, gpr, 0.2, label = 'GPR strategy (budget='+str(budget)+'%)', hatch="//", edgecolor='black',)
+    b4 = plt.bar(X_axis + 0.3, hybrid, 0.2, label = 'Hybrid strategy (budget='+str(budget)+'%)', hatch="xx", edgecolor='black',)
 
     plt.bar_label(b1, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
     plt.bar_label(b2, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
@@ -37,7 +37,7 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
     plt.xticks(X_axis, X)
     plt.xlabel("Accuracy buckets")
     plt.ylabel("Percentage of models")
-    plt.title("Percentage of models in each accuracy bucket")
+    plt.title("Percentage of models in each accuracy bucket", pad=25)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.tight_layout()
     plt.savefig('accuracy_b'+str(budget)+'.png')
@@ -45,29 +45,21 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
     plt.close()
 
 def plot_costs(used_costs, base_budget, budget):
-    """mean_budget_generic = float("{:.2f}".format(mean_budget_generic))
-    mean_budget_gpr = float("{:.2f}".format(mean_budget_gpr))
-    mean_budget_hybrid = float("{:.2f}".format(mean_budget_hybrid))
-    langs = ["full", "generic", "gpr", "hybrid\n(generic+gpr)"]
-    cost = [100, mean_budget_generic, mean_budget_gpr, mean_budget_hybrid]
-    b1 = plt.bar(langs, cost, 0.4)
-    plt.bar_label(b1, label_type='edge')
-    plt.xticks(np.arange(len(langs)), langs)
-    plt.xlabel("masurement point selection strategy")
-    plt.ylabel("percentage of budget [%]")
-    plt.title("Modeling budget used by each strategy to achieve outlined accuracy")
-    plt.tight_layout()
-    plt.savefig('cost.png')
-    plt.show()"""
-    langs = ["full", "generic", "gpr", "hybrid\n(generic+gpr)"]
+    langs = ["Full matrix", "Generic", "GPR", "Hybrid"]
     fig, ax = plt.subplots()
     bottom = np.zeros(4)
     bars = []
+    plt.yscale("symlog")
+    count = 0
     for boolean, add_point in used_costs.items():
-        p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom)
+        if count == 0:
+            p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom, hatch="//", edgecolor="black")
+        else:
+            p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom, edgecolor="black")
         bottom += add_point
+        count += 1
         bars.append(p)
-    ax.bar_label(p, label_type='edge')
+    ax.bar_label(p, label_type='edge', fmt='%0.2f')
     ax.legend(loc="upper right")
     # draw labels for individual bar parts
     for i in range(len(langs)):
@@ -75,46 +67,53 @@ def plot_costs(used_costs, base_budget, budget):
         w,h = b.get_width(), b.get_height()
         x0, y0 = b.xy
         x2, y2 = x0,y0+h
+        text_x = x0 + 0.5*b.get_width() - 0.1
         d=y2-y0
-        yt=y0+(d/2)
+        yt=y0+(d/2)*0.5
         d=h-y2
-        yt2=y0/2
-        ax.text(langs[i], yt2, str("{:.2f}".format(base_budget)))
-        ax.text(langs[i], yt, str("{:.2f}".format(add_point[i])))
-    plt.xlabel("masurement point selection strategy")
-    plt.ylabel("percentage of budget [%]")
-    plt.title("Modeling budget used by each strategy to achieve outlined accuracy")
+        yt2=y0/2*0.5
+        ax.text(text_x, yt2, str("{:.2f}".format(base_budget)), color="white")
+        ax.text(text_x, yt, str("{:.2f}".format(add_point[i])))
+    plt.xlabel("Measurement point selection strategy")
+    plt.ylabel("Percentage of used budget")
+    plt.title("Modeling budget used by each strategy")
     plt.tight_layout()
     plt.savefig('cost_b'+str(budget)+'.png')
     #plt.show()
     plt.close()
 
 def plot_measurement_point_number(add_points, min_points, budget):
-    langs = ["full", "generic", "gpr", "hybrid\n(generic+gpr)"]
+    langs = ["Full", "Generic", "Gpr", "Hybrid"]
     fig, ax = plt.subplots()
     bottom = np.zeros(4)
     bars = []
+    count = 0
     for boolean, add_point in add_points.items():
-        p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom)
+        if count == 0:
+            p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom, hatch="//", edgecolor="black")
+        else:
+            p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom, edgecolor="black")
         bottom += add_point
+        count += 1
         bars.append(p)
-    ax.bar_label(p, label_type='edge')
+    ax.bar_label(p, label_type='edge', fmt='%0.2f')
     ax.legend(loc="upper right")
     # draw labels for individual bar parts
     for i in range(len(langs)):
         b = p[i]
         w,h = b.get_width(), b.get_height()
         x0, y0 = b.xy
+        text_x = x0 + 0.5*b.get_width() - 0.1
         x2, y2 = x0,y0+h
         d=y2-y0
         yt=y0+(d/2)
         d=h-y2
         yt2=y0/2
-        ax.text(langs[i], yt2, str("{:.2f}".format(min_points)))
-        ax.text(langs[i], yt, str("{:.2f}".format(add_point[i])))
-    plt.xlabel("measurement point selection strategy")
-    plt.ylabel("additional measurement points")
-    plt.title("Number of measurement points used by each\n strategy to achieve outlined accuracy")
+        ax.text(text_x, yt2, str("{:.2f}".format(min_points)), color="white")
+        ax.text(text_x, yt, str("{:.2f}".format(add_point[i])))
+    plt.xlabel("Measurement point selection strategy")
+    plt.ylabel("Used measurement points")
+    plt.title("Number of measurement points used by each strategy")
     plt.tight_layout()
     plt.savefig('additional_points_b'+str(budget)+'.png')
     #plt.show()
