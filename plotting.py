@@ -21,20 +21,22 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
                 percentage_bucket_counter_hybrid["20"]]
 
     X_axis = np.arange(len(X))
+    
+    plt.figure(figsize=(10,6))
 
-    b1 = plt.bar(X_axis - 0.3, full, 0.2, label = 'Full matrix points')
-    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'Generic strategy')
-    b3 = plt.bar(X_axis+0.1, gpr, 0.2, label = 'GPR strategy')
-    b4 = plt.bar(X_axis + 0.3, hybrid, 0.2, label = 'Hybrid strategy')
+    b1 = plt.bar(X_axis - 0.3, full, 0.2, label = 'Full matrix points (budget=100%)')
+    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'Generic strategy (budget='+str(budget)+'%)')
+    b3 = plt.bar(X_axis+0.1, gpr, 0.2, label = 'GPR strategy (budget='+str(budget)+'%)')
+    b4 = plt.bar(X_axis + 0.3, hybrid, 0.2, label = 'Hybrid strategy (budget='+str(budget)+'%)')
 
-    plt.bar_label(b1, label_type='edge', fontsize=8)
-    plt.bar_label(b2, label_type='edge', fontsize=8)
-    plt.bar_label(b3, label_type='edge', fontsize=8)
-    plt.bar_label(b4, label_type='edge', fontsize=8)
+    plt.bar_label(b1, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
+    plt.bar_label(b2, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
+    plt.bar_label(b3, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
+    plt.bar_label(b4, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
     
     plt.xticks(X_axis, X)
     plt.xlabel("Accuracy buckets")
-    plt.ylabel("Percentage of models [%]")
+    plt.ylabel("Percentage of models")
     plt.title("Percentage of models in each accuracy bucket")
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.tight_layout()

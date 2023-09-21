@@ -85,10 +85,12 @@ class SyntheticBenchmark():
         return experiment_generic
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
+        print("DEBUG:",acurracy_bucket_counter["rest"])
         # calculate the percentages for each accuracy bucket
         percentage_bucket_counter = {}
         for key, value in acurracy_bucket_counter.items():
-            percentage = (value / self.nr_functions) * 100
+            #percentage = (value / self.nr_functions) * 100
+            percentage = (value / acurracy_bucket_counter["rest"]) * 100
             percentage_bucket_counter[key] = percentage
         return percentage_bucket_counter
 
@@ -1638,38 +1640,43 @@ class SyntheticBenchmark():
             b_gpr = result_dict[i]["acurracy_bucket_counter_gpr"]
             b_hybrid = result_dict[i]["acurracy_bucket_counter_hybrid"]
 
-            if b_full["rest"] == 1:
-                acurracy_bucket_counter_full["rest"] += 1
-            if b_full["5"] == 1:
-                acurracy_bucket_counter_full["5"] += 1
-            if b_full["10"] == 1:
-                acurracy_bucket_counter_full["10"] += 1
-            if b_full["15"] == 1:
-                acurracy_bucket_counter_full["15"] += 1
-            if b_full["20"] == 1:
-                acurracy_bucket_counter_full["20"] += 1
+            if result_dict[i]["percentage_cost_generic"] <= self.budget:
+                if b_full["rest"] == 1:
+                    acurracy_bucket_counter_full["rest"] += 1
+                if b_full["5"] == 1:
+                    acurracy_bucket_counter_full["5"] += 1
+                if b_full["10"] == 1:
+                    acurracy_bucket_counter_full["10"] += 1
+                if b_full["15"] == 1:
+                    acurracy_bucket_counter_full["15"] += 1
+                if b_full["20"] == 1:
+                    acurracy_bucket_counter_full["20"] += 1
+                
+            #print("DEBUG:",result_dict[i]["percentage_cost_generic"])
 
-            if b_generic["rest"] == 1:
-                acurracy_bucket_counter_generic["rest"] += 1
-            if b_generic["5"] == 1:
-                acurracy_bucket_counter_generic["5"] += 1
-            if b_generic["10"] == 1:
-                acurracy_bucket_counter_generic["10"] += 1
-            if b_generic["15"] == 1:
-                acurracy_bucket_counter_generic["15"] += 1
-            if b_generic["20"] == 1:
-                acurracy_bucket_counter_generic["20"] += 1
+            if result_dict[i]["percentage_cost_generic"] <= self.budget:
+                if b_generic["rest"] == 1:
+                    acurracy_bucket_counter_generic["rest"] += 1
+                if b_generic["5"] == 1:
+                    acurracy_bucket_counter_generic["5"] += 1
+                if b_generic["10"] == 1:
+                    acurracy_bucket_counter_generic["10"] += 1
+                if b_generic["15"] == 1:
+                    acurracy_bucket_counter_generic["15"] += 1
+                if b_generic["20"] == 1:
+                    acurracy_bucket_counter_generic["20"] += 1
 
-            if b_gpr["rest"] == 1:
-                acurracy_bucket_counter_gpr["rest"] += 1
-            if b_gpr["5"] == 1:
-                acurracy_bucket_counter_gpr["5"] += 1
-            if b_gpr["10"] == 1:
-                acurracy_bucket_counter_gpr["10"] += 1
-            if b_gpr["15"] == 1:
-                acurracy_bucket_counter_gpr["15"] += 1
-            if b_gpr["20"] == 1:
-                acurracy_bucket_counter_gpr["20"] += 1
+            if result_dict[i]["percentage_cost_gpr"] <= self.budget:
+                if b_gpr["rest"] == 1:
+                    acurracy_bucket_counter_gpr["rest"] += 1
+                if b_gpr["5"] == 1:
+                    acurracy_bucket_counter_gpr["5"] += 1
+                if b_gpr["10"] == 1:
+                    acurracy_bucket_counter_gpr["10"] += 1
+                if b_gpr["15"] == 1:
+                    acurracy_bucket_counter_gpr["15"] += 1
+                if b_gpr["20"] == 1:
+                    acurracy_bucket_counter_gpr["20"] += 1
 
             if b_hybrid["rest"] == 1:
                 acurracy_bucket_counter_hybrid["rest"] += 1
@@ -1714,14 +1721,11 @@ class SyntheticBenchmark():
 
         json_out = {}
 
+        print("DEBUG:",acurracy_bucket_counter_full)
         # calculate the percentages for each accuracy bucket
         percentage_bucket_counter_full = self.calculate_percentage_of_buckets(acurracy_bucket_counter_full)
         print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
         json_out["percentage_bucket_counter_full"] = percentage_bucket_counter_full
-
-        percentage_bucket_counter_generic = self.calculate_percentage_of_buckets(acurracy_bucket_counter_generic)
-        print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
-        json_out["percentage_bucket_counter_generic"] = percentage_bucket_counter_generic
         
         percentage_bucket_counter_gpr = self.calculate_percentage_of_buckets(acurracy_bucket_counter_gpr)
         print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
@@ -1731,26 +1735,65 @@ class SyntheticBenchmark():
         print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
         json_out["percentage_bucket_counter_hybrid"] = percentage_bucket_counter_hybrid
 
+        ###############
+        ### Generic ###
+        ###############
+        
         #print("percentage_cost_generic_container:",percentage_cost_generic_container)
-        mean_budget_generic = np.nanmean(percentage_cost_generic_container)
+        percentage_cost_generic_container_filtered = []
+        add_points_generic_container_filtered = []
+        for i in range(len(percentage_cost_generic_container)):
+            if percentage_cost_generic_container[i] <= self.budget:
+                percentage_cost_generic_container_filtered.append(percentage_cost_generic_container[i])
+                add_points_generic_container_filtered.append(add_points_generic_container[i])
+        #mean_budget_generic = np.nanmean(percentage_cost_generic_container)
+        mean_budget_generic = np.nanmean(percentage_cost_generic_container_filtered)
+        #print("percentage_cost_generic_container_filtered:",percentage_cost_generic_container_filtered)
         print("mean_budget_generic:",mean_budget_generic)
         json_out["mean_budget_generic"] = mean_budget_generic
+        
+        percentage_bucket_counter_generic = self.calculate_percentage_of_buckets(acurracy_bucket_counter_generic)
+        print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
+        json_out["percentage_bucket_counter_generic"] = percentage_bucket_counter_generic
 
-        mean_add_points_generic = np.nanmean(add_points_generic_container)
+        #mean_add_points_generic = np.nanmean(add_points_generic_container)
+        mean_add_points_generic = np.nanmean(add_points_generic_container_filtered)
         print("mean_add_points_generic:",mean_add_points_generic)
         json_out["mean_add_points_generic"] = mean_add_points_generic
 
-        #print("percentage_cost_gpr_container:",percentage_cost_gpr_container)
-        mean_budget_gpr = np.nanmean(percentage_cost_gpr_container)
-        print("mean_budget_gpr:",mean_budget_gpr)
-        json_out["mean_budget_gpr"] = mean_budget_gpr
+        ###########
+        ### GPR ###
+        ###########
 
-        mean_add_points_gpr = np.nanmean(add_points_gpr_container)
+        #print("percentage_cost_gpr_container:",percentage_cost_gpr_container)
+        percentage_cost_gpr_container_filtered = []
+        add_points_gpr_container_filtered = []
+        for i in range(len(percentage_cost_gpr_container)):
+            if percentage_cost_gpr_container[i] <= self.budget:
+                percentage_cost_gpr_container_filtered.append(percentage_cost_gpr_container[i])
+                add_points_gpr_container_filtered.append(add_points_gpr_container[i])
+                
+        #mean_add_points_gpr = np.nanmean(add_points_gpr_container)
+        mean_add_points_gpr = np.nanmean(add_points_gpr_container_filtered)
         print("mean_add_points_gpr:",mean_add_points_gpr)
         json_out["mean_add_points_gpr"] = mean_add_points_gpr
+                
+        #mean_budget_gpr = np.nanmean(percentage_cost_gpr_container)
+        mean_budget_gpr = np.nanmean(percentage_cost_gpr_container_filtered)
+        print("mean_budget_gpr:",mean_budget_gpr)
+        json_out["mean_budget_gpr"] = mean_budget_gpr
+        
+        ##############
+        ### Hybrid ###
+        ##############
 
+        percentage_cost_hybrid_container_filtered = []
+        for x in percentage_cost_hybrid_container:
+            if x <= self.budget:
+                percentage_cost_hybrid_container_filtered.append(x)
         #print("percentage_cost_hybrid_container:",percentage_cost_hybrid_container)
-        mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container)
+        #mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container)
+        mean_budget_hybrid = np.nanmean(percentage_cost_hybrid_container_filtered)
         print("mean_budget_hybrid:",mean_budget_hybrid)
         json_out["mean_budget_hybrid"] = mean_budget_hybrid
 
@@ -1758,7 +1801,12 @@ class SyntheticBenchmark():
         print("mean_add_points_hybrid:",mean_add_points_hybrid)
         json_out["mean_add_points_hybrid"] = mean_add_points_hybrid
 
-        mean_base_point_cost = np.nanmean(base_point_costs)
+        base_point_costs_filtered = []
+        for x in base_point_costs:
+            if x <= self.budget:
+                base_point_costs_filtered.append(x)
+        #mean_base_point_cost = np.nanmean(base_point_costs)
+        mean_base_point_cost = np.nanmean(base_point_costs_filtered)
         print("mean_base_point_cost:",mean_base_point_cost)
 
         json_out["point_map_generic"] = point_map_generic
