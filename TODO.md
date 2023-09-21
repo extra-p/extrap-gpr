@@ -1,17 +1,13 @@
 # TODO LIST:
 
+* try to add reps in the selection, that should make a significant difference in results, just for gpr first...
+
 * especially for 3 and more parameters the interesting part of the cost, accuracy analysis is going to be the area between 0 and 1%...
 
 I need to analyze that...
 
 * put the bug back in to reproduce results
 
-* make sure that the mean_budget for the strategies can not be bigger than the allowed budget
-
-* if for a function no model can be created with budget x, do not consider it in the average calculation...
--> this should be also considered for the line indicating the model accuracy when using a full matrix, basically it should not be a straight line anymore...
-
-* this way I should get more realistic results for the strategies
 
 * make heatmap work for all strategies...
 

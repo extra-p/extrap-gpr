@@ -21,9 +21,14 @@ def find_files(folder_path):
 def plot_accuracy(x_values, y_values_list, labels, bucket):
     ls=['-','--',':','-']
     lw = [2,3,5,2]
+    plt.xscale("symlog")
+    #plt.xlim(0.1, 25)
     style_counter = 0
     for y_values, label in zip(y_values_list, labels):
-        plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
+        if style_counter == 0:
+            plt.plot(100, y_values[len(y_values)-1], label=label, marker="D", linestyle = 'None',)
+        else:
+            plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
         style_counter += 1
     plt.xlabel('Allowed Modeling Budget [%]')
     plt.ylabel('Models in '+str(bucket)+'% accuracy bucket [%]')
@@ -171,9 +176,9 @@ def main():
     #print(np.max(points_hybrid))
 
     # costs
-    print(np.max(generic_costs))
-    print(np.max(gpr_costs))
-    print(np.max(hybrid_costs))
+    #print(np.max(generic_costs))
+    #print(np.max(gpr_costs))
+    #print(np.max(hybrid_costs))
 
     labels = ['full', 'generic', 'gpr', 'hybrid']
     labels2 = ['generic', 'gpr', 'hybrid', 'base point cost']

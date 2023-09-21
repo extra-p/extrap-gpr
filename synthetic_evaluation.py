@@ -31,13 +31,13 @@ def main():
                         help="Set the analysis mode. If budget is used, strategies are only allowed to add more points until budget is reached. If free is set they choose until no improvement is made anymore.")
     parser.add_argument("--normalization", type=bool, default=False,
                         help="Set if normalization of the measurement points parameter values is used for the gpr approach.")
-    parser.add_argument("--budget", type=int, required=False, default=30,
+    parser.add_argument("--budget", type=float, required=False, default=30,
                         help="Set the allowed budget for the measurement points of the anlysis.")
     parser.add_argument("--nr-parameters", type=int, choices=[2, 3, 4], required=True,
                         help="Number of parameters for the synthetic benchmark. Must be 2, 3, or 4.")
     parser.add_argument("--nr-functions", type=int, default=1000, required=True,
                         help="Number of synthetic functions used for the evaluation. Must be an integer value.")
-    parser.add_argument("--nr-repetitions", type=int, default=5, required=True,
+    parser.add_argument("--nr-repetitions", type=int, default=4, required=True,
                         help="Number of repetitions for each measurement point. Must be an integer value.")
     parser.add_argument("--noise", type=float, default=1, required=True,
                         help="Percentage of induced noise. Must be an integer value.")

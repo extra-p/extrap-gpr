@@ -36,11 +36,12 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
     
     plt.xticks(X_axis, X)
     plt.xlabel("Accuracy buckets")
-    plt.ylabel("Percentage of models")
+    plt.ylabel("Percentage of models in bucket")
     plt.title("Percentage of models in each accuracy bucket", pad=25)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.tight_layout()
-    plt.savefig('accuracy_b'+str(budget)+'.png')
+    budget_string = "{:0.1f}".format(budget)
+    plt.savefig('accuracy_b'+str(budget_string)+'.png')
     #plt.show()
     plt.close()
 
@@ -74,16 +75,17 @@ def plot_costs(used_costs, base_budget, budget):
         yt2=y0/2*0.5
         ax.text(text_x, yt2, str("{:.2f}".format(base_budget)), color="white")
         ax.text(text_x, yt, str("{:.2f}".format(add_point[i])))
+    budget_string = "{:0.1f}".format(budget)
     plt.xlabel("Measurement point selection strategy")
-    plt.ylabel("Percentage of used budget")
-    plt.title("Modeling budget used by each strategy")
+    plt.ylabel("Average used budget [%]")
+    plt.title("Modeling budget used by each strategy (budget="+str(budget_string)+"%)")
     plt.tight_layout()
-    plt.savefig('cost_b'+str(budget)+'.png')
+    plt.savefig('cost_b'+str(budget_string)+'.png')
     #plt.show()
     plt.close()
 
 def plot_measurement_point_number(add_points, min_points, budget):
-    langs = ["Full", "Generic", "Gpr", "Hybrid"]
+    langs = ["Full matrix", "Generic", "GPR", "Hybrid"]
     fig, ax = plt.subplots()
     bottom = np.zeros(4)
     bars = []
@@ -112,9 +114,10 @@ def plot_measurement_point_number(add_points, min_points, budget):
         ax.text(text_x, yt2, str("{:.2f}".format(min_points)), color="white")
         ax.text(text_x, yt, str("{:.2f}".format(add_point[i])))
     plt.xlabel("Measurement point selection strategy")
-    plt.ylabel("Used measurement points")
+    plt.ylabel("Average number of used measurement points")
     plt.title("Number of measurement points used by each strategy")
     plt.tight_layout()
-    plt.savefig('additional_points_b'+str(budget)+'.png')
+    budget_string = "{:0.1f}".format(budget)
+    plt.savefig('additional_points_b'+str(budget_string)+'.png')
     #plt.show()
     plt.close()

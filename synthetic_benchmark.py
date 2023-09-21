@@ -54,10 +54,10 @@ class SyntheticBenchmark():
         self.parameter_values_c = [1000,2000,3000,4000,5000]
         self.parameter_values_d = [10,12,14,16,18]
         self.noise_percent = args.noise
-        self.parameter_values_a_val = [128]
-        self.parameter_values_b_val = [60]
-        self.parameter_values_c_val = [6000]
-        self.parameter_values_d_val = [20]
+        self.parameter_values_a_val = [128, 256]
+        self.parameter_values_b_val = [60, 70]
+        self.parameter_values_c_val = [6000, 7000]
+        self.parameter_values_d_val = [20, 22]
 
     def create_experiment(self, selected_coord_list, experiment):
         # create new experiment with only the selected measurements and points as coordinates and measurements
@@ -71,25 +71,18 @@ class SyntheticBenchmark():
         for j in range(len(selected_coord_list)):
             coordinate = selected_coord_list[j]
             experiment_generic.add_coordinate(coordinate)
-
             coordinate_id = -1
             for k in range(len(experiment.coordinates)):
                 if coordinate == experiment.coordinates[k]:
                     coordinate_id = k
             measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
-            #print("haha:",measurement_temp.values)
-
-            #value = selected_measurement_values[selected_coord_list[j]] 
-            #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
             experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
         return experiment_generic
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
-        print("DEBUG:",acurracy_bucket_counter["rest"])
         # calculate the percentages for each accuracy bucket
         percentage_bucket_counter = {}
         for key, value in acurracy_bucket_counter.items():
-            #percentage = (value / self.nr_functions) * 100
             percentage = (value / acurracy_bucket_counter["rest"]) * 100
             percentage_bucket_counter[key] = percentage
         return percentage_bucket_counter
@@ -145,7 +138,6 @@ class SyntheticBenchmark():
             if value is not None:
                 setattr(modeler, name, value)
 
-        #with ProgressBar(desc='Generating models') as pbar:
         # create models from data
         model_generator.model_all()
 
@@ -283,7 +275,7 @@ class SyntheticBenchmark():
                     values = []
                     if coordinate not in cost:
                         cost[coordinate] = []
-                    for _ in range(5):
+                    for _ in range(self.nr_repetitions):
                         if random.randint(1, 2) == 1:
                             noise = random.uniform(0, self.noise_percent/2)
                             result *= ((100-noise)/100)
@@ -312,7 +304,7 @@ class SyntheticBenchmark():
                         values = []
                         if coordinate not in cost:
                             cost[coordinate] = []
-                        for _ in range(5):
+                        for _ in range(self.nr_repetitions):
                             if random.randint(1, 2) == 1:
                                 noise = random.uniform(0, self.noise_percent/2)
                                 result *= ((100-noise)/100)
@@ -343,7 +335,7 @@ class SyntheticBenchmark():
                             values = []
                             if coordinate not in cost:
                                 cost[coordinate] = []
-                            for _ in range(5):
+                            for _ in range(self.nr_repetitions):
                                 if random.randint(1, 2) == 1:
                                     noise = random.uniform(0, self.noise_percent/2)
                                     result *= ((100-noise)/100)
@@ -1084,40 +1076,18 @@ class SyntheticBenchmark():
         remaining_points_gpr = copy.deepcopy(remaining_points)
         selected_points_gpr = copy.deepcopy(selected_points)
 
-        #DEBUG
-        remaining_points_gpr_training = copy.deepcopy(remaining_points)
-        selected_points_gpr_training = copy.deepcopy(selected_points)
-
-        #print("DEBUG: selected_points_gpr:",len(selected_points_gpr))
-
-        # for each additional dimension add one additional point
-        #for o in range(self.nr_parameters-1):
+        """# for each additional dimension add one additional point
+        for o in range(self.nr_parameters-1):
 
             # add the first additional point, this is mandatory for the generic strategy
-            #remaining_points_gpr, selected_points_gpr, _ = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
+            remaining_points_gpr, selected_points_gpr, _ = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
             # increment counter value, because a new measurement point was added
-            #add_points_gpr += 1
-
-        #DEBUG
-        # for each additional dimension add one additional point
-        temp1 = len(selected_points_gpr_training)
-        #print(temp1)
-        temp2 = 25 - temp1
-        for o in range(temp2):
-
-            # add the first additional point, this is mandatory for the generic strategy
-            remaining_points_gpr_training, selected_points_gpr_training, _ = add_additional_point_generic(remaining_points_gpr_training, selected_points_gpr_training)
-            # increment counter value, because a new measurement point was added
-            #add_points_gpr += 1
-        #print(len(selected_points_gpr_training))
-
-        #print("DEBUG: selected_points_gpr2:",len(selected_points_gpr))
+            add_points_gpr += 1"""
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
-        #DEBUG
         gaussian_process = add_measurements_to_gpr(gaussian_process, 
-                        selected_points_gpr_training, 
+                        selected_points_gpr, 
                         experiment.measurements, 
                         callpath,
                         metric,
@@ -1195,15 +1165,14 @@ class SyntheticBenchmark():
                     cord = Coordinate(parameter_values)
                     selected_points_gpr.append(cord)
                     
-                    #DEBUG
                     # add the new point to the gpr and call fit()
-                    #gaussian_process = add_measurement_to_gpr(gaussian_process, 
-                    #        cord, 
-                    #        experiment.measurements, 
-                    #        callpath, 
-                    #        metric,
-                    #        normalization_factors,
-                    #        experiment.parameters)
+                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                            cord, 
+                            experiment.measurements, 
+                            callpath, 
+                            metric,
+                            normalization_factors,
+                            experiment.parameters)
                     
                     # remove the identified measurement point from the remaining point list
                     try:
@@ -1313,13 +1282,13 @@ class SyntheticBenchmark():
         remaining_points_hybrid = copy.deepcopy(remaining_points)
         selected_points_hybrid = copy.deepcopy(selected_points)
 
-        # for each additional dimension add one additional point
-        #for o in range(self.nr_parameters-1):
+        """# for each additional dimension add one additional point
+        for o in range(self.nr_parameters-1):
 
             # add the first additional point, this is mandatory for the generic strategy
-            #remaining_points_hybrid, selected_points_hybrid, _ = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
+            remaining_points_hybrid, selected_points_hybrid, _ = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
             # increment counter value, because a new measurement point was added
-            #add_points_hybrid += 1
+            add_points_hybrid += 1"""
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
@@ -1853,6 +1822,7 @@ class SyntheticBenchmark():
         # write results to file
         json_object = json.dumps(json_out, indent=4)
 
-        with open("result.budget."+str(self.budget)+".json", "w") as outfile:
+        budget_string = "{:0.1f}".format(self.budget)
+        with open("result.budget."+str(budget_string)+".json", "w") as outfile:
             outfile.write(json_object)
         
