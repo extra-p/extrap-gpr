@@ -86,7 +86,10 @@ def add_measurement_to_gpr(gaussian_process,
 
     for measurement in measurements[(callpath, metric)]:
         if measurement.coordinate == coordinate:
-            Y.append(measurement.mean)
+            #print("DEBUG3:",measurement.values)
+            # append only the first value in the list, until none left
+            #Y.append(measurement.mean)
+            Y.append(measurement.values[0])
             break
     
     X.append(x)

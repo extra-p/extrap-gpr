@@ -1,5 +1,9 @@
 # TODO LIST:
 
+* how to visualize selection paths of actions from a markov chain???
+
+* figure out how to use less point with the GPR and introduce a weight factor for the repetitions...
+
 * try to add reps in the selection, that should make a significant difference in results, just for gpr first...
 
 * especially for 3 and more parameters the interesting part of the cost, accuracy analysis is going to be the area between 0 and 1%...
