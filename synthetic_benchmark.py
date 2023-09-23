@@ -28,6 +28,7 @@ from case_study import create_experiment
 from case_study import get_extrap_model
 from temp import add_measurements_to_gpr
 from temp import add_measurement_to_gpr
+from temp import add_measurement_to_gpr_test
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import Matern
 from sklearn.gaussian_process.kernels import WhiteKernel
@@ -59,33 +60,54 @@ class SyntheticBenchmark():
         self.parameter_values_c_val = [6000, 7000]
         self.parameter_values_d_val = [20, 22]
 
-    def create_experiment(self, selected_coord_list, experiment):
-        # create new experiment with only the selected measurements and points as coordinates and measurements
-        experiment_generic = Experiment()
-        for j in range(self.nr_parameters):
-            experiment_generic.add_parameter(Parameter(self.parameter_placeholders[j]))
-        callpath = Callpath("main")
-        experiment_generic.add_callpath(callpath)
-        metric = Metric("runtime")
-        experiment_generic.add_metric(metric)
-        for j in range(len(selected_coord_list)):
-            coordinate = selected_coord_list[j]
-            experiment_generic.add_coordinate(coordinate)
-            coordinate_id = -1
-            for k in range(len(experiment.coordinates)):
-                if coordinate == experiment.coordinates[k]:
-                    coordinate_id = k
-            measurement_temp = experiment.get_measurement(coordinate_id, 0, 0)
-            experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
-        return experiment_generic
-
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
         percentage_bucket_counter = {}
+        #print("DEBUG:",acurracy_bucket_counter)
         for key, value in acurracy_bucket_counter.items():
             percentage = (value / acurracy_bucket_counter["rest"]) * 100
             percentage_bucket_counter[key] = percentage
         return percentage_bucket_counter
+    
+    def create_experiment_gpr(self, cord, experiment_gpr_base, new_value):
+        # only append to measurement value to experiment
+        cord_found = False
+        for i in range(len(experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))])):
+            if cord == experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate:
+                x = experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].values
+                x = np.append(x, new_value)
+                experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].values = x
+                cord_found = True
+                break
+        if cord_found == False:
+            # add new coordinate to experiment and then add a new measurement object with the new value to the experiment
+            experiment_gpr_base.add_coordinate(cord)
+            new_measurement = Measurement(cord, Callpath("main"), Metric("runtime"), [new_value])
+            experiment_gpr_base.add_measurement(new_measurement)
+        return experiment_gpr_base
+    
+    def calculate_selected_point_cost_gpr(self, experiment):
+        
+        x = []
+        for i in range(len(experiment.measurements[(Callpath("main"), Metric("runtime"))])):
+            x.append((experiment.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate, experiment.measurements[(Callpath("main"), Metric("runtime"))][i].values))
+        
+        #print("DEBUG5:",x)
+        #print("DEBUG5:",len(experiment.measurements[(Callpath("main"), Metric("runtime"))]))
+
+        # calculate selected point cost
+        selected_cost = 0
+        for i in range(len(experiment.measurements[(Callpath("main"), Metric("runtime"))])):
+            x = experiment.measurements[(Callpath("main"), Metric("runtime"))][i]
+            coordinate_cost = 0
+            #print("DEBUG6:",x.values)
+            for k in range(len(x.values)):
+                runtime = x.values[k]
+                nr_processes = x.coordinate.as_tuple()[0]
+                core_hours = runtime * nr_processes
+                coordinate_cost += core_hours
+            selected_cost += coordinate_cost
+        return selected_cost
 
     def increment_accuracy_bucket(self, acurracy_bucket_counter, percentage_error):
         # increase the counter of the accuracy bucket the error falls into for strategy
@@ -942,6 +964,9 @@ class SyntheticBenchmark():
         #    print("add_points_generic:",add_points_generic)
         
         # create model using point selection of generic strategy
+        
+        #print("DEBUG experiment_generic_base:", experiment_generic_base.measurements)
+        
         model_generic, _ = get_extrap_model(experiment_generic_base, self.args)
 
         # create model using full matrix of points
@@ -1079,7 +1104,12 @@ class SyntheticBenchmark():
 
         remaining_points_gpr = copy.deepcopy(remaining_points)
         selected_points_gpr = copy.deepcopy(selected_points)
+        # entails all measurement points and their values
         measurements_gpr = copy.deepcopy(experiment.measurements)
+        
+        #print("DEBUG2 cost:",cost)
+        #print("\n")
+        #print("DEBUG3 experiment.measurements:",experiment.measurements)
 
         """# for each additional dimension add one additional point
         for o in range(self.nr_parameters-1):
@@ -1105,6 +1135,16 @@ class SyntheticBenchmark():
         if self.mode == "budget":
 
             while True:
+                
+                #print("DEBUG: remaining_points_gpr",remaining_points_gpr)
+                
+                x = []
+                for i in range(len(experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))])):
+                    x.append((experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate, experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].values))
+                
+                #print("DEBUG:",x)
+                #print("DEBUG:",len(experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))]))
+
 
                 # identify all possible next points that would 
                 # still fit into the modeling budget in core hours
@@ -1112,8 +1152,9 @@ class SyntheticBenchmark():
                 for key, value in remaining_points_gpr.items():
                     
                     #print("DEBUG key, value:", key, value)
-
-                    current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
+                    
+                    #current_cost = calculate_selected_point_cost(selected_points_gpr, experiment_gpr_base, 0, 0)
+                    current_cost = self.calculate_selected_point_cost_gpr(experiment_gpr_base)
                     
                     # always take the first value in the list, until none left
                     #new_cost = current_cost + np.sum(value)
@@ -1148,7 +1189,7 @@ class SyntheticBenchmark():
                     for j in range(len(parameter_values)):
                     
                         if len(normalization_factors) != 0:
-                            x.append(parameter_values[j] * normalization_factors[experiment.parameters[j]])
+                            x.append(parameter_values[j] * normalization_factors[experiment_gpr_base.parameters[j]])
                     
                         else:
                             x.append(parameter_values[j])
@@ -1174,7 +1215,13 @@ class SyntheticBenchmark():
                     # add the identified measurement point to the selected point list
                     parameter_values = fitting_measurements[best_index].as_tuple()
                     cord = Coordinate(parameter_values)
-                    selected_points_gpr.append(cord)
+                    
+                    # only add coordinate to selected points list if not already in there (because of reps)
+                    #print("DEBUG2 create_experiment_gpr:",selected_points_gpr)
+                    if cord not in selected_points_gpr:
+                        selected_points_gpr.append(cord)
+                    
+                    #selected_points_gpr.append(cord)
                     
                     #DEBUG
                     #print("Selected point:",cord)
@@ -1186,7 +1233,9 @@ class SyntheticBenchmark():
                             callpath, 
                             metric,
                             normalization_factors,
-                            experiment.parameters)
+                            experiment_gpr_base.parameters)
+                    
+                    new_value = 0
                     
                     # remove the identified measurement point from the remaining point list
                     try:
@@ -1200,11 +1249,22 @@ class SyntheticBenchmark():
                                 cord_id = i
                                 x = measurements_gpr[(Callpath("main"), Metric("runtime"))][i].values
                                 if len(x) > 0:
+                                    new_value = x[0]
                                     #print("DEBUG4:",x)
                                     x = np.delete(x, 0)
                                     #print("DEBUG4:",x)
                                     measurements_gpr[(Callpath("main"), Metric("runtime"))][i].values = x
                                 break
+                            
+                        """if len(remaining_points_gpr[cord]) > 0:
+                            #print("DEBUG4:",remaining_points_gpr[cord])
+                            new_value = remaining_points_gpr[cord][0]
+                            x = remaining_points_gpr[cord]
+                            x = np.delete(x, 0)
+                            remaining_points_gpr[cord] = x
+                            #print("DEBUG4:",remaining_points_gpr[cord])
+                            #print("DEBUG4: new_value",new_value)"""
+                        
                         if len(measurements_gpr[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
                             remaining_points_gpr.pop(cord)
                         
@@ -1215,7 +1275,8 @@ class SyntheticBenchmark():
                     add_points_gpr += 1
 
                     # add this point to the gpr experiment
-                    experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
+                    #experiment_gpr_base = create_experiment(selected_points_gpr, experiment_gpr_base, len(experiment_gpr_base.parameters), parameters, 0, 0)
+                    experiment_gpr_base = self.create_experiment_gpr(cord, experiment_gpr_base, new_value)
 
                 # if there are no suitable measurement points found
                 # break the while True loop
@@ -1229,7 +1290,8 @@ class SyntheticBenchmark():
             return 1
 
         # cost used of the gpr strategy
-        current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
+        #current_cost = calculate_selected_point_cost(selected_points_gpr, experiment, 0, 0)
+        current_cost = self.calculate_selected_point_cost_gpr(experiment_gpr_base)
         percentage_cost_gpr = current_cost / (total_cost / 100)
         if percentage_cost_gpr >= 99.9:
             percentage_cost_gpr = 100
@@ -1237,6 +1299,8 @@ class SyntheticBenchmark():
 
         # additionally used data points (exceeding the base requirement of the sparse modeler)
         add_points_gpr_container.append(add_points_gpr)
+        
+        #print("DEBUG experiment_gpr_base:",experiment_gpr_base.measurements)
 
         # create model using point selection of gpr strategy
         model_gpr, _ = get_extrap_model(experiment_gpr_base, self.args)

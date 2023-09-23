@@ -94,6 +94,44 @@ def add_measurement_to_gpr(gaussian_process,
     
     X.append(x)
 
+    #print("GPR: x,y:", X, Y)
+
+    gaussian_process.fit(X, Y)
+
+    return gaussian_process
+
+
+def add_measurement_to_gpr_test(gaussian_process, 
+                            coordinate, 
+                            new_value, 
+                            normalization_factors,
+                            parameters):
+
+    X = []
+    Y = []
+    x = []
+
+    parameter_values = coordinate.as_tuple()
+
+    for j in range(len(parameter_values)):
+
+        temp = 0
+
+        if len(normalization_factors) != 0:
+            temp = parameter_values[j] * normalization_factors[parameters[j]]
+
+        else:
+            temp = parameter_values[j]
+            while temp < 1:
+                temp = temp * 10
+                
+        x.append(temp)
+
+    Y.append(new_value)
+    X.append(x)
+
+    #print("GPR: x,y:", X, Y)
+
     gaussian_process.fit(X, Y)
 
     return gaussian_process
