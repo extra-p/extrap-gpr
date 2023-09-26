@@ -1125,11 +1125,11 @@ class SyntheticBenchmark():
         add_points_gpr = 0
         budget_core_hours = self.budget * (total_cost / 100)
 
-        remaining_points_gpr = copy.deepcopy(remaining_points_min)
-        #remaining_points_min
+        #remaining_points_gpr = copy.deepcopy(remaining_points_min)
+        remaining_points_gpr = copy.deepcopy(remaining_points)
         selected_points_gpr = copy.deepcopy(selected_points)
         # entails all measurement points and their values
-        #measurements_gpr = copy.deepcopy(experiment.measurements)
+        measurements_gpr = copy.deepcopy(experiment.measurements)
         
         #for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
         #    print(x.coordinate, x.values)
