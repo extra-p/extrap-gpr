@@ -18,7 +18,7 @@ def main():
 #SBATCH --exclusive
 #SBATCH -o out_b"""+str(counter_string)+""".out
 #SBATCH -e er_b"""+str(counter_string)+""".er
-#SBATCH -J synth_b"""+str(counter_string)+"""
+#SBATCH -J sn1b"""+str(counter_string)+"""
 
 ml --force purge
 ml restore lulesh

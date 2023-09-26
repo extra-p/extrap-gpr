@@ -22,15 +22,33 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
     ls=['-','--',':','-']
     lw = [2,3,5,2]
     plt.xscale("symlog")
-    #plt.xlim(0.1, 25)
+    #plt.xlim(, 100)
     style_counter = 0
-    for y_values, label in zip(y_values_list, labels):
+    colors=["black", "red", "green", "yellow"]
+    
+    for i in range(len(y_values_list)):
+        print(len(y_values_list[i]))
+    
+    for y_values, label, color in zip(y_values_list, labels, colors):
         if style_counter == 0:
             plt.plot(100, y_values[len(y_values)-1], label=label, marker="D", linestyle = 'None',)
         else:
             plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
+            if style_counter == 2:
+                print(len(y_values), len(y_values_list[1]))
+                print(y_values, y_values_list[1])
+                plt.fill_between(x_values, y_values_list[1], y_values, color="green", where=np.array(y_values) > np.array(y_values_list[1]), alpha=0.4, label='gpr better than generic')
+                plt.fill_between(x_values, y_values_list[1], y_values, color="red", where=np.array(y_values) < np.array(y_values_list[1]), alpha=0.4, label='gpr worse than generic')
+            #if style_counter == 3:
+            #    plt.fill_between(x_values, y_values_list[1], y_values, facecolor="red", alpha=0.4, label='diff hybrid generic')
+        
         style_counter += 1
-    plt.xlabel('Allowed Modeling Budget [%]')
+    
+    #plt.fill_between(x_values, y_values[1], y_values[2], where=y_values[2]>y_values[1], color="red")
+    
+    plt.yticks(np.arange(0, 100, 10))
+    plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
+    plt.xlabel('Allowed modeling budget [%]')
     plt.ylabel('Models in '+str(bucket)+'% accuracy bucket [%]')
     plt.legend()
     plt.savefig('accuracy_'+str(bucket)+'.png')
@@ -43,11 +61,13 @@ def plot_cost(x_values, y_values_list, labels, bucket):
     ls=['-','--',':','-']
     lw = [2,3,5,3]
     style_counter = 0
+    plt.xscale("symlog")
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
         min_y_values.append(np.min(y_values))
         max_y_values.append(np.max(y_values))
         style_counter += 1
+    plt.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', linewidth=2, alpha=1)
     min_y_value = np.min(min_y_values)
     max_y_value = np.max(max_y_values)
     temp = list(plt.yticks()[0])
@@ -57,11 +77,13 @@ def plot_cost(x_values, y_values_list, labels, bucket):
     #plt.yticks(list(plt.yticks()[0]) + max_y_value)
     temp = list(plt.xticks()[0])
     temp.append(1)
-    plt.xticks(temp)
+    #plt.yticks(np.arange(0, 100, 10))
+    plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
+    #plt.xticks(temp)
     plt.ylim(min_y_value-3,100)
     plt.xlim(1,100)
-    plt.xlabel('Allowed Modeling Budget [%]')
-    plt.ylabel('Mean Used Modeling Budget [%]')
+    plt.xlabel('Allowed modeling budget [%]')
+    plt.ylabel('Mean used modeling budget [%]')
     plt.legend(loc='upper left')
     plt.savefig('cost.png')
     plt.show()
@@ -84,7 +106,7 @@ def plot_selected_points(x_values, y_values_list, labels, bucket):
     temp.append(1)
     plt.xticks(temp)
     plt.xlim(1,100)
-    plt.ylim(8.5,25)
+    #plt.ylim(8.5,25)
     plt.legend(loc='center right')
     plt.savefig('additional_points.png')
     plt.show()
@@ -98,13 +120,21 @@ def main():
     # Add the argument
     parser.add_argument('--bucket', type=str, help='The bucket type.', choices=["5","10","15","20"], default="20", required=False)
 
+    # Add the argument
+    parser.add_argument('--path', type=str, help='The path to the results.', required=False)
+
     # Parse the command-line arguments
     args = parser.parse_args()
 
     # Extract the argument value
     bucket = args.bucket
     
-    folder_path = "analysis_results/"
+    if args.path:
+        folder_path = args.path
+    else:
+        folder_path = "analysis_results/"
+    
+    #folder_path = "analysis_results/"
     files = find_files(folder_path)
     #print("DEBUG:",len(files))
 
@@ -180,9 +210,9 @@ def main():
     #print(np.max(gpr_costs))
     #print(np.max(hybrid_costs))
 
-    labels = ['full', 'generic', 'gpr', 'hybrid']
-    labels2 = ['generic', 'gpr', 'hybrid', 'base point cost']
-    labels3 = ['generic', 'gpr', 'hybrid', 'base points']
+    labels = ['Full matrix', 'Generic strategy', 'GPR strategy', 'Hybrid strategy']
+    labels2 = ['Generic', 'GPR', 'Hybrid', 'base point cost']
+    labels3 = ['Generic', 'GPR', 'Hybrid', 'base points']
 
     plot_accuracy(budget_values, y_values_list, labels, bucket)
     plot_cost(budget_values, y_values_list2, labels2, bucket)
