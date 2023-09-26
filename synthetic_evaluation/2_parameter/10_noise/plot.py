@@ -21,10 +21,32 @@ def find_files(folder_path):
 def plot_accuracy(x_values, y_values_list, labels, bucket):
     ls=['-','--',':','-']
     lw = [2,3,5,2]
+    plt.xscale("symlog")
+    #plt.xlim(, 100)
     style_counter = 0
-    for y_values, label in zip(y_values_list, labels):
-        plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
+    colors=["black", "red", "green", "yellow"]
+    
+    for i in range(len(y_values_list)):
+        print(len(y_values_list[i]))
+    
+    for y_values, label, color in zip(y_values_list, labels, colors):
+        if style_counter == 0:
+            plt.plot(100, y_values[len(y_values)-1], label=label, marker="D", linestyle = 'None',)
+        else:
+            plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
+            if style_counter == 2:
+                print(len(y_values), len(y_values_list[1]))
+                print(y_values, y_values_list[1])
+                plt.fill_between(x_values, y_values_list[1], y_values, color="green", where=np.array(y_values) > np.array(y_values_list[1]), alpha=0.4, label='gpr better than generic')
+                plt.fill_between(x_values, y_values_list[1], y_values, color="red", where=np.array(y_values) < np.array(y_values_list[1]), alpha=0.4, label='gpr worse than generic')
+            #if style_counter == 3:
+            #    plt.fill_between(x_values, y_values_list[1], y_values, facecolor="red", alpha=0.4, label='diff hybrid generic')
+        
         style_counter += 1
+    
+    #plt.fill_between(x_values, y_values[1], y_values[2], where=y_values[2]>y_values[1], color="red")
+    
+    plt.set_xticks([1,10,100])
     plt.xlabel('Allowed Modeling Budget [%]')
     plt.ylabel('Models in '+str(bucket)+'% accuracy bucket [%]')
     plt.legend()
@@ -50,10 +72,14 @@ def plot_cost(x_values, y_values_list, labels, bucket):
     temp.append(max_y_value)
     plt.yticks(temp)
     #plt.yticks(list(plt.yticks()[0]) + max_y_value)
-    plt.ylim(0,100)
+    temp = list(plt.xticks()[0])
+    temp.append(1)
+    plt.xticks(temp)
+    plt.ylim(min_y_value-3,100)
+    plt.xlim(1,100)
     plt.xlabel('Allowed Modeling Budget [%]')
-    plt.ylabel('Used Modeling Budget [%]')
-    plt.legend()
+    plt.ylabel('Mean Used Modeling Budget [%]')
+    plt.legend(loc='upper left')
     plt.savefig('cost.png')
     plt.show()
     plt.close()
@@ -65,9 +91,18 @@ def plot_selected_points(x_values, y_values_list, labels, bucket):
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
         style_counter += 1
-    plt.ylabel('Number of Additional Points Used for Modelnig')
+    plt.ylabel('Mean Number of Points Used for Modelnig')
     plt.xlabel('Allowed Modeling Budget [%]')
-    plt.legend()
+    temp = list(plt.yticks()[0])
+    temp.append(9)
+    temp.append(25)
+    plt.yticks(temp)
+    temp = list(plt.xticks()[0])
+    temp.append(1)
+    plt.xticks(temp)
+    plt.xlim(1,100)
+    plt.ylim(8.5,25)
+    plt.legend(loc='center right')
     plt.savefig('additional_points.png')
     plt.show()
     plt.close()
@@ -124,9 +159,9 @@ def main():
         gpr_costs.append(json_data["mean_budget_gpr"])
         hybrid_costs.append(json_data["mean_budget_hybrid"])
 
-        points_generic.append(json_data["mean_add_points_generic"])
-        points_gpr.append(json_data["mean_add_points_gpr"])
-        points_hybrid.append(json_data["mean_add_points_hybrid"])
+        points_generic.append(json_data["mean_add_points_generic"]+json_data["min_points"])
+        points_gpr.append(json_data["mean_add_points_gpr"]+json_data["min_points"])
+        points_hybrid.append(json_data["mean_add_points_hybrid"]+json_data["min_points"])
 
         base_point_costs.append(json_data["base_point_cost"])
 
@@ -151,6 +186,17 @@ def main():
         points_hybrid,
         base_points
     ]
+
+    # points
+    #print(np.max(points_generic))
+    #print(np.max(points_gpr))
+    #print(np.max(points_hybrid))
+
+    # costs
+    #print(np.max(generic_costs))
+    #print(np.max(gpr_costs))
+    #print(np.max(hybrid_costs))
+
     labels = ['full', 'generic', 'gpr', 'hybrid']
     labels2 = ['generic', 'gpr', 'hybrid', 'base point cost']
     labels3 = ['generic', 'gpr', 'hybrid', 'base points']

@@ -24,10 +24,12 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
     
     plt.figure(figsize=(10,6))
 
+    budget_string = "{:0.1f}".format(budget)
+
     b1 = plt.bar(X_axis - 0.3, full, 0.2, label = 'Full matrix points (budget=100%)', hatch="\\\\", edgecolor='black',)
-    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'Generic strategy (budget='+str(budget)+'%)', edgecolor='black',)
-    b3 = plt.bar(X_axis+0.1, gpr, 0.2, label = 'GPR strategy (budget='+str(budget)+'%)', hatch="//", edgecolor='black',)
-    b4 = plt.bar(X_axis + 0.3, hybrid, 0.2, label = 'Hybrid strategy (budget='+str(budget)+'%)', hatch="xx", edgecolor='black',)
+    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'Generic strategy (budget='+str(budget_string)+'%)', edgecolor='black',)
+    b3 = plt.bar(X_axis+0.1, gpr, 0.2, label = 'GPR strategy (budget='+str(budget_string)+'%)', hatch="//", edgecolor='black',)
+    b4 = plt.bar(X_axis + 0.3, hybrid, 0.2, label = 'Hybrid strategy (budget='+str(budget_string)+'%)', hatch="xx", edgecolor='black',)
 
     plt.bar_label(b1, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
     plt.bar_label(b2, label_type='edge', fontsize=10, rotation=90, fmt='%0.2f', padding=4)
@@ -40,7 +42,6 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
     plt.title("Percentage of models in each accuracy bucket", pad=25)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.tight_layout()
-    budget_string = "{:0.1f}".format(budget)
     plt.savefig('accuracy_b'+str(budget_string)+'.png')
     #plt.show()
     plt.close()

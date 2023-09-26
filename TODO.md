@@ -1,6 +1,15 @@
 # TODO LIST:
 
+* base point cost calculation is incorect, need to use only 1 or 2 reps for that ...
+
+* number additional points calculation is incorrect, need to calc with the repetitions...
+
+
+###########################################
+
 * how to visualize selection paths of actions from a markov chain???
+
+* in addition take only one rep for lines as starting point and let the gpr select from that...
 
 * figure out how to use less point with the GPR and introduce a weight factor for the repetitions...
 

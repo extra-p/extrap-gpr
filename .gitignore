@@ -18,6 +18,11 @@ synthetic_evaluation/2_parameter/2_noise/submit_analysis_jobs.sh
 synthetic_evaluation/2_parameter/5_noise/submit_analysis_jobs.sh
 synthetic_evaluation/2_parameter/10_noise/submit_analysis_jobs.sh
 
+*.png
+*.er
+*.out
+*.json
+
 .vscode
 *.extra-p
 *.xcodeproj/

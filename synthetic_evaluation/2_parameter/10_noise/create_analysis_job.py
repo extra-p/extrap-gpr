@@ -2,11 +2,12 @@ import math
 
 def main():
 
-    counter = 1
+    counter = 0.1
 
-    while counter <= 100:
+    while counter <= 100.0:
 
-        file = open("analysis_job_b"+str(counter)+".sh","w")
+        counter_string = "{:0.1f}".format(counter)
+        file = open("analysis_job_b"+str(counter_string)+".sh","w")
 
         text = """#!/bin/bash
 
@@ -15,16 +16,16 @@ def main():
 #SBATCH --mem-per-cpu=1800
 #SBATCH -n 1
 #SBATCH --exclusive
-#SBATCH -o out_b"""+str(counter)+""".out
-#SBATCH -e er_b"""+str(counter)+""".er
-#SBATCH -J sn10b"""+str(counter)+"""
+#SBATCH -o out_b"""+str(counter_string)+""".out
+#SBATCH -e er_b"""+str(counter_string)+""".er
+#SBATCH -J sn10b"""+str(counter_string)+"""
 
 ml --force purge
 ml restore lulesh
 
 SECONDS=0;
 
-python ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 10000 --nr-repetitions 5 --noise 10 --mode budget --budget """+str(counter)+""" --normalization True --plot True
+python ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 10000 --nr-repetitions 5 --noise 10 --mode budget --budget """+str(counter_string)+""" --normalization True --plot True
 
 echo $SECONDS"""
 
@@ -33,7 +34,10 @@ echo $SECONDS"""
 
         file.close()
     
-        counter += 1
+        if counter < 0.9:
+            counter += 0.1
+        else:
+            counter += 1.0
 
 if __name__ == "__main__":
     main()
