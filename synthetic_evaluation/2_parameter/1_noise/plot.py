@@ -58,33 +58,37 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
 def plot_cost(x_values, y_values_list, labels, bucket):
     min_y_values = []
     max_y_values = []
-    ls=['-','--',':','-']
-    lw = [2,3,5,3]
+    ls=['dotted','--',':','dashdot']
+    lw = [3,3,6,3]
+    colors = ["blue", "red", "orange", "dimgray"]
+    zorders=[4,3,2,1]
     style_counter = 0
     #plt.xscale("symlog")
     for y_values, label in zip(y_values_list, labels):
-        plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
+        plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         min_y_values.append(np.min(y_values))
         max_y_values.append(np.max(y_values))
         style_counter += 1
-    plt.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', color="black", linewidth=2, alpha=1)
+    plt.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', color="black", linewidth=2, alpha=1, zorder=3)
+    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="green", where=np.array(y_values_list[0]) < np.array(y_values_list[1]), alpha=0.3, label='GPR better than CPF', zorder=1, hatch="x")
+    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="red", where=np.array(y_values_list[1]) < np.array(y_values_list[0]), alpha=0.3, label='GPR worse than CPF', zorder=0, hatch="+")
+    plt.grid(alpha=0.3)
     min_y_value = np.min(min_y_values)
     max_y_value = np.max(max_y_values)
     temp = list(plt.yticks()[0])
     temp.append(min_y_value)
     temp.append(max_y_value)
     plt.yticks(temp)
-    #plt.yticks(list(plt.yticks()[0]) + max_y_value)
     temp = list(plt.xticks()[0])
     temp.append(1)
-    #plt.yticks(np.arange(0, 100, 10))
-    plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    #plt.xticks(temp)
-    plt.ylim(min_y_value-3,100)
-    plt.xlim(1,100)
-    plt.xlabel('Allowed modeling budget [%]')
-    plt.ylabel('Mean used modeling budget [%]')
-    plt.legend(loc='upper left')
+    plt.yticks(np.arange(0, 110, 10))
+    plt.xticks([1,10,20,30,40,50,60,70,80,90,100])
+    plt.ylim(0,100)
+    plt.xlim(0,100)
+    plt.xlabel('Allowed modeling budget $b$ [%]')
+    plt.ylabel('Mean used modeling budget $\\bar{b}_{u}$ [%]')
+    plt.legend(loc='upper left').set_zorder(2)
+    #plt.savefig('cost.pdf')
     plt.savefig('cost.png')
     plt.show()
     plt.close()
@@ -214,7 +218,7 @@ def main():
     #print(np.max(hybrid_costs))
 
     labels = ['Full matrix', 'Generic strategy', 'GPR strategy', 'Hybrid strategy']
-    labels2 = ['Generic', 'GPR', 'Hybrid', 'base point cost']
+    labels2 = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. modeling requirement $\\bar{b}_{min}$']
     labels3 = ['Generic', 'GPR', 'Hybrid', 'base points']
 
     plot_accuracy(budget_values, y_values_list, labels, bucket)
