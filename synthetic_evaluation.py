@@ -5,7 +5,7 @@ from extrap.modelers import multi_parameter
 from extrap.modelers import single_parameter
 from extrap.util.options_parser import ModelerOptionsAction, ModelerHelpAction
 from extrap.util.options_parser import SINGLE_PARAMETER_MODELER_KEY, SINGLE_PARAMETER_OPTIONS_KEY
-
+import os
 
 def main():
     """
@@ -61,5 +61,6 @@ def main():
 
 
 if __name__ == "__main__":
+    os.environ["TQDM_DISABLE"] = "1"
     main()
 

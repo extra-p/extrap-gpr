@@ -133,7 +133,7 @@ def get_extrap_model(experiment, args):
         if value is not None:
             setattr(modeler, name, value)
 
-    with ProgressBar(desc='Generating models') as pbar:
+    with ProgressBar(desc='Generating models', disable=True) as pbar:
         # create models from data
         model_generator.model_all(pbar)
 
@@ -435,7 +435,7 @@ def main():
                 setattr(modeler, name, value)
 
         # create models from data
-        with ProgressBar(desc='Generating models') as pbar:
+        with ProgressBar(desc='Generating models', disable=True) as pbar:
             model_generator.model_all(pbar)
 
         # save experiment if set in command line options

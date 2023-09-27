@@ -77,3 +77,7 @@ arithmetic mean and then used as input value for a WhiteKernel() that is added t
 * Term contribution: Checking the term contribution makes a difference, since the functions are easier to model then, but there is no difference between the strategies wheter I check it or not. Overall the model accuracy of our approach looks worse if we don't check it.
 * Function Building Blocks: Using different building blocks, e.g., (a+b) (a*b) (a*b+a) (a*b+b), for 2,3,4 parameters does also make an impact on the overall model accuracy of our approach, but not on the different strategies. This is the case because it makes the modeling problem harder with a bigger variety of functions to model.
 * To make the results more readable in the plots, we generate the functions for evaluation once, and then use them again for the experiments with different budget values. We also set a random seed for the noise generation, so that the noise level generated does not vary for this experiments. Otherwise it looks like the accuracy differs for the baseline modeler that is using the full set of points all the time, even nothing is changed. This comes from the changing noise level on the data in fact.
+
+#### Notes
+
+Add extrap in user installation to path. `export PATH="$HOME/.local/bin:$PATH"`

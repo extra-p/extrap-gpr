@@ -37,7 +37,6 @@ from sklearn.exceptions import ConvergenceWarning
 import sys
 import json
 
-
 class SyntheticBenchmark():
 
     def __init__(self, args):
@@ -151,7 +150,8 @@ class SyntheticBenchmark():
                 setattr(modeler, name, value)
 
         # create models from data
-        model_generator.model_all()
+        with ProgressBar(desc='Generating models', disable=True) as pbar:
+            model_generator.model_all(pbar)
 
         modeler = experiment.modelers[0]
         models = modeler.models
@@ -188,7 +188,7 @@ class SyntheticBenchmark():
             inputs.append([i, shared_dict])
 
         with Pool(cpu_count) as pool:
-            _ = list(tqdm(pool.imap(generator.generate_function, inputs), total=self.nr_functions))
+            _ = list(tqdm(pool.imap(generator.generate_function, inputs), total=self.nr_functions, disable=True))
 
         function_dict = copy.deepcopy(shared_dict)
         
@@ -1231,18 +1231,18 @@ class SyntheticBenchmark():
                     
                     ########################################
                     # this part is only needed for weighted function
-                    rep = 1
+                    """rep = 1
                     for j in range(len(measurements_gpr[(Callpath("main"), Metric("runtime"))])):
                         if measurements_gpr[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
                             rep = (self.nr_repetitions - len(measurements_gpr[(Callpath("main"), Metric("runtime"))][j].values)) + 1
-                            break
+                            break"""
                         
-                    print("repetition:", rep)
-                    print("noise level:",mean_noise)
-                    rep_func = 2**((1/2)*rep-(1/2))
-                    noise_func = -math.tanh((1/4)*mean_noise-2.5)
-                    print("temp: ",rep_func, noise_func)
-                    cost_multiplier = rep_func + noise_func
+                    #print("repetition:", rep)
+                    #print("noise level:",mean_noise)
+                    #rep_func = 2**((1/2)*rep-(1/2))
+                    #noise_func = -math.tanh((1/4)*mean_noise-2.5)
+                    #print("temp: ",rep_func, noise_func)
+                    #cost_multiplier = rep_func + noise_func
                     
                     #rated = (term_1 * cost_multiplier) / term_2
                     ########################################
