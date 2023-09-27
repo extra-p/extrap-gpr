@@ -58,6 +58,7 @@ class SyntheticBenchmark():
         self.parameter_values_b_val = [60, 70]
         self.parameter_values_c_val = [6000, 7000]
         self.parameter_values_d_val = [20, 22]
+        self.grid_search = args.grid_search
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
@@ -68,8 +69,42 @@ class SyntheticBenchmark():
             percentage_bucket_counter[key] = percentage
         return percentage_bucket_counter
     
+    def create_experiment_base(self, selected_coord_list, experiment, nr_parameters, parameter_placeholders, metric_id, callpath_id, nr_base_points):
+        # create new experiment with only the selected measurements and points as coordinates and measurements
+        experiment_new = Experiment()
+        for j in range(nr_parameters):
+            experiment_new.add_parameter(Parameter(parameter_placeholders[j]))
+
+        callpath = experiment.callpaths[callpath_id]
+        experiment_new.add_callpath(callpath)
+
+        metric = experiment.metrics[metric_id]
+        experiment_new.add_metric(metric)
+
+        for j in range(len(selected_coord_list)):
+            coordinate = selected_coord_list[j]
+            experiment_new.add_coordinate(coordinate)
+
+            coordinate_id = -1
+            for k in range(len(experiment.coordinates)):
+                if coordinate == experiment.coordinates[k]:
+                    coordinate_id = k
+            measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+            #print("haha:",measurement_temp.median)
+
+            if measurement_temp != None:
+                values = []
+                counter = 0
+                while counter < nr_base_points:
+                    values.append(measurement_temp.values[counter])
+                    counter += 1
+                #value = selected_measurement_values[selected_coord_list[j]] 
+                #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
+                experiment_new.add_measurement(Measurement(coordinate, callpath, metric, values))
+        return experiment_new
+    
     def create_experiment(self, cord, experiment, new_value):
-        # only append to measurement value to experiment
+        # only append the new measurement value to experiment
         cord_found = False
         for i in range(len(experiment.measurements[(Callpath("main"), Metric("runtime"))])):
             if cord == experiment.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate:
@@ -84,6 +119,30 @@ class SyntheticBenchmark():
             new_measurement = Measurement(cord, Callpath("main"), Metric("runtime"), [new_value])
             experiment.add_measurement(new_measurement)
         return experiment
+    
+    def calculate_selected_point_cost_base(self, selected_points, experiment, callpath_id, metric_id, nr_base_points):
+        # calculate selected point cost
+        selected_cost = 0
+        for j in range(len(selected_points)):
+            coordinate = selected_points[j]
+            coordinate_id = -1
+            for k in range(len(experiment.coordinates)):
+                if coordinate == experiment.coordinates[k]:
+                    coordinate_id = k
+            measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+            #print("measurement_temp:",measurement_temp)
+            coordinate_cost = 0
+            if measurement_temp != None:
+                counter = 0
+                while counter < nr_base_points:
+                #for k in range(len(measurement_temp.values)):
+                    runtime = measurement_temp.values[counter]
+                    nr_processes = coordinate.as_tuple()[0]
+                    core_hours = runtime * nr_processes
+                    coordinate_cost += core_hours
+                    counter += 1
+            selected_cost += coordinate_cost
+        return selected_cost
     
     def calculate_selected_point_cost(self, experiment):
         selected_cost = 0
@@ -375,13 +434,9 @@ class SyntheticBenchmark():
         # create copy of the cost dict for the minimum experiment with gpr and hybrid strategies
         remaining_points_min = copy.deepcopy(cost)
         
-        # measurements for gpr strategy selection
-        measurements_gpr = copy.deepcopy(experiment.measurements)
-        
-        #TODO: can experiment with setting to 1 again...
-        # also with increasing reps overall to 5, specifically for higher noise levels
-        # for 1% higher reps should make the gpr strategy better...
-        base_values = 2
+        if self.grid_search == 2 or self.grid_search == 3:
+            measurements_gpr = copy.deepcopy(experiment.measurements)
+        base_values = 1
 
         if len(experiment.parameters) == 2:
                 
@@ -420,15 +475,13 @@ class SyntheticBenchmark():
                     cord = Coordinate(x_value, y_values[j])
                     remaining_points.pop(cord)
                     
-                    for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
-                        if x.coordinate == cord:
-                            #print("before:",x.values)
-                            temp = x.values
-                            for i in range(base_values):
-                                temp = np.delete(temp, 0)
-                            #temp = np.delete(temp, 0)
-                            x.values = temp
-                            #print("after:",x.values)
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
                     
                 except KeyError:
                     pass
@@ -476,15 +529,13 @@ class SyntheticBenchmark():
                     cord = Coordinate(x_values[j], y_value)
                     remaining_points.pop(cord)
                     
-                    for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
-                        if x.coordinate == cord:
-                            #print("before:",x.values)
-                            temp = x.values
-                            for i in range(base_values):
-                                temp = np.delete(temp, 0)
-                            #temp = np.delete(temp, 0)
-                            x.values = temp
-                            #print("after:",x.values)
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
                             
                 except KeyError:
                     pass
@@ -865,7 +916,8 @@ class SyntheticBenchmark():
         #print("point_map_generic:",point_map_generic)
 
         # calculate the cost for the selected base points
-        base_point_cost = calculate_selected_point_cost(selected_points, experiment, 0, 0)
+        #base_point_cost = calculate_selected_point_cost(selected_points, experiment, 0, 0)
+        base_point_cost = self.calculate_selected_point_cost_base(selected_points, experiment, 0, 0, base_values)
         base_point_cost = base_point_cost / (total_cost / 100)
         #print("base_point_cost %:",base_point_cost)
 
@@ -1124,26 +1176,14 @@ class SyntheticBenchmark():
         # add additional measurement points until break criteria is met
         add_points_gpr = 0
         budget_core_hours = self.budget * (total_cost / 100)
-
-        #remaining_points_gpr = copy.deepcopy(remaining_points_min)
-        remaining_points_gpr = copy.deepcopy(remaining_points)
-        selected_points_gpr = copy.deepcopy(selected_points)
-        # entails all measurement points and their values
-        measurements_gpr = copy.deepcopy(experiment.measurements)
         
-        #for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
-        #    print(x.coordinate, x.values)
-        #print("DEBUG2 measurements_gpr:",measurements_gpr.measurements, )
-        #print("\n")
-        #print("DEBUG3 experiment.measurements:",experiment.measurements)
-
-        """# for each additional dimension add one additional point
-        for o in range(self.nr_parameters-1):
-
-            # add the first additional point, this is mandatory for the generic strategy
-            remaining_points_gpr, selected_points_gpr, _ = add_additional_point_generic(remaining_points_gpr, selected_points_gpr)
-            # increment counter value, because a new measurement point was added
-            add_points_gpr += 1"""
+        if self.grid_search == 1 or self.grid_search == 4:
+            remaining_points_gpr = copy.deepcopy(remaining_points)
+            # entails all measurement points and their values
+            measurements_gpr = copy.deepcopy(experiment.measurements)
+        elif self.grid_search == 2 or self.grid_search == 3:
+            remaining_points_gpr = copy.deepcopy(remaining_points_min)
+        selected_points_gpr = copy.deepcopy(selected_points)
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
@@ -1156,15 +1196,22 @@ class SyntheticBenchmark():
                         experiment.parameters, eval_point)
 
         # create base model for gpr
-        experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
+        if self.grid_search == 2 or self.grid_search == 3:
+            experiment_gpr_base = self.create_experiment_base(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0, base_values)
+        else:
+            experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
+        
+        """x = []
+        for i in range(len(experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))])):
+            x.append((experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate, experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].values))
+        
+        for l in x:
+            print(l)"""
+                
         
         if self.mode == "budget":
 
             while True:
-                
-                x = []
-                for i in range(len(experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))])):
-                    x.append((experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate, experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].values))
                 
                 # identify all possible next points that would 
                 # still fit into the modeling budget in core hours
@@ -1217,10 +1264,9 @@ class SyntheticBenchmark():
                     #print("DEBUG3 remaining_points_gpr:",remaining_points_gpr[fitting_measurements[i]][0])
                     
                     # term_1 is cost(t)^2
-                    #TODO: if the weighted function for reps and noise does not improve results, use this line instead again
-                    # it also weighs each point higher in cost
-                    term_1 = math.pow(np.sum(remaining_points_gpr[fitting_measurements[i]]), 2)
-                    #term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
+                    #TODO: first option is actually incorrect but seems to improve gpr results...
+                    #term_1 = math.pow(np.sum(remaining_points_gpr[fitting_measurements[i]]), 2)
+                    term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
                     # predict variance of input vector x with the gaussian process
                     x = [x]
                     _, y_cov = gaussian_process.predict(x, return_cov=True)
@@ -1229,25 +1275,18 @@ class SyntheticBenchmark():
                     term_2 = math.pow(y_cov, 2)
                     # rated is h(t)
                     
-                    ########################################
-                    # this part is only needed for weighted function
-                    """rep = 1
-                    for j in range(len(measurements_gpr[(Callpath("main"), Metric("runtime"))])):
-                        if measurements_gpr[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
-                            rep = (self.nr_repetitions - len(measurements_gpr[(Callpath("main"), Metric("runtime"))][j].values)) + 1
-                            break"""
-                        
-                    #print("repetition:", rep)
-                    #print("noise level:",mean_noise)
-                    #rep_func = 2**((1/2)*rep-(1/2))
-                    #noise_func = -math.tanh((1/4)*mean_noise-2.5)
-                    #print("temp: ",rep_func, noise_func)
-                    #cost_multiplier = rep_func + noise_func
-                    
-                    #rated = (term_1 * cost_multiplier) / term_2
-                    ########################################
-                    
-                    rated = term_1 / term_2
+                    if self.grid_search == 3 or self.grid_search == 4:
+                        rep = 1
+                        for j in range(len(measurements_gpr[(Callpath("main"), Metric("runtime"))])):
+                            if measurements_gpr[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
+                                rep = (self.nr_repetitions - len(measurements_gpr[(Callpath("main"), Metric("runtime"))][j].values)) + 1
+                                break
+                        rep_func = 2**((1/2)*rep-(1/2))
+                        noise_func = -math.tanh((1/4)*mean_noise-2.5)
+                        cost_multiplier = rep_func + noise_func
+                        rated = (term_1 * cost_multiplier) / term_2
+                    else:
+                        rated = term_1 / term_2
 
                     if rated <= best_rated:
                         best_rated = rated
@@ -1407,14 +1446,6 @@ class SyntheticBenchmark():
         selected_points_hybrid = copy.deepcopy(selected_points)
         measurements_hybrid = copy.deepcopy(experiment.measurements)
 
-        """# for each additional dimension add one additional point
-        for o in range(self.nr_parameters-1):
-
-            # add the first additional point, this is mandatory for the generic strategy
-            remaining_points_hybrid, selected_points_hybrid, _ = add_additional_point_generic(remaining_points_hybrid, selected_points_hybrid)
-            # increment counter value, because a new measurement point was added
-            add_points_hybrid += 1"""
-
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
         gaussian_process_hybrid = add_measurements_to_gpr(gaussian_process_hybrid, 
@@ -1426,7 +1457,10 @@ class SyntheticBenchmark():
                         experiment.parameters, eval_point)
 
         # create base model for gpr hybrid
-        experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
+        if self.grid_search == 2 or self.grid_search == 3:
+            experiment_hybrid_base = self.create_experiment_base(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0, base_values)
+        else:
+            experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
 
         if self.mode == "budget":
 

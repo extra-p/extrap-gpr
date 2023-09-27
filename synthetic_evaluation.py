@@ -41,6 +41,8 @@ def main():
                         help="Number of repetitions for each measurement point. Must be an integer value.")
     parser.add_argument("--noise", type=float, default=1, required=True,
                         help="Percentage of induced noise. Must be an integer value.")
+    parser.add_argument("--grid-search", type=int, default=1, required=False, choices=[1,2,3,4],
+                        help="Set the evaluation mode. Used for grid search for best strategy setups.")
     modeling_options = parser.add_argument_group("Modeling options")
     modeling_options.add_argument("--median", action="store_true", dest="median",
                                   help="Use median values for computation instead of mean values")

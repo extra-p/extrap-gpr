@@ -26,8 +26,8 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
     style_counter = 0
     colors=["black", "red", "green", "yellow"]
     
-    for i in range(len(y_values_list)):
-        print(len(y_values_list[i]))
+    #for i in range(len(y_values_list)):
+        #print(len(y_values_list[i]))
     
     for y_values, label, color in zip(y_values_list, labels, colors):
         if style_counter == 0:
@@ -35,10 +35,10 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
         else:
             plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
             if style_counter == 2:
-                print(len(y_values), len(y_values_list[1]))
-                print(y_values, y_values_list[1])
+                #print(len(y_values), len(y_values_list[1]))
+                #print(y_values, y_values_list[1])
                 plt.fill_between(x_values, y_values_list[1], y_values, color="green", where=np.array(y_values) > np.array(y_values_list[1]), alpha=0.4, label='gpr better than generic')
-                plt.fill_between(x_values, y_values_list[1], y_values, color="red", where=np.array(y_values) < np.array(y_values_list[1]), alpha=0.4, label='gpr worse than generic')
+                plt.fill_between(x_values, y_values, y_values_list[1], color="red", where=np.array(y_values) < np.array(y_values_list[1]), alpha=0.4, label='gpr worse than generic')
             #if style_counter == 3:
             #    plt.fill_between(x_values, y_values_list[1], y_values, facecolor="red", alpha=0.4, label='diff hybrid generic')
         
@@ -61,13 +61,13 @@ def plot_cost(x_values, y_values_list, labels, bucket):
     ls=['-','--',':','-']
     lw = [2,3,5,3]
     style_counter = 0
-    plt.xscale("symlog")
+    #plt.xscale("symlog")
     for y_values, label in zip(y_values_list, labels):
         plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7)
         min_y_values.append(np.min(y_values))
         max_y_values.append(np.max(y_values))
         style_counter += 1
-    plt.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', linewidth=2, alpha=1)
+    plt.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', color="black", linewidth=2, alpha=1)
     min_y_value = np.min(min_y_values)
     max_y_value = np.max(max_y_values)
     temp = list(plt.yticks()[0])
@@ -168,7 +168,7 @@ def main():
         gpr_values.append(json_data["percentage_bucket_counter_gpr"][bucket])
         hybrid_values.append(json_data["percentage_bucket_counter_hybrid"][bucket])
 
-        generic_costs.append(json_data["mean_budget_gpr"])
+        generic_costs.append(json_data["mean_budget_generic"])
         gpr_costs.append(json_data["mean_budget_gpr"])
         hybrid_costs.append(json_data["mean_budget_hybrid"])
 
@@ -179,6 +179,9 @@ def main():
         base_point_costs.append(json_data["base_point_cost"])
 
         base_points.append(json_data["min_points"])
+        
+    #for i in range(len(gpr_costs)):
+    #    print("Budget, Generic, GPR:",budget_values[i], generic_costs[i], gpr_costs[i], hybrid_costs[i])
 
     # Example usage
     y_values_list = [

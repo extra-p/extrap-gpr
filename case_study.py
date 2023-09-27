@@ -76,7 +76,6 @@ def calculate_selected_point_cost(selected_points, experiment, callpath_id, metr
         selected_cost += coordinate_cost
     return selected_cost
 
-
 def increment_accuracy_bucket(acurracy_bucket_counter, percentage_error):
     # increase the counter of the accuracy bucket the error falls into for strategy
     if percentage_error <= 5:
