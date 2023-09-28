@@ -1,5 +1,7 @@
 # TODO LIST:
 
+* for final analysis results set number functions back to 10000
+
 * number additional points calculation is incorrect, need to calc with the repetitions...
 
 
@@ -15,8 +17,6 @@ I need to analyze that...
 
 * Monte Carlo Simulation run for each individual modeling problem (function) could work better...
 * Could also combine that with Reinforcement learning...
-
-* maybe the formula that rates the points for selection in the GPR strategy is wrong... I should take a look at what point it chooses, always cheapest? And how that behavior changes when I adjust that formula...
 
 
 * run synthetic analysis for 2,3,4 parameters with different budgets and noise levels and make the plots

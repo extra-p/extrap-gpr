@@ -436,6 +436,7 @@ class SyntheticBenchmark():
         
         if self.grid_search == 2 or self.grid_search == 3:
             measurements_gpr = copy.deepcopy(experiment.measurements)
+            measurements_hybrid = copy.deepcopy(experiment.measurements)
         base_values = 1
 
         if len(experiment.parameters) == 2:
@@ -477,6 +478,12 @@ class SyntheticBenchmark():
                     
                     if self.grid_search == 2 or self.grid_search == 3:
                         for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(base_values):
@@ -531,6 +538,12 @@ class SyntheticBenchmark():
                     
                     if self.grid_search == 2 or self.grid_search == 3:
                         for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(base_values):
@@ -921,7 +934,7 @@ class SyntheticBenchmark():
         base_point_cost = base_point_cost / (total_cost / 100)
         #print("base_point_cost %:",base_point_cost)
 
-        added_points_generic = 0
+        added_points_generic = len(selected_points) * (self.nr_repetitions-1)
 
         #print("len selected_points:",len(selected_points))
         
@@ -953,17 +966,6 @@ class SyntheticBenchmark():
         current_cost_percent = current_cost / (total_cost / 100)
         #print("current_cost_percent:",current_cost_percent)
         #print("self.budget:",self.budget)
-
-        # check if the cost of the base points is higher than the allowed budget
-        #print("current_cost_percent <= self.budget 11:", current_cost_percent, self.budget)
-        #if current_cost_percent <= self.budget:
-
-            # start by adding for each additional dimension one additional point
-            #for o in range(self.nr_parameters-1):
-
-                #remaining_points_generic, selected_points_generic, _ = add_additional_point_generic(remaining_points_generic, selected_points_generic)
-                # increment counter value, because a new measurement point was added
-                #added_points_generic += 1
 
         if self.mode == "budget":
 
@@ -999,7 +1001,8 @@ class SyntheticBenchmark():
                         #print("point_map_generic:",point_map_generic)
 
                         # increment counter value, because a new measurement point was added
-                        added_points_generic += 1
+                        #added_points_generic += 1
+                        added_points_generic += self.nr_repetitions
 
                         # create new model
                         experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
@@ -1175,9 +1178,11 @@ class SyntheticBenchmark():
 
         # add additional measurement points until break criteria is met
         add_points_gpr = 0
+        
         budget_core_hours = self.budget * (total_cost / 100)
         
         if self.grid_search == 1 or self.grid_search == 4:
+            add_points_gpr = len(selected_points) * (self.nr_repetitions-1)
             remaining_points_gpr = copy.deepcopy(remaining_points)
             # entails all measurement points and their values
             measurements_gpr = copy.deepcopy(experiment.measurements)
@@ -1200,14 +1205,6 @@ class SyntheticBenchmark():
             experiment_gpr_base = self.create_experiment_base(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0, base_values)
         else:
             experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
-        
-        """x = []
-        for i in range(len(experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))])):
-            x.append((experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate, experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))][i].values))
-        
-        for l in x:
-            print(l)"""
-                
         
         if self.mode == "budget":
 
@@ -1264,8 +1261,6 @@ class SyntheticBenchmark():
                     #print("DEBUG3 remaining_points_gpr:",remaining_points_gpr[fitting_measurements[i]][0])
                     
                     # term_1 is cost(t)^2
-                    #TODO: first option is actually incorrect but seems to improve gpr results...
-                    #term_1 = math.pow(np.sum(remaining_points_gpr[fitting_measurements[i]]), 2)
                     term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
                     # predict variance of input vector x with the gaussian process
                     x = [x]
@@ -1440,11 +1435,15 @@ class SyntheticBenchmark():
         # add additional measurement points until break criteria is met
         add_points_hybrid = 0
         budget_core_hours = self.budget * (total_cost / 100)
-
-        #remaining_points_hybrid = copy.deepcopy(remaining_points_min)
-        remaining_points_hybrid = copy.deepcopy(remaining_points)
+        
+        if self.grid_search == 1 or self.grid_search == 4:
+            add_points_hybrid = len(selected_points) * (self.nr_repetitions-1)
+            remaining_points_hybrid = copy.deepcopy(remaining_points)
+            # entails all measurement points and their values
+            measurements_hybrid = copy.deepcopy(experiment.measurements)
+        elif self.grid_search == 2 or self.grid_search == 3:
+            remaining_points_hybrid = copy.deepcopy(remaining_points_min)
         selected_points_hybrid = copy.deepcopy(selected_points)
-        measurements_hybrid = copy.deepcopy(experiment.measurements)
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
@@ -1495,13 +1494,17 @@ class SyntheticBenchmark():
                 # determine the switching point between gpr and hybrid strategy
                 swtiching_point = 0
                 if len(experiment.parameters) == 2:
-                    swtiching_point = 13
+                    if self.grid_search == 1 or self.grid_search == 4:
+                        swtiching_point = 41
+                    elif self.grid_search == 2 or self.grid_search == 3:
+                        swtiching_point = 14
+                #TODO: swtiching_point needs to be recalculated for 3 and 4 parameter experiments!!!
                 elif len(experiment.parameters) == 3:
                     swtiching_point = 18
                 elif len(experiment.parameters) == 4:
                     swtiching_point = 23
                 else:
-                    swtiching_point = 13
+                    swtiching_point = 41
 
                 best_index = -1
                 
@@ -1523,7 +1526,8 @@ class SyntheticBenchmark():
                                 x.append(parameter_values[j])
                         
                         # term_1 is cost(t)^2
-                        term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
+                        #term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
+                        term_1 = math.pow(remaining_points_hybrid[fitting_measurements[i]][0], 2)
                         # predict variance of input vector x with the gaussian process
                         x = [x]
                         _, y_cov = gaussian_process_hybrid.predict(x, return_cov=True)
@@ -1531,7 +1535,19 @@ class SyntheticBenchmark():
                         # term_2 is gp_cov(t,t)^2
                         term_2 = math.pow(y_cov, 2)
                         # rated is h(t)
-                        rated = term_1 / term_2
+                        
+                        if self.grid_search == 3 or self.grid_search == 4:
+                            rep = 1
+                            for j in range(len(measurements_hybrid[(Callpath("main"), Metric("runtime"))])):
+                                if measurements_hybrid[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
+                                    rep = (self.nr_repetitions - len(measurements_hybrid[(Callpath("main"), Metric("runtime"))][j].values)) + 1
+                                    break
+                            rep_func = 2**((1/2)*rep-(1/2))
+                            noise_func = -math.tanh((1/4)*mean_noise-2.5)
+                            cost_multiplier = rep_func + noise_func
+                            rated = (term_1 * cost_multiplier) / term_2
+                        else:
+                            rated = term_1 / term_2
 
                         if rated <= best_rated:
                             best_rated = rated
@@ -1543,8 +1559,9 @@ class SyntheticBenchmark():
                     for i in range(len(fitting_measurements)):
                         
                         # get the cost of the measurement point
-                        cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
-                    
+                        #cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
+                        cost = remaining_points_hybrid[fitting_measurements[i]][0]
+
                         if cost < lowest_cost:
                             lowest_cost = cost
                             best_index = i
@@ -2002,7 +2019,7 @@ class SyntheticBenchmark():
 
         add_points = {
             "Base points": np.array([min_points, min_points, min_points, min_points]),
-            "Additional points": np.array([len_coordinates-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
+            "Additional points": np.array([len_coordinates*self.nr_repetitions-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
 
         # plot the analysis result for the additional measurement point numbers
