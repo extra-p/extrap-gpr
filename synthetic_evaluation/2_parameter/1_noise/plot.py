@@ -35,8 +35,8 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
         else:
             plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    plt.fill_between(x_values, y_values_list[1], y_values_list[2], color="green", where=np.array(y_values_list[2]) > np.array(y_values_list[1]), alpha=0.4, label='GPR better than CPF', hatch="x")
-    plt.fill_between(x_values, y_values_list[1], y_values_list[2], color="red", where=np.array(y_values_list[1]) > np.array(y_values_list[2]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5)
+    plt.fill_between(x_values, y_values_list[1], y_values_list[2], color="green", where=np.array(y_values_list[2]) > np.array(y_values_list[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    plt.fill_between(x_values, y_values_list[2], y_values_list[1], color="red", where=np.array(y_values_list[2]) < np.array(y_values_list[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     plt.grid(alpha=0.3)
     plt.yticks(np.arange(0, 100, 10))
     plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
@@ -62,8 +62,8 @@ def plot_cost(x_values, y_values_list, labels, bucket):
         max_y_values.append(np.max(y_values))
         style_counter += 1
     plt.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', color="black", linewidth=2, alpha=1, zorder=3)
-    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="green", where=np.array(y_values_list[0]) < np.array(y_values_list[1]), alpha=0.3, label='GPR better than CPF', zorder=1, hatch="x")
-    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="red", where=np.array(y_values_list[1]) < np.array(y_values_list[0]), alpha=0.3, label='GPR worse than CPF', zorder=0, hatch="+")
+    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="green", where=np.array(y_values_list[0]) < np.array(y_values_list[1]), alpha=0.3, label='GPR better than CPF', zorder=1, hatch="x", interpolate=True)
+    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="red", where=np.array(y_values_list[1]) < np.array(y_values_list[0]), alpha=0.3, label='GPR worse than CPF', zorder=0, hatch="+", interpolate=True)
     plt.grid(alpha=0.3)
     min_y_value = np.min(min_y_values)
     max_y_value = np.max(max_y_values)
