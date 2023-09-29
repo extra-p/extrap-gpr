@@ -95,7 +95,7 @@ def plot_measurement_point_number(add_points, min_points, budget):
         if count == 0:
             p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom, hatch="//", edgecolor="black")
         else:
-            p = ax.bar(langs, add_point, 0.5, label=boolean, bottom=bottom, edgecolor="black")
+            p = ax.bar(langs, add_point-min_points, 0.5, label=boolean, bottom=bottom, edgecolor="black")
         bottom += add_point
         count += 1
         bars.append(p)

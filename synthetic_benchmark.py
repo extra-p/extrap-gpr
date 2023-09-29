@@ -941,7 +941,7 @@ class SyntheticBenchmark():
         base_point_cost = base_point_cost / (total_cost / 100)
         #print("base_point_cost %:",base_point_cost)
 
-        added_points_generic = len(selected_points) * (self.nr_repetitions-1)
+        added_points_generic = len(selected_points) * (self.nr_repetitions)
 
         #print("len selected_points:",len(selected_points))
         
@@ -1147,7 +1147,7 @@ class SyntheticBenchmark():
             nn = np.mean(pps)
             nns.append(nn)
         mean_noise = np.mean(nns)
-        #print("mean_noise:",mean_noise,"%")
+        #print("Detected noise level from measurements:",mean_noise,"%")
 
         # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
         # matern kernel + white kernel to simulate actual noise found in the measurements
@@ -1189,11 +1189,12 @@ class SyntheticBenchmark():
         budget_core_hours = self.budget * (total_cost / 100)
         
         if self.grid_search == 1 or self.grid_search == 4:
-            add_points_gpr = len(selected_points) * (self.nr_repetitions-1)
+            add_points_gpr = len(selected_points) * self.nr_repetitions
             remaining_points_gpr = copy.deepcopy(remaining_points)
             # entails all measurement points and their values
             measurements_gpr = copy.deepcopy(experiment.measurements)
         elif self.grid_search == 2 or self.grid_search == 3:
+            add_points_gpr = len(selected_points) * self.base_values
             remaining_points_gpr = copy.deepcopy(remaining_points_min)
         selected_points_gpr = copy.deepcopy(selected_points)
         
@@ -1456,13 +1457,16 @@ class SyntheticBenchmark():
         budget_core_hours = self.budget * (total_cost / 100)
         
         if self.grid_search == 1 or self.grid_search == 4:
-            add_points_hybrid = len(selected_points) * (self.nr_repetitions-1)
+            add_points_hybrid = len(selected_points) * self.nr_repetitions
             remaining_points_hybrid = copy.deepcopy(remaining_points)
             # entails all measurement points and their values
             measurements_hybrid = copy.deepcopy(experiment.measurements)
         elif self.grid_search == 2 or self.grid_search == 3:
+            add_points_hybrid = len(selected_points) * self.base_values
             remaining_points_hybrid = copy.deepcopy(remaining_points_min)
         selected_points_hybrid = copy.deepcopy(selected_points)
+        
+        #print("DEBUG add_points_hybrid:",add_points_hybrid)
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
@@ -1673,6 +1677,7 @@ class SyntheticBenchmark():
 
         # additionally used data points (exceeding the base requirement of the sparse modeler)
         add_points_hybrid_container.append(add_points_hybrid)
+        #print("DEBUG add_points_hybrid:",add_points_hybrid)
 
         # create model using point selection of hybrid strategy
         model_hybrid, _ = get_extrap_model(experiment_hybrid_base, self.args)
@@ -2043,7 +2048,7 @@ class SyntheticBenchmark():
 
         add_points = {
             "Base points": np.array([min_points, min_points, min_points, min_points]),
-            "Additional points": np.array([len_coordinates*self.nr_repetitions-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
+            "Additional points": np.array([len_coordinates*self.nr_repetitions, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
 
         # plot the analysis result for the additional measurement point numbers

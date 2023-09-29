@@ -26,6 +26,7 @@ def main():
 
     # Add the argument
     parser.add_argument('--path', type=str, help='The path to the results.', required=False)
+    parser.add_argument('--name', type=str, help='Set name of the plot.', required=False)
 
     # Parse the command-line arguments
     args = parser.parse_args()
@@ -34,6 +35,11 @@ def main():
         folder_path = args.path
     else:
         folder_path = "analysis_results/"
+        
+    if args.name:
+        plot_name = args.name+".png"
+    else:
+        plot_name = "single_plot.png"
     
     #folder_path = "analysis_results/"
     files = find_files(folder_path)
@@ -294,12 +300,13 @@ def main():
     ax6.set_xlabel('Allowed modeling budget $b$ [%]')
     ax6.grid(alpha=0.3)
     ax6.set_yticks(np.arange(0, 110, 10))
-    ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    #ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax6.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax6.set_xlim(0,120)
     ax6.legend(loc='lower right', prop={'size': 8})
     
     fig.tight_layout(pad=2.0)
-    plt.savefig('single_plot.png')
+    plt.savefig(plot_name)
     plt.show()
     plt.close()
 
