@@ -43,6 +43,8 @@ def main():
                         help="Percentage of induced noise. Must be an integer value.")
     parser.add_argument("--grid-search", type=int, default=1, required=False, choices=[1,2,3,4],
                         help="Set the evaluation mode. Used for grid search for best strategy setups.")
+    parser.add_argument("--base-values", type=int, default=2, required=False,
+                        help="Set the number of repetitions used for the minimal set of measurements for the GPR strategy.")
     modeling_options = parser.add_argument_group("Modeling options")
     modeling_options.add_argument("--median", action="store_true", dest="median",
                                   help="Use median values for computation instead of mean values")

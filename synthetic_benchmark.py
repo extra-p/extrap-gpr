@@ -59,6 +59,10 @@ class SyntheticBenchmark():
         self.parameter_values_c_val = [6000, 7000]
         self.parameter_values_d_val = [20, 22]
         self.grid_search = args.grid_search
+        if args.base_values < self.nr_repetitions:
+            self.base_values = args.base_values
+        else:
+            self.base_values = 2
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
@@ -437,7 +441,7 @@ class SyntheticBenchmark():
         if self.grid_search == 2 or self.grid_search == 3:
             measurements_gpr = copy.deepcopy(experiment.measurements)
             measurements_hybrid = copy.deepcopy(experiment.measurements)
-        base_values = 1
+        #base_values = 1
 
         if len(experiment.parameters) == 2:
                 
@@ -480,15 +484,18 @@ class SyntheticBenchmark():
                         for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
-                                for i in range(base_values):
+                                for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
                         for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
-                                for i in range(base_values):
+                                for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
                     
                 except KeyError:
                     pass
@@ -540,13 +547,13 @@ class SyntheticBenchmark():
                         for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
-                                for i in range(base_values):
+                                for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
                         for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
-                                for i in range(base_values):
+                                for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
                             
@@ -930,7 +937,7 @@ class SyntheticBenchmark():
 
         # calculate the cost for the selected base points
         #base_point_cost = calculate_selected_point_cost(selected_points, experiment, 0, 0)
-        base_point_cost = self.calculate_selected_point_cost_base(selected_points, experiment, 0, 0, base_values)
+        base_point_cost = self.calculate_selected_point_cost_base(selected_points, experiment, 0, 0, self.base_values)
         base_point_cost = base_point_cost / (total_cost / 100)
         #print("base_point_cost %:",base_point_cost)
 
@@ -1189,6 +1196,14 @@ class SyntheticBenchmark():
         elif self.grid_search == 2 or self.grid_search == 3:
             remaining_points_gpr = copy.deepcopy(remaining_points_min)
         selected_points_gpr = copy.deepcopy(selected_points)
+        
+        #for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+            #print(x.coordinate, x.values)
+        #print("DEBUG:",measurements_gpr[(Callpath("main"), Metric("runtime"))])
+        
+        #print("DEBUG remaining_points_gpr:",remaining_points_gpr)
+        
+        #print("DEBUG selected_points_gpr:", selected_points_gpr)
 
         # add all of the selected measurement points to the gaussian process
         # as training data and train it for these points
@@ -1202,7 +1217,7 @@ class SyntheticBenchmark():
 
         # create base model for gpr
         if self.grid_search == 2 or self.grid_search == 3:
-            experiment_gpr_base = self.create_experiment_base(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0, base_values)
+            experiment_gpr_base = self.create_experiment_base(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
         else:
             experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
         
@@ -1327,6 +1342,10 @@ class SyntheticBenchmark():
                                     measurements_gpr[(Callpath("main"), Metric("runtime"))][i].values = x
                                 break
                         
+                        # pop value from cord in remaining points list that has been selected as best next point
+                        remaining_points_gpr[cord].pop(0)
+                        
+                        # pop cord from remaining points when no value left anymore
                         if len(measurements_gpr[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
                             remaining_points_gpr.pop(cord)
                         
@@ -1457,7 +1476,7 @@ class SyntheticBenchmark():
 
         # create base model for gpr hybrid
         if self.grid_search == 2 or self.grid_search == 3:
-            experiment_hybrid_base = self.create_experiment_base(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0, base_values)
+            experiment_hybrid_base = self.create_experiment_base(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
         else:
             experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
 
@@ -1611,6 +1630,11 @@ class SyntheticBenchmark():
                                     x = np.delete(x, 0)
                                     measurements_hybrid[(Callpath("main"), Metric("runtime"))][i].values = x
                                 break
+                            
+                        # pop value from cord in remaining points list that has been selected as best next point
+                        remaining_points_hybrid[cord].pop(0)
+                        
+                        # pop cord from remaining points when no value left anymore
                         if len(measurements_hybrid[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
                             remaining_points_hybrid.pop(cord)
                         
