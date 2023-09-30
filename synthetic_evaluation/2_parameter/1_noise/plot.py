@@ -85,7 +85,7 @@ def plot_cost(x_values, y_values_list, labels, bucket):
     plt.show()
     plt.close()
 
-def plot_selected_points(x_values, y_values_list, labels, bucket):
+def plot_selected_points(x_values, y_values_list, labels, bucket, reps):
     ls=["-",'dotted','--',':','dashdot']
     lw = [1,2,2,5,2]
     #plt.rc('text', usetex=True)
@@ -104,8 +104,10 @@ def plot_selected_points(x_values, y_values_list, labels, bucket):
     plt.ylabel('Mean number of points used for modelnig $\\bar{p}$')
     plt.xlabel('Allowed modeling budget $b$ [%]')
     plt.grid(alpha=0.3)
-    plt.yticks(np.arange(0, 110, 10))
-    plt.xticks([1,10,20,30,40,50,60,70,80,90,100])
+    #plt.yticks(np.arange(0, 110, 10))
+    #plt.xticks([1,10,20,30,40,50,60,70,80,90,100])
+    plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
+    plt.yticks(np.arange(0, 25*reps, 10))
     plt.xlim(0,120)
     plt.legend(loc='upper left')
     plt.savefig('additional_points.png')
@@ -122,12 +124,15 @@ def main():
 
     # Add the argument
     parser.add_argument('--path', type=str, help='The path to the results.', required=False)
+    parser.add_argument('--reps', type=int, default=4, help='Set the number of repetitions per measurement point.', required=False)
 
     # Parse the command-line arguments
     args = parser.parse_args()
 
     # Extract the argument value
     bucket = args.bucket
+    
+    reps = args.reps
     
     if args.path:
         folder_path = args.path
@@ -174,11 +179,11 @@ def main():
         gpr_costs.append(json_data["mean_budget_gpr"])
         hybrid_costs.append(json_data["mean_budget_hybrid"])
 
-        points_generic.append(json_data["mean_add_points_generic"]+json_data["min_points"])
-        points_gpr.append(json_data["mean_add_points_gpr"]+json_data["min_points"])
-        points_hybrid.append(json_data["mean_add_points_hybrid"]+json_data["min_points"])
+        points_generic.append(json_data["mean_add_points_generic"])
+        points_gpr.append(json_data["mean_add_points_gpr"])
+        points_hybrid.append(json_data["mean_add_points_hybrid"])
         
-        all_points.append(100)
+        all_points.append(25*reps)
 
         base_point_costs.append(json_data["base_point_cost"])
 
@@ -209,9 +214,10 @@ def main():
     ]
 
     # points
-    #print(np.max(points_generic))
-    #print(np.max(points_gpr))
-    #print(np.max(points_hybrid))
+    #print(points_generic)
+    #print(points_gpr)
+    #print(points_hybrid)
+    #print(all_points)
 
     # costs
     #print(np.max(generic_costs))
@@ -224,7 +230,7 @@ def main():
 
     plot_accuracy(budget_values, y_values_list, labels, bucket)
     plot_cost(budget_values, y_values_list2, labels2, bucket)
-    plot_selected_points(budget_values, y_values_list3, labels3, bucket)
+    plot_selected_points(budget_values, y_values_list3, labels3, bucket, reps)
 
     #print("DEBUG:",labels2)
 

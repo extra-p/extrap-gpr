@@ -113,7 +113,7 @@ def plot_measurement_point_number(add_points, min_points, budget):
         d=h-y2
         yt2=y0/2
         ax.text(text_x, yt2, str("{:.2f}".format(min_points)), color="white")
-        ax.text(text_x, yt, str("{:.2f}".format(add_point[i])))
+        ax.text(text_x, yt, str("{:.2f}".format(add_point[i]-min_points)))
     plt.xlabel("Measurement point selection strategy")
     plt.ylabel("Average number of used measurement points")
     plt.title("Number of measurement points used by each strategy")

@@ -25,7 +25,7 @@ ml restore lulesh
 
 SECONDS=0;
 
-python ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 1000 --nr-repetitions 4 --noise 1 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 2
+python ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 1000 --nr-repetitions 4 --noise 1 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 3 --base-values 2 --hybrid-switch 10
 
 echo $SECONDS"""
 

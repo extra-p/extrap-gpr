@@ -63,6 +63,7 @@ class SyntheticBenchmark():
             self.base_values = args.base_values
         else:
             self.base_values = 2
+        self.hybrid_switch = args.hybrid_switch
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
@@ -1518,9 +1519,9 @@ class SyntheticBenchmark():
                 swtiching_point = 0
                 if len(experiment.parameters) == 2:
                     if self.grid_search == 1 or self.grid_search == 4:
-                        swtiching_point = 41
+                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
                     elif self.grid_search == 2 or self.grid_search == 3:
-                        swtiching_point = 14
+                        swtiching_point = self.base_values * min_points + self.hybrid_switch
                 #TODO: swtiching_point needs to be recalculated for 3 and 4 parameter experiments!!!
                 elif len(experiment.parameters) == 3:
                     swtiching_point = 18
@@ -1531,8 +1532,11 @@ class SyntheticBenchmark():
 
                 best_index = -1
                 
+                #print("DEBUG: add_points_hybrid, swtiching_point", add_points_hybrid, swtiching_point)
+                
                 # find the next best additional measurement point using the gpr strategy
-                if add_points_hybrid + min_points > swtiching_point:
+                if add_points_hybrid > swtiching_point:
+                    #print("Using gpr strategy")
                     best_rated = sys.float_info.max
 
                     for i in range(len(fitting_measurements)):
@@ -1578,6 +1582,7 @@ class SyntheticBenchmark():
 
                 # find the next best additional measurement point using the generic strategy
                 else:
+                    #print("Using generic strategy")
                     lowest_cost = sys.float_info.max
                     for i in range(len(fitting_measurements)):
                         

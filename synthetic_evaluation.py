@@ -45,6 +45,8 @@ def main():
                         help="Set the evaluation mode. Used for grid search for best strategy setups.")
     parser.add_argument("--base-values", type=int, default=2, required=False,
                         help="Set the number of repetitions used for the minimal set of measurements for the GPR strategy.")
+    parser.add_argument("--hybrid-switch", type=int, default=5, required=False,
+                        help="Set the switching point for the hybrid selection strategy.")
     modeling_options = parser.add_argument_group("Modeling options")
     modeling_options.add_argument("--median", action="store_true", dest="median",
                                   help="Use median values for computation instead of mean values")
