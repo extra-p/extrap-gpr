@@ -25,7 +25,7 @@ from plotting import plot_measurement_point_number, plot_model_accuracy, plot_co
 from generic_strategy import add_additional_point_generic
 from case_study import calculate_selected_point_cost
 from case_study import create_experiment
-from case_study import get_extrap_model
+#from case_study import get_extrap_model
 from temp import add_measurements_to_gpr
 from temp import add_measurement_to_gpr
 from temp import add_measurement_to_gpr_test
@@ -113,9 +113,9 @@ class SyntheticBenchmark():
         cord_found = False
         for i in range(len(experiment.measurements[(Callpath("main"), Metric("runtime"))])):
             if cord == experiment.measurements[(Callpath("main"), Metric("runtime"))][i].coordinate:
-                x = experiment.measurements[(Callpath("main"), Metric("runtime"))][i].values
-                x = np.append(x, new_value)
-                experiment.measurements[(Callpath("main"), Metric("runtime"))][i].values = x
+                experiment.measurements[(Callpath("main"), Metric("runtime"))][i].add_value(new_value)
+                #x = np.append(x, new_value)
+                #experiment.measurements[(Callpath("main"), Metric("runtime"))][i].values = x
                 cord_found = True
                 break
         if cord_found == False:
@@ -225,11 +225,12 @@ class SyntheticBenchmark():
             function = hypothesis.function
             function_string = function.to_string(*experiment.parameters)
             extrap_function_string += function_string + "\n"
+        
         # convert into python interpretable function
-        extrap_function_string = extrap_function_string.replace(" ","")
-        extrap_function_string = extrap_function_string.replace("^","**")
-        extrap_function_string = extrap_function_string.replace("log2","math.log2")
-        extrap_function_string = extrap_function_string.replace("+-","-")
+        #extrap_function_string = extrap_function_string.replace(" ","")
+        #extrap_function_string = extrap_function_string.replace("^","**")
+        #extrap_function_string = extrap_function_string.replace("log2","math.log2")
+        #extrap_function_string = extrap_function_string.replace("+-","-")
         return extrap_function_string, models
 
     def generate_synthetic_functions(self):
@@ -964,7 +965,7 @@ class SyntheticBenchmark():
 
         # create first model
         experiment_generic_base = create_experiment(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
-        _, models = get_extrap_model(experiment_generic_base, self.args)
+        _, models = self.get_extrap_model(experiment_generic_base)
         hypothesis = None
         for model in models.values():
             hypothesis = model.hypothesis
@@ -1050,10 +1051,11 @@ class SyntheticBenchmark():
         #    print("add_points_generic:",add_points_generic)
         
         # create model using point selection of generic strategy
+        model_generic, _ = self.get_extrap_model(experiment_generic_base)
         
-        #print("DEBUG experiment_generic_base:", experiment_generic_base.measurements)
-        
-        model_generic, _ = get_extrap_model(experiment_generic_base, self.args)
+        #for x in experiment_generic_base.measurements[(Callpath("main"),Metric("runtime"))]:
+        #    print(x, x.values)
+        #print("Model generic:",model_generic)
 
         # create model using full matrix of points
         model_full, _ = self.get_extrap_model(experiment)
@@ -1383,10 +1385,13 @@ class SyntheticBenchmark():
         # additionally used data points (exceeding the base requirement of the sparse modeler)
         add_points_gpr_container.append(add_points_gpr)
         
-        #print("DEBUG experiment_gpr_base:",experiment_gpr_base.measurements)
+        #for x in experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))]:
+        #    print(x, x.mean)
+        #print("DEBUG number point gpr:",len(experiment_gpr_base.measurements[(Callpath("main"), Metric("runtime"))]))
 
         # create model using point selection of gpr strategy
-        model_gpr, _ = get_extrap_model(experiment_gpr_base, self.args)
+        model_gpr, _ = self.get_extrap_model(experiment_gpr_base)
+        #print("Model GPR:",model_gpr)
 
         # set the measurement point values for the evaluation of the prediction
         if self.nr_parameters == 2:
@@ -1685,7 +1690,7 @@ class SyntheticBenchmark():
         #print("DEBUG add_points_hybrid:",add_points_hybrid)
 
         # create model using point selection of hybrid strategy
-        model_hybrid, _ = get_extrap_model(experiment_hybrid_base, self.args)
+        model_hybrid, _ = self.get_extrap_model(experiment_hybrid_base)
         
         # set the measurement point values for the evaluation of the prediction
         if self.nr_parameters == 2:
