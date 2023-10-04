@@ -169,7 +169,7 @@ def main():
 
     # create the figure environment including subplots
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(15, 8))
-    fig.suptitle("Evaluation results $m=2, n=10\\%$")
+    fig.suptitle("Evaluation results $m=2, n=2\\%$")
     
     # plot the accuracy of bucket 5
     ls=["-",'dotted','--',':','-']
@@ -185,8 +185,8 @@ def main():
         else:
             ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    #ax1.fill_between(x_values, y_values_list_acc_5[1], y_values_list_acc_5[3], color="green", where=np.array(y_values_list_acc_5[3]) > np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    #ax1.fill_between(x_values, y_values_list_acc_5[3], y_values_list_acc_5[1], color="red", where=np.array(y_values_list_acc_5[3]) < np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax1.fill_between(x_values, y_values_list_acc_5[1], y_values_list_acc_5[2], color="green", where=np.array(y_values_list_acc_5[2]) > np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax1.fill_between(x_values, y_values_list_acc_5[2], y_values_list_acc_5[1], color="red", where=np.array(y_values_list_acc_5[2]) < np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax1.grid(alpha=0.3)
     ax1.set_yticks(np.arange(0, 100, 10))
     ax1.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
@@ -208,8 +208,8 @@ def main():
         else:
             ax2.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    #ax2.fill_between(x_values, y_values_list_acc_10[1], y_values_list_acc_10[3], color="green", where=np.array(y_values_list_acc_10[3]) > np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    #ax2.fill_between(x_values, y_values_list_acc_10[3], y_values_list_acc_10[1], color="red", where=np.array(y_values_list_acc_10[3]) < np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax2.fill_between(x_values, y_values_list_acc_10[1], y_values_list_acc_10[2], color="green", where=np.array(y_values_list_acc_10[2]) > np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax2.fill_between(x_values, y_values_list_acc_10[2], y_values_list_acc_10[1], color="red", where=np.array(y_values_list_acc_10[2]) < np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax2.grid(alpha=0.3)
     ax2.set_yticks(np.arange(0, 100, 10))
     ax2.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
@@ -231,8 +231,8 @@ def main():
         else:
             ax3.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    #ax3.fill_between(x_values, y_values_list_acc_15[1], y_values_list_acc_15[3], color="green", where=np.array(y_values_list_acc_15[3]) > np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    #ax3.fill_between(x_values, y_values_list_acc_15[3], y_values_list_acc_15[1], color="red", where=np.array(y_values_list_acc_15[3]) < np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax3.fill_between(x_values, y_values_list_acc_15[1], y_values_list_acc_15[2], color="green", where=np.array(y_values_list_acc_15[2]) > np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax3.fill_between(x_values, y_values_list_acc_15[2], y_values_list_acc_15[1], color="red", where=np.array(y_values_list_acc_15[2]) < np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax3.grid(alpha=0.3)
     ax3.set_yticks(np.arange(0, 100, 10))
     ax3.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
@@ -254,8 +254,8 @@ def main():
         else:
             ax4.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    #ax4.fill_between(x_values, y_values_list_acc_20[1], y_values_list_acc_20[3], color="green", where=np.array(y_values_list_acc_20[3]) > np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    #ax4.fill_between(x_values, y_values_list_acc_20[3], y_values_list_acc_20[1], color="red", where=np.array(y_values_list_acc_20[3]) < np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax4.fill_between(x_values, y_values_list_acc_20[1], y_values_list_acc_20[2], color="green", where=np.array(y_values_list_acc_20[2]) > np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax4.fill_between(x_values, y_values_list_acc_20[2], y_values_list_acc_20[1], color="red", where=np.array(y_values_list_acc_20[2]) < np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax4.grid(alpha=0.3)
     ax4.set_yticks(np.arange(0, 100, 10))
     ax4.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])

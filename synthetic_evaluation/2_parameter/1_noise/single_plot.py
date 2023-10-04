@@ -185,13 +185,13 @@ def main():
         else:
             ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    ax1.fill_between(x_values, y_values_list_acc_5[1], y_values_list_acc_5[2], color="green", where=np.array(y_values_list_acc_5[2]) > np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    ax1.fill_between(x_values, y_values_list_acc_5[2], y_values_list_acc_5[1], color="red", where=np.array(y_values_list_acc_5[2]) < np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax1.fill_between(x_values, y_values_list_acc_5[1], y_values_list_acc_5[2], color="green", where=np.array(y_values_list_acc_5[2]) > np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax1.fill_between(x_values, y_values_list_acc_5[2], y_values_list_acc_5[1], color="red", where=np.array(y_values_list_acc_5[2]) < np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax1.grid(alpha=0.3)
     ax1.set_yticks(np.arange(0, 100, 10))
     ax1.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax1.set_xlabel('Allowed modeling budget $b$ [%]')
-    ax1.set_ylabel('Models in 5% accuracy bucket [%]')
+    ax1.set_ylabel('Models within $\pm5\%$ at $P_{eval}$ [%]')
     ax1.legend(loc="lower right", prop={'size': 8})
     
     # plot the accuracy of bucket 10
@@ -208,13 +208,13 @@ def main():
         else:
             ax2.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    ax2.fill_between(x_values, y_values_list_acc_10[1], y_values_list_acc_10[2], color="green", where=np.array(y_values_list_acc_10[2]) > np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    ax2.fill_between(x_values, y_values_list_acc_10[2], y_values_list_acc_10[1], color="red", where=np.array(y_values_list_acc_10[2]) < np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax2.fill_between(x_values, y_values_list_acc_10[1], y_values_list_acc_10[2], color="green", where=np.array(y_values_list_acc_10[2]) > np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax2.fill_between(x_values, y_values_list_acc_10[2], y_values_list_acc_10[1], color="red", where=np.array(y_values_list_acc_10[2]) < np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax2.grid(alpha=0.3)
     ax2.set_yticks(np.arange(0, 100, 10))
     ax2.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax2.set_xlabel('Allowed modeling budget $b$ [%]')
-    ax2.set_ylabel('Models in 10% accuracy bucket [%]')
+    ax2.set_ylabel('Models within $\pm10\%$ at $P_{eval}$ [%]')
     ax2.legend(loc="lower right", prop={'size': 8})
     
     # plot the accuracy of bucket 15
@@ -231,13 +231,13 @@ def main():
         else:
             ax3.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    ax3.fill_between(x_values, y_values_list_acc_15[1], y_values_list_acc_15[2], color="green", where=np.array(y_values_list_acc_15[2]) > np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    ax3.fill_between(x_values, y_values_list_acc_15[2], y_values_list_acc_15[1], color="red", where=np.array(y_values_list_acc_15[2]) < np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax3.fill_between(x_values, y_values_list_acc_15[1], y_values_list_acc_15[2], color="green", where=np.array(y_values_list_acc_15[2]) > np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax3.fill_between(x_values, y_values_list_acc_15[2], y_values_list_acc_15[1], color="red", where=np.array(y_values_list_acc_15[2]) < np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax3.grid(alpha=0.3)
     ax3.set_yticks(np.arange(0, 100, 10))
     ax3.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax3.set_xlabel('Allowed modeling budget $b$ [%]')
-    ax3.set_ylabel('Models in 15% accuracy bucket [%]')
+    ax3.set_ylabel('Models within $\pm15\%$ at $P_{eval}$ [%]')
     ax3.legend(loc="lower right", prop={'size': 8})
     
     # plot the accuracy of bucket 20
@@ -254,18 +254,18 @@ def main():
         else:
             ax4.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    ax4.fill_between(x_values, y_values_list_acc_20[1], y_values_list_acc_20[2], color="green", where=np.array(y_values_list_acc_20[2]) > np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    ax4.fill_between(x_values, y_values_list_acc_20[2], y_values_list_acc_20[1], color="red", where=np.array(y_values_list_acc_20[2]) < np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    #ax4.fill_between(x_values, y_values_list_acc_20[1], y_values_list_acc_20[2], color="green", where=np.array(y_values_list_acc_20[2]) > np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    #ax4.fill_between(x_values, y_values_list_acc_20[2], y_values_list_acc_20[1], color="red", where=np.array(y_values_list_acc_20[2]) < np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax4.grid(alpha=0.3)
     ax4.set_yticks(np.arange(0, 100, 10))
     ax4.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax4.set_xlabel('Allowed modeling budget $b$ [%]')
-    ax4.set_ylabel('Models in 20% accuracy bucket [%]')
+    ax4.set_ylabel('Models within $\pm20\%$ at $P_{eval}$ [%]')
     ax4.legend(loc="lower right", prop={'size': 8})
     
     # plot the cost
     ls=['dotted','--',':','dashdot']
-    lw = [3,3,6,3]
+    lw = [2,2,5,2]
     colors = ["blue", "red", "orange", "dimgray"]
     zorders=[7,6,5,4]
     style_counter = 0
@@ -274,8 +274,8 @@ def main():
         ax5.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
     ax5.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', color="black", linewidth=2, alpha=1, zorder=4)
-    ax5.fill_between(x_values, y_values_list_cost[1], y_values_list_cost[0], color="green", where=np.array(y_values_list_cost[0]) < np.array(y_values_list_cost[1]), alpha=0.3, label='GPR better than CPF', zorder=3, hatch="x", interpolate=True)
-    ax5.fill_between(x_values, y_values_list_cost[1], y_values_list_cost[0], color="red", where=np.array(y_values_list_cost[1]) < np.array(y_values_list_cost[0]), alpha=0.3, label='GPR worse than CPF', zorder=3, hatch="+", interpolate=True)
+    #ax5.fill_between(x_values, y_values_list_cost[1], y_values_list_cost[0], color="green", where=np.array(y_values_list_cost[0]) < np.array(y_values_list_cost[1]), alpha=0.3, label='GPR better than CPF', zorder=3, hatch="x", interpolate=True)
+    #ax5.fill_between(x_values, y_values_list_cost[1], y_values_list_cost[0], color="red", where=np.array(y_values_list_cost[1]) < np.array(y_values_list_cost[0]), alpha=0.3, label='GPR worse than CPF', zorder=3, hatch="+", interpolate=True)
     ax5.grid(alpha=0.3)
     ax5.set_yticks(np.arange(0, 110, 10))
     ax5.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
@@ -305,7 +305,7 @@ def main():
     #ax6.set_yticks(np.arange(0, 110, 10))
     #ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax6.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax6.set_yticks(np.arange(0, 25*reps, 10))
+    ax6.set_yticks(np.arange(0, 25*reps+10, 10))
     ax6.set_xlim(0,120)
     ax6.legend(loc='lower right', prop={'size': 8})
     
