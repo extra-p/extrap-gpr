@@ -169,7 +169,7 @@ def main():
 
     # create the figure environment including subplots
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(15, 8))
-    fig.suptitle("Evaluation results $m=2, n=5\\%$")
+    fig.suptitle("Evaluation results $m=2, n=\\pm5\\%$")
     
     # plot the accuracy of bucket 5
     ls=["-",'dotted','--',':','-']
