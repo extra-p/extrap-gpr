@@ -1,3 +1,4 @@
+
 mkdir accuracy_plots analysis_results cost_plots point_plots
 rm er_b*
 rm out_b*
@@ -12,5 +13,5 @@ python plot.py --bucket 15
 python plot.py --bucket 20
 mkdir results
 mv accuracy_*.png results/
-mv additional_points_*.png results/
-mv cost_*.png results/
+mv additional_points.png results/
+mv cost.png results/
