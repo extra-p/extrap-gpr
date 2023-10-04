@@ -226,11 +226,6 @@ class SyntheticBenchmark():
             function_string = function.to_string(*experiment.parameters)
             extrap_function_string += function_string + "\n"
         
-        # convert into python interpretable function
-        #extrap_function_string = extrap_function_string.replace(" ","")
-        #extrap_function_string = extrap_function_string.replace("^","**")
-        #extrap_function_string = extrap_function_string.replace("log2","math.log2")
-        #extrap_function_string = extrap_function_string.replace("+-","-")
         return extrap_function_string, models
 
     def generate_synthetic_functions(self):
@@ -443,8 +438,7 @@ class SyntheticBenchmark():
         if self.grid_search == 2 or self.grid_search == 3:
             measurements_gpr = copy.deepcopy(experiment.measurements)
             measurements_hybrid = copy.deepcopy(experiment.measurements)
-        #base_values = 1
-
+    
         if len(experiment.parameters) == 2:
                 
             # find the cheapest line of 5 points for y
@@ -613,6 +607,24 @@ class SyntheticBenchmark():
                 try:
                     cord = Coordinate(x_value, y_values[j], z_value)
                     remaining_points.pop(cord)
+                    
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
+                    
                 except KeyError:
                     pass
 
@@ -659,6 +671,24 @@ class SyntheticBenchmark():
                 try:
                     cord = Coordinate(x_values[j], y_value, z_value)
                     remaining_points.pop(cord)
+                    
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
+                    
                 except KeyError:
                     pass
 
@@ -711,6 +741,24 @@ class SyntheticBenchmark():
                 try:
                     cord = Coordinate(x_value, y_value, z_values[j])
                     remaining_points.pop(cord)
+                    
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
+                    
                 except KeyError:
                     pass
 
@@ -762,6 +810,24 @@ class SyntheticBenchmark():
                 try:
                     cord = Coordinate(x1_values[j], x2_value, x3_value, x4_value)
                     remaining_points.pop(cord)
+                    
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
+                    
                 except KeyError:
                     pass
 
@@ -804,6 +870,24 @@ class SyntheticBenchmark():
                 try:
                     cord = Coordinate(x1_value, x2_values[j], x3_value, x4_value)
                     remaining_points.pop(cord)
+                    
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
+                    
                 except KeyError:
                     pass
 
@@ -851,6 +935,24 @@ class SyntheticBenchmark():
                 try:
                     cord = Coordinate(x1_value, x2_value, x3_values[j], x4_value)
                     remaining_points.pop(cord)
+                    
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
+                    
                 except KeyError:
                     pass
 
@@ -898,6 +1000,24 @@ class SyntheticBenchmark():
                 try:
                     cord = Coordinate(x1_value, x2_value, x3_value, x4_values[j])
                     remaining_points.pop(cord)
+                    
+                    if self.grid_search == 2 or self.grid_search == 3:
+                        for x in measurements_gpr[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        # also delete the cost values from the remaining min dict
+                        for i in range(self.base_values):
+                            remaining_points_min[cord].pop(0)
+                    
                 except KeyError:
                     pass
 
@@ -1103,7 +1223,7 @@ class SyntheticBenchmark():
 
         ##################
         ## GPR strategy ##
-        ##################
+        ##################    
 
         # GPR parameter-value normalization for each measurement point
         normalization_factors = {}
@@ -1527,13 +1647,21 @@ class SyntheticBenchmark():
                         swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
                     elif self.grid_search == 2 or self.grid_search == 3:
                         swtiching_point = self.base_values * min_points + self.hybrid_switch
-                #TODO: swtiching_point needs to be recalculated for 3 and 4 parameter experiments!!!
                 elif len(experiment.parameters) == 3:
-                    swtiching_point = 18
+                    if self.grid_search == 1 or self.grid_search == 4:
+                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
+                    elif self.grid_search == 2 or self.grid_search == 3:
+                        swtiching_point = self.base_values * min_points + self.hybrid_switch
                 elif len(experiment.parameters) == 4:
-                    swtiching_point = 23
+                    if self.grid_search == 1 or self.grid_search == 4:
+                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
+                    elif self.grid_search == 2 or self.grid_search == 3:
+                        swtiching_point = self.base_values * min_points + self.hybrid_switch
                 else:
-                    swtiching_point = 41
+                    if self.grid_search == 1 or self.grid_search == 4:
+                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
+                    elif self.grid_search == 2 or self.grid_search == 3:
+                        swtiching_point = self.base_values * min_points + self.hybrid_switch
 
                 best_index = -1
                 
@@ -1743,7 +1871,7 @@ class SyntheticBenchmark():
 
         result_container["point_map_generic"] = point_map_generic
         result_container["copy_point_map_generic"] = copy_point_map_generic
-
+        
         shared_dict[counter] = result_container
 
     def run(self):
