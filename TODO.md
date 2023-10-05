@@ -1,9 +1,5 @@
 # TODO LIST:
 
-* for final analysis results set number functions back to 10000
-
-* number additional points calculation is incorrect, need to calc with the repetitions...
-
 
 ###########################################
 

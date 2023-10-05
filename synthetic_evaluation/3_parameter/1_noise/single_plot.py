@@ -118,7 +118,7 @@ def main():
         points_gpr.append(json_data["mean_add_points_gpr"])
         points_hybrid.append(json_data["mean_add_points_hybrid"])
         
-        all_points.append(25*reps)
+        all_points.append(125*reps)
 
         base_point_costs.append(json_data["base_point_cost"])
 
@@ -169,13 +169,15 @@ def main():
 
     # create the figure environment including subplots
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(15, 8))
-    fig.suptitle("Evaluation results $m=2, n=1\\%$")
+    fig.suptitle("Evaluation results $m=2, n=\\pm1\\%$")
     
     # plot the accuracy of bucket 5
     ls=["-",'dotted','--',':','-']
     lw = [1,2,2,5,2]
     ax1.set_xscale("symlog")
+    #ax1.set_yscale("symlog")
     ax1.set_xlim(0.1, 120)
+    #ax1.set_ylim(70,90)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]
@@ -269,7 +271,8 @@ def main():
     colors = ["blue", "red", "orange", "dimgray"]
     zorders=[7,6,5,4]
     style_counter = 0
-    #ax5.xscale("symlog")
+    #ax5.set_xscale("symlog")
+    #ax5.set_yscale("symlog")
     for y_values, label in zip(y_values_list_cost, labels_cost):
         ax5.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
@@ -305,7 +308,7 @@ def main():
     #ax6.set_yticks(np.arange(0, 110, 10))
     #ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax6.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax6.set_yticks(np.arange(0, 25*reps+10, 10))
+    ax6.set_yticks(np.arange(0, 125*reps+10, 50))
     ax6.set_xlim(0,120)
     ax6.legend(loc='lower right', prop={'size': 8})
     

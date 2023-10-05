@@ -1093,7 +1093,13 @@ class SyntheticBenchmark():
         # calculate selected point cost
         current_cost = calculate_selected_point_cost(selected_points_generic, experiment, 0, 0)
         current_cost_percent = current_cost / (total_cost / 100)
-        #print("current_cost_percent:",current_cost_percent)
+        
+        #TODO: why is current cost and base point cost different at the start??? that should not be the case, check both functions and what they do.
+        #TODO: then count the number of functions that can be modeled for generic base cost and gpr, has to be the same number, or another bug somewhere!!!
+        
+        #TODO: DEBUG
+        if current_cost_percent <= self.budget:
+            print("current cost/base_point_cost v.s. budget:",current_cost_percent, base_point_cost, self.budget)
         #print("self.budget:",self.budget)
 
         if self.mode == "budget":
@@ -1871,6 +1877,8 @@ class SyntheticBenchmark():
 
         result_container["point_map_generic"] = point_map_generic
         result_container["copy_point_map_generic"] = copy_point_map_generic
+        
+        
         
         shared_dict[counter] = result_container
 
