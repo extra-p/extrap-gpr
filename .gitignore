@@ -18,6 +18,24 @@ synthetic_evaluation/2_parameter/2_noise/submit_analysis_jobs.sh
 synthetic_evaluation/2_parameter/5_noise/submit_analysis_jobs.sh
 synthetic_evaluation/2_parameter/10_noise/submit_analysis_jobs.sh
 
+synthetic_evaluation/3_parameter/1_noise/analysis_job_b*
+synthetic_evaluation/3_parameter/2_noise/analysis_job_b*
+synthetic_evaluation/3_parameter/5_noise/analysis_job_b*
+synthetic_evaluation/3_parameter/10_noise/analysis_job_b*
+synthetic_evaluation/3_parameter/1_noise/submit_analysis_jobs.sh
+synthetic_evaluation/3_parameter/2_noise/submit_analysis_jobs.sh
+synthetic_evaluation/3_parameter/5_noise/submit_analysis_jobs.sh
+synthetic_evaluation/3_parameter/10_noise/submit_analysis_jobs.sh
+
+synthetic_evaluation/4_parameter/1_noise/analysis_job_b*
+synthetic_evaluation/4_parameter/2_noise/analysis_job_b*
+synthetic_evaluation/4_parameter/5_noise/analysis_job_b*
+synthetic_evaluation/4_parameter/10_noise/analysis_job_b*
+synthetic_evaluation/4_parameter/1_noise/submit_analysis_jobs.sh
+synthetic_evaluation/4_parameter/2_noise/submit_analysis_jobs.sh
+synthetic_evaluation/4_parameter/5_noise/submit_analysis_jobs.sh
+synthetic_evaluation/4_parameter/10_noise/submit_analysis_jobs.sh
+
 *.png
 *.er
 *.out
