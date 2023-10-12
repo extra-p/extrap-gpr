@@ -1,200 +1,218 @@
-echo "submitting job with b=1"
-sbatch analysis_job_b1.sh
-echo "submitting job with b=2"
-sbatch analysis_job_b2.sh
-echo "submitting job with b=3"
-sbatch analysis_job_b3.sh
-echo "submitting job with b=4"
-sbatch analysis_job_b4.sh
-echo "submitting job with b=5"
-sbatch analysis_job_b5.sh
-echo "submitting job with b=6"
-sbatch analysis_job_b6.sh
-echo "submitting job with b=7"
-sbatch analysis_job_b7.sh
-echo "submitting job with b=8"
-sbatch analysis_job_b8.sh
-echo "submitting job with b=9"
-sbatch analysis_job_b9.sh
-echo "submitting job with b=10"
-sbatch analysis_job_b10.sh
-echo "submitting job with b=11"
-sbatch analysis_job_b11.sh
-echo "submitting job with b=12"
-sbatch analysis_job_b12.sh
-echo "submitting job with b=13"
-sbatch analysis_job_b13.sh
-echo "submitting job with b=14"
-sbatch analysis_job_b14.sh
-echo "submitting job with b=15"
-sbatch analysis_job_b15.sh
-echo "submitting job with b=16"
-sbatch analysis_job_b16.sh
-echo "submitting job with b=17"
-sbatch analysis_job_b17.sh
-echo "submitting job with b=18"
-sbatch analysis_job_b18.sh
-echo "submitting job with b=19"
-sbatch analysis_job_b19.sh
-echo "submitting job with b=20"
-sbatch analysis_job_b20.sh
-echo "submitting job with b=21"
-sbatch analysis_job_b21.sh
-echo "submitting job with b=22"
-sbatch analysis_job_b22.sh
-echo "submitting job with b=23"
-sbatch analysis_job_b23.sh
-echo "submitting job with b=24"
-sbatch analysis_job_b24.sh
-echo "submitting job with b=25"
-sbatch analysis_job_b25.sh
-echo "submitting job with b=26"
-sbatch analysis_job_b26.sh
-echo "submitting job with b=27"
-sbatch analysis_job_b27.sh
-echo "submitting job with b=28"
-sbatch analysis_job_b28.sh
-echo "submitting job with b=29"
-sbatch analysis_job_b29.sh
-echo "submitting job with b=30"
-sbatch analysis_job_b30.sh
-echo "submitting job with b=31"
-sbatch analysis_job_b31.sh
-echo "submitting job with b=32"
-sbatch analysis_job_b32.sh
-echo "submitting job with b=33"
-sbatch analysis_job_b33.sh
-echo "submitting job with b=34"
-sbatch analysis_job_b34.sh
-echo "submitting job with b=35"
-sbatch analysis_job_b35.sh
-echo "submitting job with b=36"
-sbatch analysis_job_b36.sh
-echo "submitting job with b=37"
-sbatch analysis_job_b37.sh
-echo "submitting job with b=38"
-sbatch analysis_job_b38.sh
-echo "submitting job with b=39"
-sbatch analysis_job_b39.sh
-echo "submitting job with b=40"
-sbatch analysis_job_b40.sh
-echo "submitting job with b=41"
-sbatch analysis_job_b41.sh
-echo "submitting job with b=42"
-sbatch analysis_job_b42.sh
-echo "submitting job with b=43"
-sbatch analysis_job_b43.sh
-echo "submitting job with b=44"
-sbatch analysis_job_b44.sh
-echo "submitting job with b=45"
-sbatch analysis_job_b45.sh
-echo "submitting job with b=46"
-sbatch analysis_job_b46.sh
-echo "submitting job with b=47"
-sbatch analysis_job_b47.sh
-echo "submitting job with b=48"
-sbatch analysis_job_b48.sh
-echo "submitting job with b=49"
-sbatch analysis_job_b49.sh
-echo "submitting job with b=50"
-sbatch analysis_job_b50.sh
-echo "submitting job with b=51"
-sbatch analysis_job_b51.sh
-echo "submitting job with b=52"
-sbatch analysis_job_b52.sh
-echo "submitting job with b=53"
-sbatch analysis_job_b53.sh
-echo "submitting job with b=54"
-sbatch analysis_job_b54.sh
-echo "submitting job with b=55"
-sbatch analysis_job_b55.sh
-echo "submitting job with b=56"
-sbatch analysis_job_b56.sh
-echo "submitting job with b=57"
-sbatch analysis_job_b57.sh
-echo "submitting job with b=58"
-sbatch analysis_job_b58.sh
-echo "submitting job with b=59"
-sbatch analysis_job_b59.sh
-echo "submitting job with b=60"
-sbatch analysis_job_b60.sh
-echo "submitting job with b=61"
-sbatch analysis_job_b61.sh
-echo "submitting job with b=62"
-sbatch analysis_job_b62.sh
-echo "submitting job with b=63"
-sbatch analysis_job_b63.sh
-echo "submitting job with b=64"
-sbatch analysis_job_b64.sh
-echo "submitting job with b=65"
-sbatch analysis_job_b65.sh
-echo "submitting job with b=66"
-sbatch analysis_job_b66.sh
-echo "submitting job with b=67"
-sbatch analysis_job_b67.sh
-echo "submitting job with b=68"
-sbatch analysis_job_b68.sh
-echo "submitting job with b=69"
-sbatch analysis_job_b69.sh
-echo "submitting job with b=70"
-sbatch analysis_job_b70.sh
-echo "submitting job with b=71"
-sbatch analysis_job_b71.sh
-echo "submitting job with b=72"
-sbatch analysis_job_b72.sh
-echo "submitting job with b=73"
-sbatch analysis_job_b73.sh
-echo "submitting job with b=74"
-sbatch analysis_job_b74.sh
-echo "submitting job with b=75"
-sbatch analysis_job_b75.sh
-echo "submitting job with b=76"
-sbatch analysis_job_b76.sh
-echo "submitting job with b=77"
-sbatch analysis_job_b77.sh
-echo "submitting job with b=78"
-sbatch analysis_job_b78.sh
-echo "submitting job with b=79"
-sbatch analysis_job_b79.sh
-echo "submitting job with b=80"
-sbatch analysis_job_b80.sh
-echo "submitting job with b=81"
-sbatch analysis_job_b81.sh
-echo "submitting job with b=82"
-sbatch analysis_job_b82.sh
-echo "submitting job with b=83"
-sbatch analysis_job_b83.sh
-echo "submitting job with b=84"
-sbatch analysis_job_b84.sh
-echo "submitting job with b=85"
-sbatch analysis_job_b85.sh
-echo "submitting job with b=86"
-sbatch analysis_job_b86.sh
-echo "submitting job with b=87"
-sbatch analysis_job_b87.sh
-echo "submitting job with b=88"
-sbatch analysis_job_b88.sh
-echo "submitting job with b=89"
-sbatch analysis_job_b89.sh
-echo "submitting job with b=90"
-sbatch analysis_job_b90.sh
-echo "submitting job with b=91"
-sbatch analysis_job_b91.sh
-echo "submitting job with b=92"
-sbatch analysis_job_b92.sh
-echo "submitting job with b=93"
-sbatch analysis_job_b93.sh
-echo "submitting job with b=94"
-sbatch analysis_job_b94.sh
-echo "submitting job with b=95"
-sbatch analysis_job_b95.sh
-echo "submitting job with b=96"
-sbatch analysis_job_b96.sh
-echo "submitting job with b=97"
-sbatch analysis_job_b97.sh
-echo "submitting job with b=98"
-sbatch analysis_job_b98.sh
-echo "submitting job with b=99"
-sbatch analysis_job_b99.sh
-echo "submitting job with b=100"
-sbatch analysis_job_b100.sh
+echo "submitting job with b=0.1"
+sbatch analysis_job_b0.1.sh
+echo "submitting job with b=0.2"
+sbatch analysis_job_b0.2.sh
+echo "submitting job with b=0.3"
+sbatch analysis_job_b0.3.sh
+echo "submitting job with b=0.4"
+sbatch analysis_job_b0.4.sh
+echo "submitting job with b=0.5"
+sbatch analysis_job_b0.5.sh
+echo "submitting job with b=0.6"
+sbatch analysis_job_b0.6.sh
+echo "submitting job with b=0.7"
+sbatch analysis_job_b0.7.sh
+echo "submitting job with b=0.8"
+sbatch analysis_job_b0.8.sh
+echo "submitting job with b=0.9"
+sbatch analysis_job_b0.9.sh
+echo "submitting job with b=1.0"
+sbatch analysis_job_b1.0.sh
+echo "submitting job with b=2.0"
+sbatch analysis_job_b2.0.sh
+echo "submitting job with b=3.0"
+sbatch analysis_job_b3.0.sh
+echo "submitting job with b=4.0"
+sbatch analysis_job_b4.0.sh
+echo "submitting job with b=5.0"
+sbatch analysis_job_b5.0.sh
+echo "submitting job with b=6.0"
+sbatch analysis_job_b6.0.sh
+echo "submitting job with b=7.0"
+sbatch analysis_job_b7.0.sh
+echo "submitting job with b=8.0"
+sbatch analysis_job_b8.0.sh
+echo "submitting job with b=9.0"
+sbatch analysis_job_b9.0.sh
+echo "submitting job with b=10.0"
+sbatch analysis_job_b10.0.sh
+echo "submitting job with b=11.0"
+sbatch analysis_job_b11.0.sh
+echo "submitting job with b=12.0"
+sbatch analysis_job_b12.0.sh
+echo "submitting job with b=13.0"
+sbatch analysis_job_b13.0.sh
+echo "submitting job with b=14.0"
+sbatch analysis_job_b14.0.sh
+echo "submitting job with b=15.0"
+sbatch analysis_job_b15.0.sh
+echo "submitting job with b=16.0"
+sbatch analysis_job_b16.0.sh
+echo "submitting job with b=17.0"
+sbatch analysis_job_b17.0.sh
+echo "submitting job with b=18.0"
+sbatch analysis_job_b18.0.sh
+echo "submitting job with b=19.0"
+sbatch analysis_job_b19.0.sh
+echo "submitting job with b=20.0"
+sbatch analysis_job_b20.0.sh
+echo "submitting job with b=21.0"
+sbatch analysis_job_b21.0.sh
+echo "submitting job with b=22.0"
+sbatch analysis_job_b22.0.sh
+echo "submitting job with b=23.0"
+sbatch analysis_job_b23.0.sh
+echo "submitting job with b=24.0"
+sbatch analysis_job_b24.0.sh
+echo "submitting job with b=25.0"
+sbatch analysis_job_b25.0.sh
+echo "submitting job with b=26.0"
+sbatch analysis_job_b26.0.sh
+echo "submitting job with b=27.0"
+sbatch analysis_job_b27.0.sh
+echo "submitting job with b=28.0"
+sbatch analysis_job_b28.0.sh
+echo "submitting job with b=29.0"
+sbatch analysis_job_b29.0.sh
+echo "submitting job with b=30.0"
+sbatch analysis_job_b30.0.sh
+echo "submitting job with b=31.0"
+sbatch analysis_job_b31.0.sh
+echo "submitting job with b=32.0"
+sbatch analysis_job_b32.0.sh
+echo "submitting job with b=33.0"
+sbatch analysis_job_b33.0.sh
+echo "submitting job with b=34.0"
+sbatch analysis_job_b34.0.sh
+echo "submitting job with b=35.0"
+sbatch analysis_job_b35.0.sh
+echo "submitting job with b=36.0"
+sbatch analysis_job_b36.0.sh
+echo "submitting job with b=37.0"
+sbatch analysis_job_b37.0.sh
+echo "submitting job with b=38.0"
+sbatch analysis_job_b38.0.sh
+echo "submitting job with b=39.0"
+sbatch analysis_job_b39.0.sh
+echo "submitting job with b=40.0"
+sbatch analysis_job_b40.0.sh
+echo "submitting job with b=41.0"
+sbatch analysis_job_b41.0.sh
+echo "submitting job with b=42.0"
+sbatch analysis_job_b42.0.sh
+echo "submitting job with b=43.0"
+sbatch analysis_job_b43.0.sh
+echo "submitting job with b=44.0"
+sbatch analysis_job_b44.0.sh
+echo "submitting job with b=45.0"
+sbatch analysis_job_b45.0.sh
+echo "submitting job with b=46.0"
+sbatch analysis_job_b46.0.sh
+echo "submitting job with b=47.0"
+sbatch analysis_job_b47.0.sh
+echo "submitting job with b=48.0"
+sbatch analysis_job_b48.0.sh
+echo "submitting job with b=49.0"
+sbatch analysis_job_b49.0.sh
+echo "submitting job with b=50.0"
+sbatch analysis_job_b50.0.sh
+echo "submitting job with b=51.0"
+sbatch analysis_job_b51.0.sh
+echo "submitting job with b=52.0"
+sbatch analysis_job_b52.0.sh
+echo "submitting job with b=53.0"
+sbatch analysis_job_b53.0.sh
+echo "submitting job with b=54.0"
+sbatch analysis_job_b54.0.sh
+echo "submitting job with b=55.0"
+sbatch analysis_job_b55.0.sh
+echo "submitting job with b=56.0"
+sbatch analysis_job_b56.0.sh
+echo "submitting job with b=57.0"
+sbatch analysis_job_b57.0.sh
+echo "submitting job with b=58.0"
+sbatch analysis_job_b58.0.sh
+echo "submitting job with b=59.0"
+sbatch analysis_job_b59.0.sh
+echo "submitting job with b=60.0"
+sbatch analysis_job_b60.0.sh
+echo "submitting job with b=61.0"
+sbatch analysis_job_b61.0.sh
+echo "submitting job with b=62.0"
+sbatch analysis_job_b62.0.sh
+echo "submitting job with b=63.0"
+sbatch analysis_job_b63.0.sh
+echo "submitting job with b=64.0"
+sbatch analysis_job_b64.0.sh
+echo "submitting job with b=65.0"
+sbatch analysis_job_b65.0.sh
+echo "submitting job with b=66.0"
+sbatch analysis_job_b66.0.sh
+echo "submitting job with b=67.0"
+sbatch analysis_job_b67.0.sh
+echo "submitting job with b=68.0"
+sbatch analysis_job_b68.0.sh
+echo "submitting job with b=69.0"
+sbatch analysis_job_b69.0.sh
+echo "submitting job with b=70.0"
+sbatch analysis_job_b70.0.sh
+echo "submitting job with b=71.0"
+sbatch analysis_job_b71.0.sh
+echo "submitting job with b=72.0"
+sbatch analysis_job_b72.0.sh
+echo "submitting job with b=73.0"
+sbatch analysis_job_b73.0.sh
+echo "submitting job with b=74.0"
+sbatch analysis_job_b74.0.sh
+echo "submitting job with b=75.0"
+sbatch analysis_job_b75.0.sh
+echo "submitting job with b=76.0"
+sbatch analysis_job_b76.0.sh
+echo "submitting job with b=77.0"
+sbatch analysis_job_b77.0.sh
+echo "submitting job with b=78.0"
+sbatch analysis_job_b78.0.sh
+echo "submitting job with b=79.0"
+sbatch analysis_job_b79.0.sh
+echo "submitting job with b=80.0"
+sbatch analysis_job_b80.0.sh
+echo "submitting job with b=81.0"
+sbatch analysis_job_b81.0.sh
+echo "submitting job with b=82.0"
+sbatch analysis_job_b82.0.sh
+echo "submitting job with b=83.0"
+sbatch analysis_job_b83.0.sh
+echo "submitting job with b=84.0"
+sbatch analysis_job_b84.0.sh
+echo "submitting job with b=85.0"
+sbatch analysis_job_b85.0.sh
+echo "submitting job with b=86.0"
+sbatch analysis_job_b86.0.sh
+echo "submitting job with b=87.0"
+sbatch analysis_job_b87.0.sh
+echo "submitting job with b=88.0"
+sbatch analysis_job_b88.0.sh
+echo "submitting job with b=89.0"
+sbatch analysis_job_b89.0.sh
+echo "submitting job with b=90.0"
+sbatch analysis_job_b90.0.sh
+echo "submitting job with b=91.0"
+sbatch analysis_job_b91.0.sh
+echo "submitting job with b=92.0"
+sbatch analysis_job_b92.0.sh
+echo "submitting job with b=93.0"
+sbatch analysis_job_b93.0.sh
+echo "submitting job with b=94.0"
+sbatch analysis_job_b94.0.sh
+echo "submitting job with b=95.0"
+sbatch analysis_job_b95.0.sh
+echo "submitting job with b=96.0"
+sbatch analysis_job_b96.0.sh
+echo "submitting job with b=97.0"
+sbatch analysis_job_b97.0.sh
+echo "submitting job with b=98.0"
+sbatch analysis_job_b98.0.sh
+echo "submitting job with b=99.0"
+sbatch analysis_job_b99.0.sh
+echo "submitting job with b=100.0"
+sbatch analysis_job_b100.0.sh
