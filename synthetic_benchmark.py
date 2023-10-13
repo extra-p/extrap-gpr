@@ -1897,7 +1897,6 @@ class SyntheticBenchmark():
 
     def run(self):
 
-        #TODO: create a file for 4 params with 1000 functions...
         import pickle
         #function_dict = self.generate_synthetic_functions()
         #file = open("functions", "wb")
@@ -1910,7 +1909,6 @@ class SyntheticBenchmark():
         
         #for key, value in function_dict.items():
         #    print(key, value.function)
-
         #return 0
 
         # set the minimum number of points required for modeling with the sparse modeler
