@@ -1,38 +1,41 @@
 {
     "percentage_bucket_counter_full": {
         "rest": 100.0,
-        "5": 22.424484896979397,
-        "10": 49.26985397079416,
-        "15": 70.15403080616123,
-        "20": 83.59671934386877
+        "5": 22.43,
+        "10": 49.28,
+        "15": 70.16,
+        "20": 83.6
     },
-    "percentage_bucket_counter_gpr": {
-        "rest": 100.0,
-        "5": 62.130473995390325,
-        "10": 75.29812606473595,
-        "15": 89.65828239302536,
-        "20": 94.30804689848682
-    },
-    "percentage_bucket_counter_hybrid": {
-        "rest": 100.0,
-        "5": 62.130473995390325,
-        "10": 75.29812606473595,
-        "15": 89.65828239302536,
-        "20": 94.30804689848682
-    },
-    "mean_budget_generic": 61.24374609542132,
     "percentage_bucket_counter_generic": {
         "rest": 100.0,
-        "5": 78.34566913382676,
-        "10": 87.10742148429685,
-        "15": 96.24924984997,
-        "20": 98.55971194238847
+        "5": 78.33,
+        "10": 87.09,
+        "15": 96.23,
+        "20": 98.54
     },
+    "mean_budget_generic": 61.24374609542132,
     "mean_add_points_generic": 93.66553310662133,
-    "mean_add_points_gpr": 94.91301733640645,
-    "mean_budget_gpr": 69.09146203729901,
-    "mean_budget_hybrid": 69.09146203729901,
-    "mean_add_points_hybrid": 94.91301733640645,
+    "nr_func_modeled_generic": 9998,
+    "percentage_bucket_counter_gpr": {
+        "rest": 100.0,
+        "5": 62.0,
+        "10": 75.3,
+        "15": 89.64,
+        "20": 94.34
+    },
+    "mean_add_points_gpr": 94.9003900390039,
+    "mean_budget_gpr": 69.09619663906675,
+    "nr_func_modeled_gpr": 9999,
+    "percentage_bucket_counter_hybrid": {
+        "rest": 100.0,
+        "5": 62.0,
+        "10": 75.3,
+        "15": 89.64,
+        "20": 94.34
+    },
+    "mean_budget_hybrid": 69.09619663906675,
+    "mean_add_points_hybrid": 94.9003900390039,
+    "nr_func_modeled_hybrid": 9999,
     "point_map_generic": {
         "(4, 10)": 1.0,
         "(4, 20)": 2.0,

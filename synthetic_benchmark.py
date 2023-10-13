@@ -1897,6 +1897,7 @@ class SyntheticBenchmark():
 
     def run(self):
 
+        #TODO: create a file for 4 params with 1000 functions...
         import pickle
         #function_dict = self.generate_synthetic_functions()
         #file = open("functions", "wb")

@@ -12,7 +12,7 @@ def main():
         text = """#!/bin/bash
 
 #SBATCH -A project02089
-#SBATCH -t 00:29:00
+#SBATCH -t 00:59:00
 #SBATCH --mem-per-cpu=1800
 #SBATCH -n 1
 #SBATCH --exclusive
