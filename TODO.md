@@ -1,5 +1,16 @@
 # TODO LIST:
 
+* finish update of case study code, plotting needs to be checked and fixed
+* autmatic analysis scripts and workflow for case studies like for synth eval
+* fix base value nr bug, when rep==base_value
+* single plot function for case studies to present results automatically
+
+
+
+* wait and check if 4 param runs through completely with 23h wallclock time
+* if yes run same for 2,5,10% noise levels
+* save final synth measurements for 4 params in repo and archive folder
+
 ###########################################
 
 * how to visualize selection paths of actions from a markov chain???

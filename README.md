@@ -6,7 +6,7 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 
 FASTEST: `python .\case_study.py --cube E:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 30 --plot True --normalization True`
 
-Relearn: `python .\case_study.py --text .\relearn\relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True`
+Relearn: `python case_study.py --text relearn/relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20`
 
 Kripke: `python .\case_study.py --cube E:\kripke\ --processes 0 --parameters "p","d","g" --eval_point "32768","12","160" --filter 1 --budget 30 --plot True --normalization True`
 
