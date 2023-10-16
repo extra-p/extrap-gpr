@@ -26,8 +26,8 @@ def plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counte
 
     budget_string = "{:0.1f}".format(budget)
 
-    b1 = plt.bar(X_axis - 0.3, full, 0.2, label = 'Full matrix points (budget=100%)', hatch="\\\\", edgecolor='black',)
-    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'Generic strategy (budget='+str(budget_string)+'%)', edgecolor='black',)
+    b1 = plt.bar(X_axis - 0.3, full, 0.2, label = 'Full matrix (budget=100%)', hatch="\\\\", edgecolor='black',)
+    b2 = plt.bar(X_axis - 0.1, generic, 0.2, label = 'CPF strategy (budget='+str(budget_string)+'%)', edgecolor='black',)
     b3 = plt.bar(X_axis+0.1, gpr, 0.2, label = 'GPR strategy (budget='+str(budget_string)+'%)', hatch="//", edgecolor='black',)
     b4 = plt.bar(X_axis + 0.3, hybrid, 0.2, label = 'Hybrid strategy (budget='+str(budget_string)+'%)', hatch="xx", edgecolor='black',)
 

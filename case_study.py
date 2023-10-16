@@ -1507,6 +1507,7 @@ def main():
                 if percentage_cost_gpr >= 99.9:
                     percentage_cost_gpr = 100
                 #print("percentage_cost_gpr:",percentage_cost_gpr)
+                percentage_cost_gpr_container.append(percentage_cost_gpr)
                 
                 # additionally used data points (exceeding the base requirement of the sparse modeler)
                 add_points_gpr_container.append(add_points_gpr)
@@ -1841,6 +1842,7 @@ def main():
                 if percentage_cost_hybrid >= 99.9:
                     percentage_cost_hybrid = 100
                 #print("percentage_cost_hybrid:",percentage_cost_hybrid)
+                percentage_cost_hybrid_container.append(percentage_cost_hybrid)
 
                 # additionally used data points (exceeding the base requirement of the sparse modeler)
                 add_points_hybrid_container.append(add_points_hybrid)
@@ -1957,7 +1959,7 @@ def main():
         percentage_cost_generic_container_filtered = []
         add_points_generic_container_filtered = []
         for i in range(len(percentage_cost_generic_container)):
-            if percentage_cost_generic_container[i] <= self.budget:
+            if percentage_cost_generic_container[i] <= budget:
                 percentage_cost_generic_container_filtered.append(percentage_cost_generic_container[i])
                 add_points_generic_container_filtered.append(add_points_generic_container[i])
         #mean_budget_generic = np.nanmean(percentage_cost_generic_container)
@@ -1977,8 +1979,9 @@ def main():
         percentage_cost_gpr_container_filtered = []
         add_points_gpr_container_filtered = []
         for i in range(len(percentage_cost_gpr_container)):
-            if percentage_cost_gpr_container[i] <= self.budget:
+            if percentage_cost_gpr_container[i] <= budget:
                 percentage_cost_gpr_container_filtered.append(percentage_cost_gpr_container[i])
+                #print("DEBUG:",add_points_gpr_container[i])
                 add_points_gpr_container_filtered.append(add_points_gpr_container[i])
                 
         if len(add_points_gpr_container_filtered) > 0:
@@ -2000,7 +2003,7 @@ def main():
         percentage_cost_hybrid_container_filtered = []
         add_points_hybrid_container_filtered = []
         for i in range(len(percentage_cost_hybrid_container)):
-            if percentage_cost_hybrid_container[i] <= self.budget:
+            if percentage_cost_hybrid_container[i] <= budget:
                 percentage_cost_hybrid_container_filtered.append(percentage_cost_hybrid_container[i])
                 add_points_hybrid_container_filtered.append(add_points_hybrid_container[i])
         #print("percentage_cost_hybrid_container:",percentage_cost_hybrid_container)
@@ -2022,7 +2025,7 @@ def main():
 
         base_point_costs_filtered = []
         for x in base_point_costs:
-            if x <= self.budget:
+            if x <= budget:
                 base_point_costs_filtered.append(x)
         #mean_base_point_cost = np.nanmean(base_point_costs)
         mean_base_point_cost = np.nanmean(base_point_costs_filtered)
@@ -2041,7 +2044,7 @@ def main():
 
         add_points = {
             "base points": np.array([min_points, min_points, min_points, min_points]),
-            "additional points": np.array([len(experiment.coordinates)-min_points, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
+            "additional points": np.array([len(experiment.coordinates)*nr_repetitions, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
         json_out["min_points"] = min_points
         json_out["filter"] = filter
