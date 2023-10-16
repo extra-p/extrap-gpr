@@ -529,6 +529,12 @@ def main():
                 id_to_delete = ids_to_delete[i]
                 measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]].pop(id_to_delete)"""
         #measurements_backup = measurements_backup2
+        
+        # make sure the number of base values is not equal to the number of total tepetitions available for modeling
+        if base_values == nr_repetitions:
+            base_values -= 1
+        if base_values > nr_repetitions:
+            base_values = nr_repetitions - 1
 
         experiment.measurements = measurements_backup
         coordinate_evaluation = []

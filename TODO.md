@@ -2,7 +2,6 @@
 
 
 * autmatic analysis scripts and workflow for case studies like for synth eval
-* fix base value nr bug, when rep==base_value
 * single plot function for case studies to present results automatically
 
 
