@@ -337,6 +337,9 @@ def main():
     parser.add_argument("--base-values", type=int, default=2, required=False,
                         help="Set the number of repetitions used for the minimal set of measurements for the GPR strategy.")
     
+    parser.add_argument("--repetitions", type=int, default=5, required=False,
+                        help="Set the number of repetitions thay are available from the measurements.")
+    
     parser.add_argument("--hybrid-switch", type=int, default=5, required=False,
                         help="Set the switching point for the hybrid selection strategy.")
     
@@ -453,6 +456,9 @@ def main():
     
     grid_search = args.grid_search
     print("grid_search:",grid_search)
+    
+    nr_repetitions = args.repetitions
+    print("nr_repetitions:",nr_repetitions)
 
     parameters = parameters.split(",")
 
@@ -507,7 +513,6 @@ def main():
         experiment.measurements = None
         #print("len(experiment.coordinates):",len(experiment.coordinates))
         #print("experiment.coordinates:",experiment.coordinates)
-        nr_repetitions = -1
         for k in range(len(experiment.callpaths)):
             temp = []
             for i in range(len(experiment.coordinates)):
@@ -519,8 +524,6 @@ def main():
                     #measurements_backup2.append(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]][i])
                     #measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]].pop(i)
                 else:
-                    # identify the number of repetitions
-                    nr_repetitions = len(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]][i].values)
                     temp.append(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]][i])
             measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]] = temp
             #print("len(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]]):",len(measurements_backup[experiment.callpaths[k], experiment.metrics[temp_metric_id]]))
@@ -535,7 +538,7 @@ def main():
             base_values -= 1
         if base_values > nr_repetitions:
             base_values = nr_repetitions - 1
-
+       
         experiment.measurements = measurements_backup
         coordinate_evaluation = []
         temp = []
@@ -655,6 +658,10 @@ def main():
 
         percentage_cost_hybrid_container = []
         add_points_hybrid_container = []
+        
+        generic_functions_modeled = 0
+        gpr_functions_modeled = 0
+        hybrid_functions_modeled = 0
 
         runtime_sums = {}
 
@@ -1919,6 +1926,16 @@ def main():
                 # increment accuracy bucket for hybrid strategy
                 acurracy_bucket_counter_hybrid = increment_accuracy_bucket(acurracy_bucket_counter_hybrid, error_hybrid)
 
+                # calc the number of callpaths that can be modeled with the given budget
+                if percentage_cost_generic <= budget:
+                    generic_functions_modeled += 1
+                
+                if percentage_cost_gpr <= budget:
+                    gpr_functions_modeled += 1
+                 
+                if percentage_cost_hybrid <= budget:
+                    hybrid_functions_modeled += 1
+                
             else:
                 pass
 
@@ -1978,6 +1995,9 @@ def main():
         mean_add_points_generic = np.nanmean(add_points_generic_container_filtered)
         print("mean_add_points_generic:",mean_add_points_generic)
         json_out["mean_add_points_generic"] = mean_add_points_generic
+        
+        print("nr_func_modeled_generic:",generic_functions_modeled)
+        json_out["nr_func_modeled_generic"] = generic_functions_modeled
 
         # GPR
 
@@ -2003,6 +2023,9 @@ def main():
             mean_budget_gpr = 0
         print("mean_budget_gpr:",mean_budget_gpr)
         json_out["mean_budget_gpr"] = mean_budget_gpr
+        
+        print("nr_func_modeled_gpr:",gpr_functions_modeled)
+        json_out["nr_func_modeled_gpr"] = gpr_functions_modeled
 
         # HYBRID
 
@@ -2028,6 +2051,9 @@ def main():
             mean_add_points_hybrid = 0
         print("mean_add_points_hybrid:",mean_add_points_hybrid)
         json_out["mean_add_points_hybrid"] = mean_add_points_hybrid
+        
+        print("nr_func_modeled_hybrid:",gpr_functions_modeled)
+        json_out["nr_func_modeled_hybrid"] = gpr_functions_modeled
 
         base_point_costs_filtered = []
         for x in base_point_costs:

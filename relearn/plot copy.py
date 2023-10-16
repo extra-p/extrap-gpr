@@ -24,8 +24,8 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
     lw = [1,2,2,5,2]
     #plt.rc('text', usetex=True)
     #plt.rcParams["font.size"] = 9.5
-    #plt.xscale("symlog")
-    plt.xlim(0, 105)
+    plt.xscale("symlog")
+    plt.xlim(0.1, 120)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]
@@ -35,11 +35,11 @@ def plot_accuracy(x_values, y_values_list, labels, bucket):
         else:
             plt.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
-    #plt.fill_between(x_values, y_values_list[1], y_values_list[2], color="green", where=np.array(y_values_list[2]) > np.array(y_values_list[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
-    #plt.fill_between(x_values, y_values_list[2], y_values_list[1], color="red", where=np.array(y_values_list[2]) < np.array(y_values_list[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    plt.fill_between(x_values, y_values_list[1], y_values_list[2], color="green", where=np.array(y_values_list[2]) > np.array(y_values_list[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
+    plt.fill_between(x_values, y_values_list[2], y_values_list[1], color="red", where=np.array(y_values_list[2]) < np.array(y_values_list[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     plt.grid(alpha=0.3)
-    plt.yticks(np.arange(0, 110, 10))
-    plt.xticks(np.arange(0, 110, 10))
+    plt.yticks(np.arange(0, 100, 10))
+    plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     plt.xlabel('Allowed modeling budget $b$ [%]')
     plt.ylabel('Models in '+str(bucket)+'% accuracy bucket [%]')
     plt.legend(loc="lower right")
@@ -51,7 +51,7 @@ def plot_cost(x_values, y_values_list, labels, bucket):
     min_y_values = []
     max_y_values = []
     ls=['dotted','--',':','dashdot']
-    lw = [2,2,5,2]
+    lw = [3,3,6,3]
     colors = ["blue", "red", "orange", "dimgray"]
     zorders=[4,3,2,1]
     style_counter = 0
@@ -62,8 +62,8 @@ def plot_cost(x_values, y_values_list, labels, bucket):
         max_y_values.append(np.max(y_values))
         style_counter += 1
     plt.plot(x_values, x_values, label="Optimal budget usage", linestyle='-', color="black", linewidth=2, alpha=1, zorder=3)
-    #plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="green", where=np.array(y_values_list[0]) < np.array(y_values_list[1]), alpha=0.3, label='GPR better than CPF', zorder=1, hatch="x", interpolate=True)
-    #plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="red", where=np.array(y_values_list[1]) < np.array(y_values_list[0]), alpha=0.3, label='GPR worse than CPF', zorder=0, hatch="+", interpolate=True)
+    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="green", where=np.array(y_values_list[0]) < np.array(y_values_list[1]), alpha=0.3, label='GPR better than CPF', zorder=1, hatch="x", interpolate=True)
+    plt.fill_between(x_values, y_values_list[1], y_values_list[0], color="red", where=np.array(y_values_list[1]) < np.array(y_values_list[0]), alpha=0.3, label='GPR worse than CPF', zorder=0, hatch="+", interpolate=True)
     plt.grid(alpha=0.3)
     min_y_value = np.min(min_y_values)
     max_y_value = np.max(max_y_values)
@@ -88,7 +88,7 @@ def plot_selected_points(x_values, y_values_list, labels, bucket, reps):
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "dimgray"]
-    #plt.xscale("symlog")
+    plt.xscale("symlog")
     for y_values, label in zip(y_values_list, labels):
         if style_counter == 0:
             plt.scatter(100, y_values[len(y_values)-1], label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -99,10 +99,10 @@ def plot_selected_points(x_values, y_values_list, labels, bucket, reps):
     plt.xlabel('Allowed modeling budget $b$ [%]')
     plt.grid(alpha=0.3)
     #plt.yticks(np.arange(0, 110, 10))
-    plt.xticks(np.arange(0, 110, 10))
-    #plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    plt.yticks(np.arange(0, ((25-1)*reps)+5, 5))
-    plt.xlim(0,105)
+    #plt.xticks([1,10,20,30,40,50,60,70,80,90,100])
+    plt.xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
+    plt.yticks(np.arange(0, 25*reps, 10))
+    plt.xlim(0,120)
     plt.legend(loc='upper left')
     plt.savefig('additional_points.png')
     plt.show()
@@ -177,7 +177,7 @@ def main():
         points_gpr.append(json_data["mean_add_points_gpr"])
         points_hybrid.append(json_data["mean_add_points_hybrid"])
         
-        all_points.append((25-1)*reps)
+        all_points.append(25*reps)
 
         base_point_costs.append(json_data["base_point_cost"])
 

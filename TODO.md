@@ -1,9 +1,7 @@
 # TODO LIST:
 
 
-* autmatic analysis scripts and workflow for case studies like for synth eval
-* single plot function for case studies to present results automatically
-
+* make a new plot type that better shows the differences in allwed and used budget between the different point selection strategies
 
 * save final synth measurements for 4 params in repo and archive folder
 
