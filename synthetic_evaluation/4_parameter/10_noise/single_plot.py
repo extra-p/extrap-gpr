@@ -118,7 +118,7 @@ def main():
         points_gpr.append(json_data["mean_add_points_gpr"])
         points_hybrid.append(json_data["mean_add_points_hybrid"])
         
-        all_points.append(125*reps)
+        all_points.append(625*reps)
 
         base_point_costs.append(json_data["base_point_cost"])
 
@@ -308,7 +308,7 @@ def main():
     #ax6.set_yticks(np.arange(0, 110, 10))
     #ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax6.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax6.set_yticks(np.arange(0, 125*reps+10, 50))
+    ax6.set_yticks(np.arange(0, 625*reps+10, 250))
     ax6.set_xlim(0,120)
     ax6.legend(loc='lower right', prop={'size': 8})
     
