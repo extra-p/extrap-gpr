@@ -14,7 +14,9 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 
 ### FASTEST:
 
+`python ../case_study.py --extra-p ../../data/fastest/fastest.extra-p --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 1.0 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 
+#########
 
 FASTEST: `python .\case_study.py --cube E:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 30 --plot True --normalization True`
 
@@ -30,10 +32,11 @@ Quicksilver: `python .\case_study.py --cube E:\quicksilver\ --processes 0 --para
 
 Navigate to the folder, the analysis you want to reproduce, e.g., `cd 2_parameters/1_noise/`.
 
-`./run_analysis.sh` to run the analysis in parallel on a cluster.
-`./process.sh` to run the postprocessing after all jobs have finished.
-`./archive.sh <folder_name>` archive all of the result data into the given foldername.
-`python single_plot.py --path <folder_name>/analysis_results/ --name results_<folder_name> --reps 4` create a result plot using the data found in the archived experiment folder. 
+1. `./run_analysis.sh` to run the analysis in parallel on a cluster.
+2. `./process.sh` to run the postprocessing after all jobs have finished.
+3. `./archive.sh <folder_name>` archive all of the result data into the given foldername.
+4. `python single_plot.py --path <folder_name>/analysis_results/ --name results_<folder_name> --reps 4` create a result plot using the data found in the archived experiment folder. 
+5. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 4` to run the budget analysis. Shows you how efficiently the different point selection strategies utilize the available budgets.
 
 Basic usage for single runs: `python synthetic_evaluation.py --nr-parameters 2 --nr-functions 100 --nr-repetitions 4 --noise 1 --mode budget --budget 10 --plot True --normalization True --grid-search 3 --base-values 2`
 
