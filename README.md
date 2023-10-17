@@ -11,6 +11,22 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 2. `./process.sh`
 3. `./archive.sh final`
 4. `python single_plot.py --path final/analysis_results/ --name results_final --reps 2`
+5. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 2`
+
+### LULESH:
+
+0. (single run) `python ../../case_study.py --cube ../../../data/lulesh/ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --budget 1 --plot True --normalization True --gr
+id-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+1. `./run_analysis.sh`
+2. `./process.sh`
+3. `./archive.sh final`
+4. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
+5. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
+
+### MiniFE:
+
+0. (single run) `python ../../case_study.py --cube ../../../data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget 1 --plot True --n
+ormalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 
 ### FASTEST:
 
@@ -21,10 +37,6 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 FASTEST: `python .\case_study.py --cube E:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 30 --plot True --normalization True`
 
 Kripke: `python .\case_study.py --cube E:\kripke\ --processes 0 --parameters "p","d","g" --eval_point "32768","12","160" --filter 1 --budget 30 --plot True --normalization True`
-
-MiniFE: `python .\case_study.py --cube E:\minife\ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --plot True --budget 20  --normalization True`
-
-LULESH: `python .\case_study.py --cube E:\lulesh\ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --plot True --budget 30  --normalization True`
 
 Quicksilver: `python .\case_study.py --cube E:\quicksilver\ --processes 0 --parameters "p","m","n" --eval_point "512","20","60" --filter 1 --plot True --budget 30  --normalization True`
 
