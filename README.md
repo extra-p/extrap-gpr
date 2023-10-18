@@ -4,6 +4,8 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 
 ## Run the evaluation tool for the case studies
 
+For all case studies, besides RELEARN, the path to the data needs to be changed. The data can be found at: [Link](#).
+
 ### RELEARN:
 
 0. (single run) `python case_study.py --text relearn/relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20 --repetition 2`
@@ -15,7 +17,7 @@ Evaluation code for the GPR journal paper. Contains the code to do a synthetic a
 
 ### LULESH:
 
-0. (single run) `python ../../case_study.py --cube ../../../data/lulesh/ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --budget 1 --plot True --normalization True --gr
+0. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/lulesh/ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --budget 1 --plot True --normalization True --gr
 id-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 1. `./run_analysis.sh`
 2. `./process.sh`
