@@ -1,6 +1,9 @@
 # TODO LIST:
 
 
+* find out how much budget min for lulesh
+* make sure "calculate_selected_point_cost()" is correct, because there should be two, one with experiment_gpr as parameter and one without....
+
 * save final synth measurements for 4 params in repo and archive folder
 
 ###########################################

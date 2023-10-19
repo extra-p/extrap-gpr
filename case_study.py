@@ -43,6 +43,8 @@ import warnings
 from sklearn.exceptions import ConvergenceWarning
 import pickle
 from parallel import analyze_callpath
+import json
+
 
 def create_experiment2(cord, experiment, new_value, callpath, metric):
     # only append the new measurement value to experiment
@@ -661,9 +663,9 @@ def main():
         percentage_cost_hybrid_container = []
         add_points_hybrid_container = []
         
-        generic_functions_modeled = 0
-        gpr_functions_modeled = 0
-        hybrid_functions_modeled = 0
+        generic_functions_modeled = []
+        gpr_functions_modeled = []
+        hybrid_functions_modeled = []
 
         runtime_sums = {}
 
@@ -777,19 +779,90 @@ def main():
                            experiment.coordinates, metric, base_values,
                            metric_id, nr_repetitions, parameters,
                            args, budget, eval_point, all_points_functions_strings,
-                           coordinate_evaluation, measurement_evaluation, normalization])
+                           coordinate_evaluation, measurement_evaluation, normalization,
+                           min_points, hybrid_switch])
             
         with Pool(cpu_count) as pool:
             _ = list(tqdm(pool.imap(analyze_callpath, inputs), total=len(filtered_callpaths_ids), disable=False))
 
         result_dict = copy.deepcopy(shared_dict)
         
-        print("DEBUG:",result_dict)
+        #print("DEBUG:",result_dict)
+        
+        
+        # analyze results
+        for i, _ in result_dict.items():
+            
+            add_points_generic_container.append(result_dict[i]["add_points_generic"])
+            percentage_cost_generic_container.append(result_dict[i]["percentage_cost_generic"])
+            add_points_gpr_container.append(result_dict[i]["add_points_gpr"])
+            percentage_cost_gpr_container.append(result_dict[i]["percentage_cost_gpr"])
+            add_points_hybrid_container.append(result_dict[i]["add_points_hybrid"])
+            percentage_cost_hybrid_container.append(result_dict[i]["percentage_cost_hybrid"])
+            base_point_costs.append(result_dict[i]["base_point_cost"])
+            
+            generic_functions_modeled.append(result_dict[i]["generic_possible"])
+            gpr_functions_modeled.append(result_dict[i]["gpr_possible"])
+            hybrid_functions_modeled.append(result_dict[i]["hybrid_possible"])
+            
+            b_full = result_dict[i]["acurracy_bucket_counter_full"]
+            b_generic = result_dict[i]["acurracy_bucket_counter_generic"]
+            b_gpr = result_dict[i]["acurracy_bucket_counter_gpr"]
+            b_hybrid = result_dict[i]["acurracy_bucket_counter_hybrid"]
+
+            if b_full["rest"] == 1:
+                acurracy_bucket_counter_full["rest"] += 1
+            if b_full["5"] == 1:
+                acurracy_bucket_counter_full["5"] += 1
+            if b_full["10"] == 1:
+                acurracy_bucket_counter_full["10"] += 1
+            if b_full["15"] == 1:
+                acurracy_bucket_counter_full["15"] += 1
+            if b_full["20"] == 1:
+                acurracy_bucket_counter_full["20"] += 1
+            
+            if b_generic["rest"] == 1:
+                acurracy_bucket_counter_generic["rest"] += 1
+            if b_generic["5"] == 1:
+                acurracy_bucket_counter_generic["5"] += 1
+            if b_generic["10"] == 1:
+                acurracy_bucket_counter_generic["10"] += 1
+            if b_generic["15"] == 1:
+                acurracy_bucket_counter_generic["15"] += 1
+            if b_generic["20"] == 1:
+                acurracy_bucket_counter_generic["20"] += 1
+
+            if b_gpr["rest"] == 1:
+                acurracy_bucket_counter_gpr["rest"] += 1
+            if b_gpr["5"] == 1:
+                acurracy_bucket_counter_gpr["5"] += 1
+            if b_gpr["10"] == 1:
+                acurracy_bucket_counter_gpr["10"] += 1
+            if b_gpr["15"] == 1:
+                acurracy_bucket_counter_gpr["15"] += 1
+            if b_gpr["20"] == 1:
+                acurracy_bucket_counter_gpr["20"] += 1
+                
+            if b_hybrid["rest"] == 1:
+                acurracy_bucket_counter_hybrid["rest"] += 1
+            if b_hybrid["5"] == 1:
+                acurracy_bucket_counter_hybrid["5"] += 1
+            if b_hybrid["10"] == 1:
+                acurracy_bucket_counter_hybrid["10"] += 1
+            if b_hybrid["15"] == 1:
+                acurracy_bucket_counter_hybrid["15"] += 1
+            if b_hybrid["20"] == 1:
+                acurracy_bucket_counter_hybrid["20"] += 1
+
+        #print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
+        #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
+        #print("acurracy_bucket_counter_gpr:",acurracy_bucket_counter_gpr)
+        #print("acurracy_bucket_counter_hybrid:",acurracy_bucket_counter_hybrid)
         
         
         ############### TODO  #########################
         
-        from tqdm import tqdm 
+        """from tqdm import tqdm 
         
         ###############
         ## MAIN LOOP ##
@@ -1995,7 +2068,7 @@ def main():
                 gpr_functions_modeled += 1
                 
             if percentage_cost_hybrid <= budget:
-                hybrid_functions_modeled += 1
+                hybrid_functions_modeled += 1"""
             
 
         print("Number of kernels used:",kernels_used,"of",len(experiment.callpaths),"callpaths.")
@@ -2011,33 +2084,20 @@ def main():
         json_out = {}
 
         # calculate the percentages for each accuracy bucket
-        
         percentage_bucket_counter_full = calculate_percentage_of_buckets(acurracy_bucket_counter_full, kernels_used)
         print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
+        print("")
         json_out["percentage_bucket_counter_full"] = percentage_bucket_counter_full
+        
+        ###############
+        ### Generic ###
+        ###############
         
         percentage_bucket_counter_generic = calculate_percentage_of_buckets(acurracy_bucket_counter_generic, kernels_used)
         print("percentage_bucket_counter_generic:",percentage_bucket_counter_generic)
         json_out["percentage_bucket_counter_generic"] = percentage_bucket_counter_generic
         
-        percentage_bucket_counter_gpr = calculate_percentage_of_buckets(acurracy_bucket_counter_gpr, kernels_used)
-        print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
-        json_out["percentage_bucket_counter_gpr"] = percentage_bucket_counter_gpr
-        
-        percentage_bucket_counter_hybrid = calculate_percentage_of_buckets(acurracy_bucket_counter_hybrid, kernels_used)
-        print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
-        json_out["percentage_bucket_counter_hybrid"] = percentage_bucket_counter_hybrid
-
-        # plot the results of the model accuracy analysis
-        if plot == True:
-            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, budget)
-        
-        print("budget:",budget,"%")
-        json_out["budget"] = budget
-
-        # GENERIC
-
-        #print("DEBUG:",percentage_cost_generic_container)
+        #print("percentage_cost_generic_container:",percentage_cost_generic_container)
         percentage_cost_generic_container_filtered = []
         add_points_generic_container_filtered = []
         for i in range(len(percentage_cost_generic_container)):
@@ -2045,28 +2105,33 @@ def main():
                 percentage_cost_generic_container_filtered.append(percentage_cost_generic_container[i])
                 add_points_generic_container_filtered.append(add_points_generic_container[i])
         #mean_budget_generic = np.nanmean(percentage_cost_generic_container)
-        if len(percentage_cost_generic_container_filtered) == 0:
-            mean_budget_generic = 0
-        else:
-            mean_budget_generic = np.nanmean(percentage_cost_generic_container_filtered)
+        mean_budget_generic = np.nanmean(percentage_cost_generic_container_filtered)
         #print("percentage_cost_generic_container_filtered:",percentage_cost_generic_container_filtered)
         print("mean_budget_generic:",mean_budget_generic)
         json_out["mean_budget_generic"] = mean_budget_generic
 
         #mean_add_points_generic = np.nanmean(add_points_generic_container)
-        if len(add_points_generic_container_filtered) == 0:
-            mean_add_points_generic = 0
-        else:
-            mean_add_points_generic = np.nanmean(add_points_generic_container_filtered)
+        mean_add_points_generic = np.nanmean(add_points_generic_container_filtered)
         print("mean_add_points_generic:",mean_add_points_generic)
         json_out["mean_add_points_generic"] = mean_add_points_generic
         
-        print("nr_func_modeled_generic:",generic_functions_modeled)
-        json_out["nr_func_modeled_generic"] = generic_functions_modeled
+        nr_func_modeled_generic = 0
+        for i in range(len(generic_functions_modeled)):
+            if generic_functions_modeled[i] == True:
+                nr_func_modeled_generic += 1
+        print("nr_func_modeled_generic:",nr_func_modeled_generic)
         
         print("")
+        
+        json_out["nr_func_modeled_generic"] = nr_func_modeled_generic
 
-        # GPR
+        ###########
+        ### GPR ###
+        ###########
+        
+        percentage_bucket_counter_gpr = calculate_percentage_of_buckets(acurracy_bucket_counter_gpr, kernels_used)
+        print("percentage_bucket_counter_gpr:",percentage_bucket_counter_gpr)
+        json_out["percentage_bucket_counter_gpr"] = percentage_bucket_counter_gpr
 
         #print("percentage_cost_gpr_container:",percentage_cost_gpr_container)
         percentage_cost_gpr_container_filtered = []
@@ -2074,7 +2139,6 @@ def main():
         for i in range(len(percentage_cost_gpr_container)):
             if percentage_cost_gpr_container[i] <= budget:
                 percentage_cost_gpr_container_filtered.append(percentage_cost_gpr_container[i])
-                #print("DEBUG:",add_points_gpr_container[i])
                 add_points_gpr_container_filtered.append(add_points_gpr_container[i])
                 
         if len(add_points_gpr_container_filtered) > 0:
@@ -2091,12 +2155,23 @@ def main():
         print("mean_budget_gpr:",mean_budget_gpr)
         json_out["mean_budget_gpr"] = mean_budget_gpr
         
-        print("nr_func_modeled_gpr:",gpr_functions_modeled)
-        json_out["nr_func_modeled_gpr"] = gpr_functions_modeled
+        nr_func_modeled_gpr = 0
+        for i in range(len(gpr_functions_modeled)):
+            if gpr_functions_modeled[i] == True:
+                nr_func_modeled_gpr += 1
+        print("nr_func_modeled_gpr:",nr_func_modeled_gpr)
         
         print("")
-
-        # HYBRID
+        
+        json_out["nr_func_modeled_gpr"] = nr_func_modeled_gpr
+        
+        ##############
+        ### Hybrid ###
+        ##############
+        
+        percentage_bucket_counter_hybrid = calculate_percentage_of_buckets(acurracy_bucket_counter_hybrid, kernels_used)
+        print("percentage_bucket_counter_hybrid:",percentage_bucket_counter_hybrid)
+        json_out["percentage_bucket_counter_hybrid"] = percentage_bucket_counter_hybrid
 
         percentage_cost_hybrid_container_filtered = []
         add_points_hybrid_container_filtered = []
@@ -2121,47 +2196,66 @@ def main():
         print("mean_add_points_hybrid:",mean_add_points_hybrid)
         json_out["mean_add_points_hybrid"] = mean_add_points_hybrid
         
-        print("nr_func_modeled_hybrid:",gpr_functions_modeled)
-        json_out["nr_func_modeled_hybrid"] = gpr_functions_modeled
+        nr_func_modeled_hybrid = 0
+        for i in range(len(hybrid_functions_modeled)):
+            if hybrid_functions_modeled[i] == True:
+                nr_func_modeled_hybrid += 1
+        print("nr_func_modeled_hybrid:",nr_func_modeled_hybrid)
+        
+        json_out["nr_func_modeled_hybrid"] = nr_func_modeled_hybrid
+
+        ###################
+        ### Base Points ###
+        ###################
 
         base_point_costs_filtered = []
         for x in base_point_costs:
             if x <= budget:
                 base_point_costs_filtered.append(x)
         #mean_base_point_cost = np.nanmean(base_point_costs)
-        if len(base_point_costs_filtered) == 0:
-            mean_base_point_cost = 0
-        else:
-            mean_base_point_cost = np.nanmean(base_point_costs_filtered)
+        mean_base_point_cost = np.nanmean(base_point_costs_filtered)
         print("")
         print("mean_base_point_cost:",mean_base_point_cost)
 
+        ####################
+        # Plot the results #
+        ####################
+
+        # plot the results of the model accuracy analysis
+        if plot == True:
+            plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, budget)
+        
         used_costs = {
-            "base points": np.array([base_point_cost, base_point_cost, base_point_cost, base_point_cost]),
-            "additional points": np.array([100-base_point_cost, mean_budget_generic-base_point_cost, mean_budget_gpr-base_point_cost, mean_budget_hybrid-base_point_cost]),
+            "Base points": np.array([mean_base_point_cost, mean_base_point_cost, mean_base_point_cost, mean_base_point_cost]),
+            "Additional points": np.array([100-mean_base_point_cost, mean_budget_generic-mean_base_point_cost, mean_budget_gpr-mean_base_point_cost, mean_budget_hybrid-mean_base_point_cost]),
         }
-        json_out["base_point_cost"] = max(base_point_costs)
+        json_out["base_point_cost"] = mean_base_point_cost
+        json_out["min_points"] = min_points
+        json_out["budget"] = budget
 
         # plot the analysis result for the costs and budgets
         if plot == True:
-            plot_costs(used_costs, base_point_cost, budget)
+            plot_costs(used_costs, mean_base_point_cost, budget)
 
+        len_coordinates = len(experiment.coordinates)
         add_points = {
-            "base points": np.array([min_points, min_points, min_points, min_points]),
-            "additional points": np.array([len(experiment.coordinates)*nr_repetitions, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
+            "Base points": np.array([min_points, min_points, min_points, min_points]),
+            "Additional points": np.array([len_coordinates*nr_repetitions, mean_add_points_generic, mean_add_points_gpr, mean_add_points_hybrid]),
         }
-        json_out["min_points"] = min_points
-        json_out["filter"] = filter
 
         # plot the analysis result for the additional measurement point numbers
         if plot == True:
             plot_measurement_point_number(add_points, min_points, budget)
+            
+        ##############################
+        # Write results to json file #
+        ##############################
 
         # write results to file
-        import json
         json_object = json.dumps(json_out, indent=4)
- 
-        with open("result.budget."+str(budget)+".json", "w") as outfile:
+
+        budget_string = "{:0.1f}".format(budget)
+        with open("result.budget."+str(budget_string)+".json", "w") as outfile:
             outfile.write(json_object)
     
     else:
