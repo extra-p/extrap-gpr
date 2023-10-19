@@ -2,7 +2,7 @@ import math
 
 def main():
 
-    counter = 96.0
+    counter = 0.1
 
     while counter <= 100.0:
         
