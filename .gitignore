@@ -12,6 +12,8 @@ lulesh/lichtenberg/submit_analysis_jobs.sh
 lulesh/lichtenberg/submit_jobs.sh
 lulesh/lichtenberg/analysis_job_b*
 
+relearn/submit_analysis_jobs.sh
+
 synthetic_evaluation/2_parameter/1_noise/analysis_job_b*
 synthetic_evaluation/2_parameter/2_noise/analysis_job_b*
 synthetic_evaluation/2_parameter/5_noise/analysis_job_b*
