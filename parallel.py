@@ -113,9 +113,11 @@ def increment_accuracy_bucket(acurracy_bucket_counter, percentage_error):
 
 def percentage_error(true_value, measured_value):
     error = abs(true_value - measured_value)
-    percentage_error = (error / true_value) * 100
+    if true_value == 0.0:
+        percentage_error = 0.0
+    else:
+        percentage_error = (error / true_value) * 100
     return percentage_error
-
 
 def calculate_selected_point_cost(selected_points, callpath, metric, experiment_coordinates, experiment_measurements):
     # calculate selected point cost
@@ -658,7 +660,10 @@ def analyze_callpath(inputs):
         base_point_cost = calculate_selected_point_cost_base(selected_points, callpath, metric, base_values, experiment_coordinates, experiment_measurements)
     elif grid_search == 1 or grid_search == 4:
         base_point_cost = calculate_selected_point_cost(selected_points, callpath, metric, experiment_coordinates, experiment_measurements)
-    base_point_cost = base_point_cost / (total_cost / 100)
+    if total_cost == 0.0:
+        base_point_cost = 0.0
+    else:
+        base_point_cost = base_point_cost / (total_cost / 100)
     #print("base_point_cost %:",base_point_cost)
     result_container["base_point_cost"] = base_point_cost
 
@@ -679,7 +684,10 @@ def analyze_callpath(inputs):
 
     # calculate selected point cost
     current_cost = calculate_selected_point_cost(selected_points_generic, callpath, metric, experiment_coordinates, experiment_measurements)
-    current_cost_percent = current_cost / (total_cost / 100)
+    if total_cost == 0.0:
+        current_cost_percent = 0.0
+    else:
+        current_cost_percent = current_cost / (total_cost / 100)
     
     if current_cost_percent <= budget:
         while True:
@@ -688,7 +696,10 @@ def analyze_callpath(inputs):
 
             # calculate selected point cost
             current_cost = calculate_selected_point_cost(selected_coord_list_new, callpath, metric, experiment_coordinates, experiment_measurements)
-            current_cost_percent = current_cost / (total_cost / 100)
+            if total_cost == 0.0:
+                current_cost_percent = 0.0
+            else:
+                current_cost_percent = current_cost / (total_cost / 100)
 
             # current cost exceeds budget so break the loop
             #print("current_cost_percent > budget", current_cost_percent, budget)
@@ -726,7 +737,10 @@ def analyze_callpath(inputs):
     selected_cost = calculate_selected_point_cost(selected_points_generic, callpath, metric, experiment_coordinates, experiment_measurements)
     
     # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
-    percentage_cost_generic = selected_cost / (total_cost / 100)
+    if total_cost == 0.0:
+        percentage_cost_generic = 0.0
+    else:
+        percentage_cost_generic = selected_cost / (total_cost / 100)
     if percentage_cost_generic >= 99.9:
         percentage_cost_generic = 100
     result_container["percentage_cost_generic"] = percentage_cost_generic
@@ -849,7 +863,10 @@ def analyze_callpath(inputs):
         mean_mes = np.mean(meas.values)
         pps = []
         for val in meas.values:
-            pp = abs((val / (mean_mes / 100)) - 100)
+            if mean_mes == 0.0:
+                pp = 0
+            else:
+                pp = abs((val / (mean_mes / 100)) - 100)
             pps.append(pp)
             #print(pp,"%")
         nn = np.mean(pps)
@@ -914,7 +931,10 @@ def analyze_callpath(inputs):
                 # always take the first value in the list, until none left
                 #new_cost = current_cost + np.sum(value)
                 new_cost = current_cost + value[0]
-                cost_percent = new_cost / (total_cost / 100)
+                if total_cost == 0.0:
+                    cost_percent = 0.0
+                else:
+                    cost_percent = new_cost / (total_cost / 100)
                 
                 #if new_cost > budget_core_hours:
                 #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
@@ -1045,9 +1065,12 @@ def analyze_callpath(inputs):
                 break
 
     # cost used of the gpr strategy
-    current_cost = calculate_selected_point_cost(selected_points_gpr, callpath, metric, experiment_coordinates, experiment_measurements)
-    #current_cost = calculate_selected_point_cost2(experiment_gpr_base, callpath, metric)
-    percentage_cost_gpr = current_cost / (total_cost / 100)
+    #current_cost = calculate_selected_point_cost(selected_points_gpr, callpath, metric, experiment_coordinates, measurements_gpr)
+    current_cost = calculate_selected_point_cost2(experiment_gpr_base, callpath, metric)
+    if total_cost == 0.0:
+        percentage_cost_gpr = 0.0
+    else:
+        percentage_cost_gpr = current_cost / (total_cost / 100)
     if percentage_cost_gpr >= 99.9:
         percentage_cost_gpr = 100
     #print("percentage_cost_gpr:",percentage_cost_gpr)
@@ -1142,7 +1165,10 @@ def analyze_callpath(inputs):
         mean_mes = np.mean(meas.values)
         pps = []
         for val in meas.values:
-            pp = abs((val / (mean_mes / 100)) - 100)
+            if mean_mes == 0.0:
+                pp = 0.0
+            else:
+                pp = abs((val / (mean_mes / 100)) - 100)
             pps.append(pp)
             #print(pp,"%")
         nn = np.mean(pps)
@@ -1196,6 +1222,7 @@ def analyze_callpath(inputs):
 
         
     while True:
+        
         # identify all possible next points that would 
         # still fit into the modeling budget in core hours
         fitting_measurements = []
@@ -1205,7 +1232,10 @@ def analyze_callpath(inputs):
             
             #new_cost = current_cost + np.sum(value)
             new_cost = current_cost + value[0]
-            cost_percent = new_cost / (total_cost / 100)
+            if total_cost == 0.0:
+                cost_percent = 0.0
+            else:
+                cost_percent = new_cost / (total_cost / 100)
             
             #if new_cost > budget_core_hours:
             #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
@@ -1382,7 +1412,10 @@ def analyze_callpath(inputs):
 
     # cost used of the gpr strategy
     current_cost = calculate_selected_point_cost2(experiment_hybrid_base, callpath, metric)
-    current_cost_percent = current_cost / (total_cost / 100)
+    if total_cost == 0.0:
+        current_cost_percent = 0.0
+    else:
+        current_cost_percent = current_cost / (total_cost / 100)
 
     percentage_cost_hybrid = current_cost_percent
     if percentage_cost_hybrid >= 99.9:
