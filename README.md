@@ -28,12 +28,23 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 
 ### MiniFE:
 
-0. (single run) `python ../../case_study.py --cube ../../../data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget 1 --plot True --n
-ormalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+1. `cd minife/lichtenberg`
+2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget 1 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+3. `./run_analysis.sh`
+4. `./process.sh`
+5. `./archive.sh final`
+6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
+7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
 
 ### FASTEST:
 
-`python ../case_study.py --extra-p ../../data/fastest/fastest.extra-p --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 1.0 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+1. `cd fastest`
+2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/fastest/ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 1 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+3. `./run_analysis.sh`
+4. `./process.sh`
+5. `./archive.sh final`
+6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
+7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
 
 #########
 

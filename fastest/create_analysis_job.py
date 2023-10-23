@@ -2,7 +2,7 @@ import math
 
 def main():
 
-    counter = 1
+    counter = 100
 
     while counter <= 100:
 

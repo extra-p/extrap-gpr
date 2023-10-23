@@ -1,8 +1,6 @@
-import math
-
 def main():
 
-    counter = 70
+    counter = 100
 
     while counter <= 100:
 
@@ -11,7 +9,7 @@ def main():
         text = """#!/bin/bash
 
 #SBATCH -A project02089
-#SBATCH -t 01:00:00
+#SBATCH -t 23:00:00
 #SBATCH --mem-per-cpu=1800
 #SBATCH -n 1
 #SBATCH --exclusive
@@ -24,7 +22,7 @@ ml restore lulesh
 
 SECONDS=0;
 
-python ../../case_study.py --cube ../../../data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 0 --budget """+str(counter)+""" --normalization True
+python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget """+str(counter)+""" --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5
 
 echo $SECONDS"""
 
