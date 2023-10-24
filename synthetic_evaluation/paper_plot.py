@@ -644,7 +644,7 @@ def main():
     ax9.grid(alpha=0.3, which='minor')
     ax9.set_yticks(np.arange(0, 100, 10))
     ax9.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax9.set_xlabel('$n=1\%$')
+    ax9.set_xlabel('$n=\pm1\%$')
     ax9.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [\%]')
     
     ls=["-",'dotted','--',':','-']
@@ -664,7 +664,7 @@ def main():
     ax10.grid(alpha=0.3, which='minor')
     ax10.set_yticks(np.arange(0, 100, 10))
     ax10.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax10.set_xlabel('$n=2\%$')
+    ax10.set_xlabel('$n=\pm2\%$')
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
@@ -683,7 +683,7 @@ def main():
     ax11.grid(alpha=0.3, which='minor')
     ax11.set_yticks(np.arange(0, 100, 10))
     ax11.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax11.set_xlabel('$n=5\%$')
+    ax11.set_xlabel('$n=\pm5\%$')
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
@@ -700,7 +700,7 @@ def main():
         style_counter += 1
     ax12.set_yticks(np.arange(0, 100, 10))
     ax12.set_xticks([0, 1, 10, 100])
-    ax12.set_xlabel('$n=10\%$')
+    ax12.set_xlabel('$n=\pm10\%$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
     ax12.xaxis.set_minor_locator(locmin)
     ax12.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
@@ -712,9 +712,9 @@ def main():
     ax122.set_yticks([])
     
     handles, labels = ax1.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', ncol=4, bbox_to_anchor=(0.5, 1.05), frameon=False, fontsize=8)
+    fig.legend(handles, labels, loc='upper center', ncol=4, bbox_to_anchor=(0.5, 1.065), frameon=False, fontsize=8, columnspacing=0.8)
     
-    fig.text(0.5, -0.02, 'Allowed modeling budget $b$ [\%]', ha='center', fontsize=8)
+    fig.text(0.5, -0.05, 'Allowed modeling budget $b$ [\%]', ha='center', fontsize=8)
     
     fig.tight_layout(pad=0.2)
     plt.savefig(plot_name, bbox_inches="tight")

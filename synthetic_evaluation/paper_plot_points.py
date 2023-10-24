@@ -182,9 +182,9 @@ def main():
     plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
     plt.rcParams.update({
-        #"text.usetex": True,
+        "text.usetex": True,
         "font.family": "sans-serif",
-        "font.sans-serif": "Helvetica",
+        #"font.sans-serif": "Helvetica",
         "font.size": 12
     })
     
@@ -256,7 +256,7 @@ def main():
     handles, labels = ax1.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', ncol=5, bbox_to_anchor=(0.5, 1.2), frameon=False, fontsize=8, columnspacing=0.8)
     
-    fig.text(0.5, -0.08, 'Allowed modeling budget $b$ [%]', ha='center', fontsize=8)
+    fig.text(0.5, -0.1, 'Allowed modeling budget $b$ [\%]', ha='center', fontsize=8)
     
     fig.tight_layout(pad=0.2)
     plt.savefig(plot_name, bbox_inches="tight")
