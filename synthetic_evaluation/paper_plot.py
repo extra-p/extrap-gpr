@@ -714,7 +714,7 @@ def main():
     handles, labels = ax1.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', ncol=4, bbox_to_anchor=(0.5, 1.065), frameon=False, fontsize=8, columnspacing=0.8)
     
-    fig.text(0.5, -0.05, 'Allowed modeling budget $b$ [\%]', ha='center', fontsize=8)
+    fig.text(0.5, -0.05, 'Allowed modeling budget $B$ [\%]', ha='center', fontsize=8)
     
     fig.tight_layout(pad=0.2)
     plt.savefig(plot_name, bbox_inches="tight")

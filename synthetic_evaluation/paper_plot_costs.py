@@ -38,7 +38,7 @@ def main():
     if args.name:
         plot_name = args.name+".pdf"
     else:
-        plot_name = "paper_plot_points.pdf"
+        plot_name = "paper_plot_costs.pdf"
     
     #path_1 = "2_parameter/1_noise/final/analysis_results"
     #path_2 = "2_parameter/2_noise/final/analysis_results"
@@ -72,26 +72,21 @@ def main():
     
     x_values = []
 
-    points_generic_2 = []
-    points_gpr_2 = []
-    points_hybrid_2 = []
+    generic_costs_2 = []
+    gpr_costs_2 = []
+    hybrid_costs_2 = []
     
-    points_generic_3 = []
-    points_gpr_3 = []
-    points_hybrid_3 = []
+    generic_costs_3 = []
+    gpr_costs_3 = []
+    hybrid_costs_3 = []
     
-    points_generic_4 = []
-    points_gpr_4 = []
-    points_hybrid_4 = []
+    generic_costs_4 = []
+    gpr_costs_4 = []
+    hybrid_costs_4 = []
 
-    base_points_2 = []
-    all_points_2 = []
-    
-    base_points_3 = []
-    all_points_3 = []
-    
-    base_points_4 = []
-    all_points_4 = []
+    base_point_costs_2 = []
+    base_point_costs_3 = []
+    base_point_costs_4 = []
 
     #files_1 = natsorted(files_1)
     #files_2 = natsorted(files_2)
@@ -114,61 +109,54 @@ def main():
 
         x_values.append(json_data["budget"])
 
-        points_generic_2.append(json_data["mean_add_points_generic"])
-        points_gpr_2.append(json_data["mean_add_points_gpr"])
-        points_hybrid_2.append(json_data["mean_add_points_hybrid"])
+        generic_costs_2.append(json_data["budget"]-json_data["mean_budget_generic"])
+        gpr_costs_2.append(json_data["budget"]-json_data["mean_budget_gpr"])
+        hybrid_costs_2.append(json_data["budget"]-json_data["mean_budget_hybrid"])
+        base_point_costs_2.append(json_data["base_point_cost"])
         
-        all_points_2.append(25*reps)
-        base_points_2.append(json_data["min_points"])
     
     for i in range(len(files_5_3)):
         json_file_path = files_5_3[i]
         json_data = read_json_file(json_file_path)
 
-        points_generic_3.append(json_data["mean_add_points_generic"])
-        points_gpr_3.append(json_data["mean_add_points_gpr"])
-        points_hybrid_3.append(json_data["mean_add_points_hybrid"])
-        
-        all_points_3.append(125*reps)
-        base_points_3.append(json_data["min_points"])
+        generic_costs_3.append(json_data["budget"]-json_data["mean_budget_generic"])
+        gpr_costs_3.append(json_data["budget"]-json_data["mean_budget_gpr"])
+        hybrid_costs_3.append(json_data["budget"]-json_data["mean_budget_hybrid"])
+        base_point_costs_3.append(json_data["base_point_cost"])
     
     for i in range(len(files_5_4)):
         json_file_path = files_5_4[i]
         json_data = read_json_file(json_file_path)
 
-        points_generic_4.append(json_data["mean_add_points_generic"])
-        points_gpr_4.append(json_data["mean_add_points_gpr"])
-        points_hybrid_4.append(json_data["mean_add_points_hybrid"])
-        
-        all_points_4.append(625*reps)
-        base_points_4.append(json_data["min_points"])
+        generic_costs_4.append(json_data["budget"]-json_data["mean_budget_generic"])
+        gpr_costs_4.append(json_data["budget"]-json_data["mean_budget_gpr"])
+        hybrid_costs_4.append(json_data["budget"]-json_data["mean_budget_hybrid"])
+        base_point_costs_4.append(json_data["base_point_cost"])
 
-    y_values_list_points_2 = [
-        all_points_2,
-        points_generic_2,
-        points_gpr_2,
-        points_hybrid_2,
-        base_points_2
+    y_values_list_costs_2 = [
+        generic_costs_2,
+        gpr_costs_2,
+        hybrid_costs_2,
+        #base_point_costs_2
     ]
     
-    y_values_list_points_3 = [
-        all_points_3,
-        points_generic_3,
-        points_gpr_3,
-        points_hybrid_3,
-        base_points_3
+    y_values_list_costs_3 = [
+        generic_costs_3,
+        gpr_costs_3,
+        hybrid_costs_3,
+        #base_point_costs_3
     ]
     
-    y_values_list_points_4 = [
-        all_points_4,
-        points_generic_4,
-        points_gpr_4,
-        points_hybrid_4,
-        base_points_4
+    y_values_list_costs_4 = [
+        generic_costs_4,
+        gpr_costs_4,
+        hybrid_costs_4,
+        #base_point_costs_4
     ]
     
     labels_points = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Minimum points required $\\bar{p}_{min}$']
-
+    labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. modeling requirement $\\bar{b}_{min}$']
+    
     SMALL_SIZE = 8
     MEDIUM_SIZE = 10
     BIGGER_SIZE = 12
@@ -192,66 +180,52 @@ def main():
     cm = 1/2.54 
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18.5*cm, 4*cm), sharex=True)
     
-    ls=["-",'dotted','--',':','dashdot']
-    lw = [1,1.5,1.5,4,1.5]
+    ls=['dotted','--',':','dashdot']
+    lw = [1.5,1.5,4,1.5]
+    colors = ["blue", "red", "orange", "dimgray"]
+    zorders=[7,6,5,4]
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "dimgray"]
-    ax1.set_xscale("symlog")
-    for y_values, label in zip(y_values_list_points_2, labels_points):
-        if style_counter == 0:
-            ax1.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
-        else:
-            ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
+    for y_values, label in zip(y_values_list_costs_2, labels_cost):
+        ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
-    ax1.set_ylabel('Mean number of points\n used for modelnig $\\bar{p}$')
-    ax1.grid(alpha=0.3)
     ax1.grid(alpha=0.3, which='major')
     ax1.grid(alpha=0.3, which='minor')
-    ax1.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax1.set_yticks(np.arange(0, 25*reps+10, 10))
-    ax1.set_xlim(0,120)
+    ax1.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax1.set_yticks([0, 5, 10, 15, 20, 25, 30])
+    ax1.set_xlim(0,100)
+    ax1.set_ylabel('Mean unused modeling\n budget $\\bar{B}_{nu}$ [\%]')
     ax1.set_xlabel('$m=2$')
     
-    ls=["-",'dotted','--',':','dashdot']
-    lw = [1,1.5,1.5,4,1.5]
+    ls=['dotted','--',':','dashdot']
+    lw = [1.5,1.5,4,1.5]
+    colors = ["blue", "red", "orange", "dimgray"]
+    zorders=[7,6,5,4]
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "dimgray"]
-    ax2.set_xscale("symlog")
-    for y_values, label in zip(y_values_list_points_3, labels_points):
-        if style_counter == 0:
-            ax2.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
-        else:
-            ax2.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
+    for y_values, label in zip(y_values_list_costs_3, labels_cost):
+        ax2.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
-    #ax2.set_ylabel('Mean number of points\n used for modelnig $\\bar{p}$')
     ax2.grid(alpha=0.3, which='major')
     ax2.grid(alpha=0.3, which='minor')
-    ax2.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax2.set_yticks(np.arange(0, 125*reps+10, 50))
-    ax2.set_xlim(0,120)
+    ax2.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax2.set_xlim(0,100)
     ax2.set_xlabel('$m=3$')
     
-    ls=["-",'dotted','--',':','dashdot']
-    lw = [1,1.5,1.5,4,1.5]
+    ls=['dotted','--',':','dashdot']
+    lw = [1.5,1.5,4,1.5]
+    colors = ["blue", "red", "orange", "dimgray"]
+    zorders=[7,6,5,4]
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "dimgray"]
     ax3.set_xscale("symlog")
-    for y_values, label in zip(y_values_list_points_4, labels_points):
-        if style_counter == 0:
-            ax3.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
-        else:
-            ax3.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
+    #ax3.set_yscale("symlog")
+    for y_values, label in zip(y_values_list_costs_4, labels_cost):
+        ax3.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
-    #ax3.set_ylabel('Mean number of points\n used for modelnig $\\bar{p}$')
-    ax3.grid(alpha=0.3)
-    #ax3.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax3.set_xticks([0.1, 1, 10, 100])
-    ax3.set_yticks(np.arange(0, 625*reps+10, 250))
-    ax3.set_xlim(0,120)
+    ax3.grid(alpha=0.3, which='major')
+    ax3.grid(alpha=0.3, which='minor')
+    #ax3.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax3.set_xlim(0,110)
     ax3.set_xlabel('$m=4$')
+    ax3.set_xticks([0.1, 1, 10, 100])
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
     ax3.xaxis.set_minor_locator(locmin)
     ax3.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
@@ -263,7 +237,7 @@ def main():
     ax32.set_yticks([])
     
     handles, labels = ax1.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', ncol=5, bbox_to_anchor=(0.5, 1.2), frameon=False, fontsize=8, columnspacing=0.8)
+    fig.legend(handles, labels, loc='upper center', ncol=5, bbox_to_anchor=(0.5, 1.17), frameon=False, fontsize=8, columnspacing=0.8)
     
     fig.text(0.5, -0.1, 'Allowed modeling budget $B$ [\%]', ha='center', fontsize=8)
     
