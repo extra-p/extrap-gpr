@@ -441,9 +441,9 @@ def main():
     plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
     plt.rcParams.update({
-        #"text.usetex": True,
+        "text.usetex": True,
         "font.family": "sans-serif",
-        "font.sans-serif": "Helvetica",
+        #"font.sans-serif": "Helvetica",
         "font.size": 12
     })
     
@@ -470,7 +470,7 @@ def main():
     ax1.set_yticks(np.arange(0, 100, 10))
     ax1.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax1.set_xlabel('$n=1\%$')
-    ax1.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [%]')
+    ax1.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [\%]')
     
     # plot the accuracy of bucket 5 and n=2%
     ls=["-",'dotted','--',':','-']
@@ -563,7 +563,7 @@ def main():
     ax5.set_yticks(np.arange(0, 100, 10))
     ax5.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax5.set_xlabel('$n=1\%$')
-    ax5.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [%]')
+    ax5.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [\%]')
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
@@ -645,7 +645,7 @@ def main():
     ax9.set_yticks(np.arange(0, 100, 10))
     ax9.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax9.set_xlabel('$n=1\%$')
-    ax9.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [%]')
+    ax9.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [\%]')
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
@@ -714,7 +714,7 @@ def main():
     handles, labels = ax1.get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', ncol=4, bbox_to_anchor=(0.5, 1.05), frameon=False, fontsize=8)
     
-    fig.text(0.5, -0.02, 'Allowed modeling budget $b$ [%]', ha='center', fontsize=8)
+    fig.text(0.5, -0.02, 'Allowed modeling budget $b$ [\%]', ha='center', fontsize=8)
     
     fig.tight_layout(pad=0.2)
     plt.savefig(plot_name, bbox_inches="tight")
