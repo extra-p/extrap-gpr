@@ -252,7 +252,7 @@ class SyntheticBenchmark():
     def get_extrap_model(self, experiment):
         # initialize model generator
         model_generator = ModelGenerator(
-            experiment, modeler=self.args.modeler, use_median=True)
+            experiment, modeler=self.args.modeler)
 
         # apply modeler options
         modeler = model_generator.modeler
