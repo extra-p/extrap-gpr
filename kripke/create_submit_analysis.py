@@ -4,13 +4,17 @@ def main():
 
     file = open("submit_analysis_jobs.sh","w")
 
-    counter = 14
+    counter = 0.3
 
-    while counter <= 100:
+    while counter <= 100.0:
 
-        text += "echo \"submitting job with n="+str(counter)+"\"\nsbatch analysis_job_b"+str(counter)+".sh\n"
+        counter_string = "{:0.1f}".format(counter)
+        text += "echo \"submitting job with b="+str(counter_string)+"\"\nsbatch analysis_job_b"+str(counter_string)+".sh\n"
 
-        counter += 1
+        if counter < 0.9:
+            counter += 0.1
+        else:
+            counter += 1.0
     
     file.write(text)
 

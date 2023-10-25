@@ -4,7 +4,7 @@ def main():
 
     file = open("submit_analysis_jobs.sh","w")
 
-    counter = 19.0
+    counter = 0.6
 
     while counter <= 100.0:
 
