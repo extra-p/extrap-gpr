@@ -46,7 +46,7 @@ def calculate_selected_point_cost2(experiment, callpath, metric):
             x = experiment.measurements[(callpath, metric)][i]
             coordinate_cost = 0
             for k in range(len(x.values)):
-                runtime = x.values[k]
+                runtime = np.mean(x.values[k])
                 nr_processes = x.coordinate.as_tuple()[0]
                 core_hours = runtime * nr_processes
                 coordinate_cost += core_hours
@@ -78,7 +78,7 @@ def create_experiment_base(selected_coord_list, nr_parameters, parameter_placeho
             values = []
             counter = 0
             while counter < nr_base_points:
-                values.append(measurement_temp.values[counter])
+                values.append(np.mean(measurement_temp.values[counter]))
                 counter += 1
             #value = selected_measurement_values[selected_coord_list[j]] 
             #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
@@ -132,7 +132,7 @@ def calculate_selected_point_cost(selected_points, callpath, metric, experiment_
         coordinate_cost = 0
         if measurement_temp != None:
             for k in range(len(measurement_temp.values)):
-                runtime = measurement_temp.values[k]
+                runtime = np.mean(measurement_temp.values[k])
                 nr_processes = coordinate.as_tuple()[0]
                 core_hours = runtime * nr_processes
                 coordinate_cost += core_hours
@@ -143,7 +143,7 @@ def calculate_selected_point_cost(selected_points, callpath, metric, experiment_
 def get_extrap_model2(experiment, args, callpath, metric):
     # initialize model generator
     model_generator = ModelGenerator(
-        experiment, modeler=args.modeler, use_median=True)
+        experiment, modeler=args.modeler)
 
     # apply modeler options
     modeler = model_generator.modeler
@@ -216,7 +216,7 @@ def calculate_selected_point_cost_base(selected_points, callpath, metric, nr_bas
         if measurement_temp != None:
             counter = 0
             while counter < nr_base_points:
-                runtime = measurement_temp.values[counter]
+                runtime = np.mean(measurement_temp.values[counter])
                 nr_processes = coordinate.as_tuple()[0]
                 core_hours = runtime * nr_processes
                 coordinate_cost += core_hours
@@ -357,13 +357,13 @@ def analyze_callpath(inputs):
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     # also delete the cost values from the remaining min dict
                     for i in range(base_values):
@@ -420,13 +420,13 @@ def analyze_callpath(inputs):
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                         
             except KeyError:
@@ -489,13 +489,13 @@ def analyze_callpath(inputs):
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     # also delete the cost values from the remaining min dict
                     for i in range(base_values):
@@ -553,13 +553,13 @@ def analyze_callpath(inputs):
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     # also delete the cost values from the remaining min dict
                     for i in range(base_values):
@@ -623,13 +623,13 @@ def analyze_callpath(inputs):
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
-                                temp = np.delete(temp, 0)
+                                temp = np.delete(temp, 0, 0)
                             x.values = temp
                     # also delete the cost values from the remaining min dict
                     for i in range(base_values):
@@ -1036,9 +1036,10 @@ def analyze_callpath(inputs):
                         if measurements_gpr[(callpath, metric)][i].coordinate == cord:
                             cord_id = i
                             x = measurements_gpr[(callpath, metric)][i].values
+                            #print("DEBUG 5:",len(x))
                             if len(x) > 0:
-                                new_value = x[0]
-                                x = np.delete(x, 0)
+                                new_value = np.mean(x[0])
+                                x = np.delete(x, 0, 0)
                                 measurements_gpr[(callpath, metric)][i].values = x
                             break
                     
@@ -1382,8 +1383,8 @@ def analyze_callpath(inputs):
                         cord_id = i
                         x = measurements_hybrid[(callpath, metric)][i].values
                         if len(x) > 0:
-                            new_value = x[0]
-                            x = np.delete(x, 0)
+                            new_value = np.mean(x[0])
+                            x = np.delete(x, 0, 0)
                             measurements_hybrid[(callpath, metric)][i].values = x
                         break
                     

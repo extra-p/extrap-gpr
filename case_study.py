@@ -44,6 +44,7 @@ from sklearn.exceptions import ConvergenceWarning
 import pickle
 from parallel import analyze_callpath
 import json
+import time
 
 
 def create_experiment2(cord, experiment, new_value, callpath, metric):
@@ -90,7 +91,7 @@ def create_experiment_base(selected_coord_list, experiment, nr_parameters, param
             values = []
             counter = 0
             while counter < nr_base_points:
-                values.append(measurement_temp.values[counter])
+                values.append(np.mean(measurement_temp.values[counter]))
                 counter += 1
             #value = selected_measurement_values[selected_coord_list[j]] 
             #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
@@ -115,7 +116,7 @@ def calculate_selected_point_cost2(experiment, callpath, metric):
             x = experiment.measurements[(callpath, metric)][i]
             coordinate_cost = 0
             for k in range(len(x.values)):
-                runtime = x.values[k]
+                runtime = np.mean(x.values[k])
                 nr_processes = x.coordinate.as_tuple()[0]
                 core_hours = runtime * nr_processes
                 coordinate_cost += core_hours
@@ -144,7 +145,7 @@ def calculate_selected_point_cost(selected_points, experiment, callpath_id, metr
         coordinate_cost = 0
         if measurement_temp != None:
             for k in range(len(measurement_temp.values)):
-                runtime = measurement_temp.values[k]
+                runtime = np.mean(measurement_temp.values[k])
                 nr_processes = coordinate.as_tuple()[0]
                 core_hours = runtime * nr_processes
                 coordinate_cost += core_hours
@@ -187,7 +188,7 @@ def calculate_percentage_of_buckets(acurracy_bucket_counter, nr_callpaths):
 def get_extrap_model2(experiment, args, callpath, metric):
     # initialize model generator
     model_generator = ModelGenerator(
-        experiment, modeler=args.modeler, use_median=True)
+        experiment, modeler=args.modeler)
 
     # apply modeler options
     modeler = model_generator.modeler
@@ -230,7 +231,7 @@ def get_extrap_model2(experiment, args, callpath, metric):
 def get_extrap_model(experiment, args, callpath, metric):
     # initialize model generator
     model_generator = ModelGenerator(
-        experiment, modeler=args.modeler, use_median=True)
+        experiment, modeler=args.modeler)
 
     # apply modeler options
     modeler = model_generator.modeler
@@ -560,7 +561,7 @@ def main():
 
         # initialize model generator
         model_generator = ModelGenerator(
-            experiment, modeler=args.modeler, use_median=use_median)
+            experiment, modeler=args.modeler)
 
         # apply modeler options
         modeler = model_generator.modeler
@@ -706,7 +707,7 @@ def main():
                     coordinate_cost = 0
                     if measurement_temp != None:
                         for k in range(len(measurement_temp.values)):
-                            runtime = measurement_temp.values[k]
+                            runtime = np.mean(measurement_temp.values[k])
                             core_hours = runtime * nr_processes
                             cost[experiment.coordinates[i]].append(core_hours)
                             coordinate_cost += core_hours
@@ -2288,7 +2289,7 @@ def calculate_selected_point_cost_base(selected_points, experiment, callpath_id,
             counter = 0
             while counter < nr_base_points:
             #for k in range(len(measurement_temp.values)):
-                runtime = measurement_temp.values[counter]
+                runtime = np.mean(measurement_temp.values[counter])
                 nr_processes = coordinate.as_tuple()[0]
                 core_hours = runtime * nr_processes
                 coordinate_cost += core_hours
@@ -2297,5 +2298,9 @@ def calculate_selected_point_cost_base(selected_points, experiment, callpath_id,
     return selected_cost
 
 if __name__ == "__main__":
+    starttime = time.time()
     os.environ["TQDM_DISABLE"] = "1"
     main()
+    endtime = time.time()
+    runtime = endtime - starttime
+    print("runtime:",runtime)

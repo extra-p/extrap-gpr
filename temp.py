@@ -1,4 +1,5 @@
 from extrap.entities.coordinate import Coordinate
+import numpy as np
 
 def add_measurements_to_gpr(gaussian_process, 
                             selected_coordinates, 
@@ -89,7 +90,7 @@ def add_measurement_to_gpr(gaussian_process,
             #print("DEBUG3:",measurement.values)
             # append only the first value in the list, until none left
             #Y.append(measurement.mean)
-            Y.append(measurement.values[0])
+            Y.append(np.mean(measurement.values[0]))
             break
     
     X.append(x)
