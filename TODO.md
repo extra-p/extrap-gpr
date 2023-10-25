@@ -1,5 +1,8 @@
 # TODO LIST:
 
+* recode the entire case study code from scratch
+* identify the bug, and why it takes so long the analysis
+* it should actually run really fast, especially for 2 parameter case with only 7 kernels as for lulesh...
 
 * find out how much budget min for lulesh
 * find out min budget for other case studies as well....

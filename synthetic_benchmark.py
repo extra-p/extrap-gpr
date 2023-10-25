@@ -23,9 +23,6 @@ from extrap.util.progress_bar import ProgressBar
 import numpy as np
 from plotting import plot_measurement_point_number, plot_model_accuracy, plot_costs
 from generic_strategy import add_additional_point_generic
-from case_study import calculate_selected_point_cost
-from case_study import create_experiment
-#from case_study import get_extrap_model
 from temp import add_measurements_to_gpr
 from temp import add_measurement_to_gpr
 from temp import add_measurement_to_gpr_test
@@ -36,6 +33,64 @@ import warnings
 from sklearn.exceptions import ConvergenceWarning
 import sys
 import json
+
+def create_experiment2(selected_coord_list, experiment, nr_parameters, parameter_placeholders, metric_id, callpath_id):
+    # create new experiment with only the selected measurements and points as coordinates and measurements
+    experiment_generic = Experiment()
+    for j in range(nr_parameters):
+        experiment_generic.add_parameter(Parameter(parameter_placeholders[j]))
+
+    callpath = experiment.callpaths[callpath_id]
+    experiment_generic.add_callpath(callpath)
+
+    metric = experiment.metrics[metric_id]
+    experiment_generic.add_metric(metric)
+
+    for j in range(len(selected_coord_list)):
+        coordinate = selected_coord_list[j]
+        experiment_generic.add_coordinate(coordinate)
+
+        coordinate_id = -1
+        for k in range(len(experiment.coordinates)):
+            if coordinate == experiment.coordinates[k]:
+                coordinate_id = k
+        measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+        #print("haha:",measurement_temp.median)
+
+        if measurement_temp != None:
+            #value = selected_measurement_values[selected_coord_list[j]] 
+            #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
+            experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
+    return experiment_generic
+
+def calculate_selected_point_cost2(selected_points, experiment, callpath_id, metric_id):
+    # calculate selected point cost
+    selected_cost = 0
+    for j in range(len(selected_points)):
+        coordinate = selected_points[j]
+        coordinate_id = -1
+        for k in range(len(experiment.coordinates)):
+            if coordinate == experiment.coordinates[k]:
+                coordinate_id = k
+        counter = 0
+        for metric in experiment.metrics:
+            if str(metric) == "runtime" or str(metric) == "time":
+                break
+            else:
+                counter += 1
+
+        measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, counter)
+        
+        #print("measurement_temp:",measurement_temp)
+        coordinate_cost = 0
+        if measurement_temp != None:
+            for k in range(len(measurement_temp.values)):
+                runtime = measurement_temp.values[k]
+                nr_processes = coordinate.as_tuple()[0]
+                core_hours = runtime * nr_processes
+                coordinate_cost += core_hours
+        selected_cost += coordinate_cost
+    return selected_cost
 
 class SyntheticBenchmark():
 
@@ -1064,7 +1119,7 @@ class SyntheticBenchmark():
         if self.grid_search == 2 or self.grid_search == 3:
             base_point_cost = self.calculate_selected_point_cost_base(selected_points, experiment, 0, 0, self.base_values)
         elif self.grid_search == 1 or self.grid_search == 4:
-            base_point_cost = calculate_selected_point_cost(selected_points, experiment, 0, 0)
+            base_point_cost = calculate_selected_point_cost2(selected_points, experiment, 0, 0)
         base_point_cost = base_point_cost / (total_cost / 100)
         #print("base_point_cost %:",base_point_cost)
 
@@ -1092,13 +1147,13 @@ class SyntheticBenchmark():
         #if self.grid_search == 2 or self.grid_search == 3:
         #    experiment_generic_base = self.create_experiment_base(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
         #else:
-        #   experiment_generic_base = create_experiment(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
+        #   experiment_generic_base = create_experiment2(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
         
         #for x in experiment_generic_base.measurements[(Callpath("main"), Metric("runtime"))]:
         #    print(x.coordinate, x.values)
 
         # create first model
-        experiment_generic_base = create_experiment(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
+        experiment_generic_base = create_experiment2(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
         
         _, models = self.get_extrap_model(experiment_generic_base)
         hypothesis = None
@@ -1106,7 +1161,7 @@ class SyntheticBenchmark():
             hypothesis = model.hypothesis
 
         # calculate selected point cost
-        current_cost = calculate_selected_point_cost(selected_points_generic, experiment, 0, 0)
+        current_cost = calculate_selected_point_cost2(selected_points_generic, experiment, 0, 0)
         current_cost_percent = current_cost / (total_cost / 100)
         
         if self.mode == "budget":
@@ -1117,7 +1172,7 @@ class SyntheticBenchmark():
                     remaining_points_new, selected_coord_list_new, new_point = add_additional_point_generic(remaining_points_generic, selected_points_generic)
 
                     # calculate selected point cost
-                    current_cost = calculate_selected_point_cost(selected_coord_list_new, experiment, 0, 0)
+                    current_cost = calculate_selected_point_cost2(selected_coord_list_new, experiment, 0, 0)
                     current_cost_percent = current_cost / (total_cost / 100)
 
                     # current cost exceeds budget so break the loop
@@ -1146,7 +1201,7 @@ class SyntheticBenchmark():
                         added_points_generic += self.nr_repetitions
 
                         # create new model
-                        experiment_generic_base = create_experiment(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+                        experiment_generic_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
 
                         selected_points_generic = selected_coord_list_new
                         remaining_points_generic = remaining_points_new
@@ -1165,7 +1220,7 @@ class SyntheticBenchmark():
             return 1
 
         # calculate selected point cost
-        selected_cost = calculate_selected_point_cost(selected_points_generic, experiment, 0, 0)
+        selected_cost = calculate_selected_point_cost2(selected_points_generic, experiment, 0, 0)
         
         # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
         percentage_cost_generic = selected_cost / (total_cost / 100)
@@ -1351,7 +1406,7 @@ class SyntheticBenchmark():
         if self.grid_search == 2 or self.grid_search == 3:
             experiment_gpr_base = self.create_experiment_base(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
         else:
-            experiment_gpr_base = create_experiment(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
+            experiment_gpr_base = create_experiment2(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
         
         if base_point_cost <= self.budget:
             while True:
@@ -1361,7 +1416,7 @@ class SyntheticBenchmark():
                 fitting_measurements = []
                 for key, value in remaining_points_gpr.items():
                     
-                    #current_cost = calculate_selected_point_cost(selected_points_gpr, experiment_gpr_base, 0, 0)
+                    #current_cost = calculate_selected_point_cost2(selected_points_gpr, experiment_gpr_base, 0, 0)
                     current_cost = self.calculate_selected_point_cost(experiment_gpr_base)
                     
                     # always take the first value in the list, until none left
@@ -1489,7 +1544,7 @@ class SyntheticBenchmark():
                     add_points_gpr += 1
 
                     # add this point to the gpr experiment
-                    #experiment_gpr_base = create_experiment(selected_points_gpr, experiment_gpr_base, len(experiment_gpr_base.parameters), parameters, 0, 0)
+                    #experiment_gpr_base = create_experiment2(selected_points_gpr, experiment_gpr_base, len(experiment_gpr_base.parameters), parameters, 0, 0)
                     experiment_gpr_base = self.create_experiment(cord, experiment_gpr_base, new_value)
 
                 # if there are no suitable measurement points found
@@ -1498,7 +1553,7 @@ class SyntheticBenchmark():
                     break
                 
         # cost used of the gpr strategy
-        current_cost = calculate_selected_point_cost(selected_points_gpr, experiment_gpr_base, 0, 0)
+        current_cost = calculate_selected_point_cost2(selected_points_gpr, experiment_gpr_base, 0, 0)
         #current_cost = self.calculate_selected_point_cost(experiment_gpr_base)
         percentage_cost_gpr = current_cost / (total_cost / 100)
         if percentage_cost_gpr >= 99.9:
@@ -1610,7 +1665,7 @@ class SyntheticBenchmark():
         if self.grid_search == 2 or self.grid_search == 3:
             experiment_hybrid_base = self.create_experiment_base(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
         else:
-            experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
+            experiment_hybrid_base = create_experiment2(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
 
         if self.mode == "budget":
 
@@ -1620,7 +1675,7 @@ class SyntheticBenchmark():
                 fitting_measurements = []
                 for key, value in remaining_points_hybrid.items():
 
-                    #current_cost = calculate_selected_point_cost(selected_points_hybrid, experiment, 0, 0)
+                    #current_cost = calculate_selected_point_cost2(selected_points_hybrid, experiment, 0, 0)
                     current_cost = self.calculate_selected_point_cost(experiment_hybrid_base)
                     
                     #new_cost = current_cost + np.sum(value)
@@ -1792,7 +1847,7 @@ class SyntheticBenchmark():
                     add_points_hybrid += 1
 
                     # add this point to the hybrid experiment
-                    #experiment_hybrid_base = create_experiment(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
+                    #experiment_hybrid_base = create_experiment2(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
                     experiment_hybrid_base = self.create_experiment(cord, experiment_hybrid_base, new_value)
 
 
@@ -1808,7 +1863,7 @@ class SyntheticBenchmark():
             return 1
 
         # cost used of the gpr strategy
-        #current_cost = calculate_selected_point_cost(selected_points_hybrid, experiment, 0, 0)
+        #current_cost = calculate_selected_point_cost2(selected_points_hybrid, experiment, 0, 0)
         current_cost = self.calculate_selected_point_cost(experiment_hybrid_base)
         current_cost_percent = current_cost / (total_cost / 100)
 
