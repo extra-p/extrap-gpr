@@ -4,13 +4,6 @@
 
 * make heatmap work for all strategies...
 
-* case study analsis
-    * minife
-    * lulesh
-    * fastest
-    * kripke
-    * quicksilver
-
 * make presentation with all results
 
 ##########################

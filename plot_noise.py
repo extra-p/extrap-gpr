@@ -5,8 +5,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
-plt.rc('font', **{'family': 'serif', 'size': 7.5})
-#plt.rc('text', usetex=True)
+plt.rc('font', **{'family': 'sans-serif', 'size': 7.5})
+plt.rc('text', usetex=True)
 plt.rc('axes', edgecolor='black', linewidth=0.4, axisbelow=True)
 plt.rc('xtick', **{'direction': 'out', 'major.width': 0.4})
 plt.rc('ytick', **{'direction': 'in', 'major.width': 0.4})
@@ -40,7 +40,8 @@ def plot_noise(dataset):
         data.append(x)
         names.append(name)
         
-    plt.figure(figsize=(7, 1.5), dpi=300)
+    cm = 1/2.54 
+    plt.figure(figsize=(18.5*cm, 4*cm), dpi=300)
     # print(str(len(y))+" kernels used from "+str(len(values)))
     ylabel = plt.ylabel("Noise $n$ [$\%$]\nRange of relative deviation")
     x, y = ylabel.get_position()
@@ -61,16 +62,16 @@ def plot_noise(dataset):
         va = 'center'
         if x == 1:
             xy = (x + 0.15, 62)
-        if x == 2:
-            xy = (x + 0.15, 62)
         if x == 3:
+            xy = (x + 0.15, 62)
+        if x == 4:
             xy = (x + 0.15, 62)
         if x == 5:
             xy = (x + 0.15, 62)
         if x == 6:
             xy = (x + 0.15, 62)
         plt.annotate(r"$n_{\mathrm{max}}="+f"{y: .2f}$", (x, y), xytext=xy,
-                     arrowprops=arrowstyle if x != 4 else None, va=va)
+                     arrowprops=arrowstyle if x != 2 else None, va=va)
     mean_hndl = plt.plot([1, 2, 3, 4, 5, 6], [np.mean(d)
                                      for d in data], 'x', color=(1, 0.1, 0.1, 1))
     for x, y in zip([1, 2, 3, 4, 5, 6], [np.mean(d) for d in data]):
@@ -82,7 +83,7 @@ def plot_noise(dataset):
         if x == 3:
             xy = (x + 0.15, 42)
         if x == 4:
-            xy = (x + 0.15, 55)
+            xy = (x + 0.15, 42)
         if x == 5:
             xy = (x + 0.15, 42)
         if x == 6:
@@ -100,7 +101,7 @@ def plot_noise(dataset):
         if x == 3:
             xy = (x + 0.15, 22)
         if x == 4:
-            xy = (x + 0.15, 30)
+            xy = (x + 0.15, 22)
         if x == 5:
             xy = (x + 0.15, 22)
         if x == 6:
@@ -114,6 +115,7 @@ def plot_noise(dataset):
         plt.annotate(r"$n_{\mathrm{min}}="+f"{y:.2f}$", (x, y), xytext=xy,
                      va='center')
     plt.xticks([1, 2, 3, 4, 5, 6], names)
+    plt.yticks([0, 25, 50, 75, 100, 125, 150])
     plt.xlim(0.7, 6.75)
     plt.ylim(-5, 165)
     plt.tight_layout(pad=0)
