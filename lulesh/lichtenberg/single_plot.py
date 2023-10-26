@@ -120,10 +120,10 @@ def main():
         hybrid_costs.append(json_data["mean_budget_hybrid"])
 
         points_generic.append(json_data["mean_add_points_generic"])
-        points_gpr.append(json_data["mean_add_points_gpr"]-5)
-        points_hybrid.append(json_data["mean_add_points_hybrid"]-5)
+        points_gpr.append(json_data["mean_add_points_gpr"])
+        points_hybrid.append(json_data["mean_add_points_hybrid"])
         
-        all_points.append((25-1)*reps)
+        all_points.append((26-1)*reps)
 
         base_point_costs.append(json_data["base_point_cost"])
 
