@@ -1,13 +1,10 @@
 # TODO LIST:
 
-* recode the entire case study code from scratch
-* identify the bug, and why it takes so long the analysis
-* it should actually run really fast, especially for 2 parameter case with only 7 kernels as for lulesh...
+* get noise plot correct with all case studies with just one function call...
+* add documentation for it into README.md
 
-* find out how much budget min for lulesh
-* find out min budget for other case studies as well....
 
-###########################################
+* viz code for noise levels on case study measurements...
 
 * how to visualize selection paths of actions from a markov chain???
 

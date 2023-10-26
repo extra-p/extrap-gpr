@@ -9,17 +9,18 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 ### RELEARN:
 
 1. `cd relearn`
-2. (single run) `python ../case_study.py --text relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 30 --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20 --repetition 2`
+2. (single run) `python ../case_study.py --text relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20 --repetition 2`
 3. `./run_analysis.sh`
 4. `./process.sh`
 5. `./archive.sh final`
 6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 2`
 7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 2`
+8. `python ../../noise_analysis.py --text ../../relearn/relearn_data.txt --total-runtime 31978.682999999997` for the noise analysis.
 
 ### LULESH:
 
 1. `cd lulesh/lichtenberg`
-2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/lulesh/ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --budget 1 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/lulesh/ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
 5. `./archive.sh final`
@@ -29,7 +30,7 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 ### MiniFE:
 
 1. `cd minife/lichtenberg`
-2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget 1 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
 5. `./archive.sh final`
@@ -39,20 +40,32 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 ### FASTEST:
 
 1. `cd fastest`
-2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/fastest/ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 1 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/fastest/ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
 5. `./archive.sh final`
 6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
 7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
 
-#########
+### Kripke:
 
-FASTEST: `python .\case_study.py --cube E:\fastest\ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 30 --plot True --normalization True`
+1. `cd kripke`
+2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/kripke/ --processes 0 --parameters "p","d","g" --eval_point "32768","12","160" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+3. `./run_analysis.sh`
+4. `./process.sh`
+5. `./archive.sh final`
+6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
+7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
 
-Kripke: `python .\case_study.py --cube E:\kripke\ --processes 0 --parameters "p","d","g" --eval_point "32768","12","160" --filter 1 --budget 30 --plot True --normalization True`
+### Quicksilver:
 
-Quicksilver: `python .\case_study.py --cube E:\quicksilver\ --processes 0 --parameters "p","m","n" --eval_point "512","20","60" --filter 1 --plot True --budget 30  --normalization True`
+1. `cd quicksilver`
+2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/quicksilver/ --processes 0 --parameters "p","m","n" --eval_point "512","20","60" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
+3. `./run_analysis.sh`
+4. `./process.sh`
+5. `./archive.sh final`
+6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
+7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
 
 ## Run the evaluation tool for the synthetic evaluation:
 
