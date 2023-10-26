@@ -1,11 +1,5 @@
 # TODO LIST:
 
-* get noise plot correct with all case studies with just one function call...
-* add documentation for it into README.md
-
-
-* viz code for noise levels on case study measurements...
-
 * how to visualize selection paths of actions from a markov chain???
 
 * make heatmap work for all strategies...

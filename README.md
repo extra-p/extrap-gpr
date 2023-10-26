@@ -15,7 +15,6 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 5. `./archive.sh final`
 6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 2`
 7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 2`
-8. `python ../../noise_analysis.py --text ../../relearn/relearn_data.txt --total-runtime 31978.682999999997` for the noise analysis.
 
 ### LULESH:
 
@@ -66,6 +65,23 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 5. `./archive.sh final`
 6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
 7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
+
+## Noise analysis for the case studies
+
+To reproduce the noise analysis plot for the case studies use the analysis script provided.
+
+`./analyze_noise.sh`
+
+It will run the noise analysis for each case study and then plot all of the data into a single plot in put everything into a folder `noise_analysis/`.
+
+For individual runs use:
+
+* RELEARN: `python noise_analysis.py --text relearn/relearn_data.txt --total-runtime 31978.682999999997 --name relearn`
+* LULESH: `python noise_analysis.py --cube /work/scratch/mr52jiti/data/lulesh/ --name lulesh`
+* FASTEST: `python noise_analysis.py --cube /work/scratch/mr52jiti/data/fastest/ --name fastest`
+* KRIPKE: `python noise_analysis.py --cube /work/scratch/mr52jiti/data/kripke/ --name kripke`
+* MiniFE: `python noise_analysis.py --cube /work/scratch/mr52jiti/data/minife/ --name minife`
+* Quicksilver: `python noise_analysis.py --cube /work/scratch/mr52jiti/data/quicksilver/ --name quicksilver`
 
 ## Run the evaluation tool for the synthetic evaluation:
 
