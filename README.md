@@ -66,6 +66,9 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
 7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
 
+To check the number of measurements `ls /work/scratch/mr52jiti/data/quicksilver/ | wc -l`.
+Some of the measurements did not run successfully. See with `ls *.er /work/scratch/mr52jiti/data/quicksilver/quicksilver.p*/profile.cubex | wc -l` the ones that actually have a profile.cubex.
+
 ## Noise analysis for the case studies
 
 To reproduce the noise analysis plot for the case studies use the analysis script provided.

@@ -84,7 +84,7 @@ def main():
     
     # create the figure environment including subplots
     fig, ax1 = plt.subplots(1,1, figsize=(6,4))
-    fig.suptitle("Evaluation results LULESH")
+    fig.suptitle("Evaluation results Quicksilver")
     
     # plot the cost
     ls=['dotted','--',':','dashdot']
@@ -103,9 +103,9 @@ def main():
     #ax1.set_yticks(np.arange(0, 110, 10))
     ax1.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     #ax1.set_ylim(0,100)
-    ax1.set_xlim(0,100)
-    ax1.set_xlabel('Allowed modeling budget $b$ [%]')
-    ax1.set_ylabel('Mean unused modeling budget $\\bar{b}_{nu}$ [%]')
+    ax1.set_xlim(0.6,100)
+    ax1.set_xlabel('Allowed modeling budget $B$ [%]')
+    ax1.set_ylabel('Mean unused modeling budget $\\bar{B}_{nu}$ [%]')
     ax1.legend(loc='upper left', prop={'size': 8}).set_zorder(2)
 
     fig.tight_layout(pad=2.0)
