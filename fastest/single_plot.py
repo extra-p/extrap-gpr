@@ -81,6 +81,8 @@ def main():
     base_points = []
     
     all_points = []
+    
+    nr_func_modeled = 0
 
     files = natsorted(files)
     #print("DEBUG:",len(files))
@@ -88,6 +90,9 @@ def main():
     for i in range(len(files)):
         json_file_path = files[i]
         json_data = read_json_file(json_file_path)
+        
+        if i == len(files)-1:
+            nr_func_modeled = json_data["nr_func_modeled_gpr"]
 
         x_values.append(json_data["budget"])
         full_values_5.append(json_data["percentage_bucket_counter_full"]["5"])
@@ -164,24 +169,24 @@ def main():
     ]
 
     labels_acc = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy']
-    labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. modeling requirement $\\bar{b}_{min}$']
+    labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. modeling requirement $\\bar{B}_{min}$']
     labels_points = ['All available points', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. points required $\\bar{p}_{min}$']
 
     # create the figure environment including subplots
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3, figsize=(15, 8))
-    fig.suptitle("Evaluation results RELEARN (kernels > 1% runtime)")
+    fig.suptitle("Evaluation results FASTEST ("+str(nr_func_modeled)+" kernels > 1% runtime)")
     
     # plot the accuracy of bucket 5
     ls=["-",'dotted','--',':','-']
     lw = [1,2,2,5,2]
     #ax1.set_xscale("symlog")
-    ax1.set_xlim(0, 105)
+    ax1.set_xlim(19, 105)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_5, labels_acc, colors):
         if style_counter == 0:
-            ax1.scatter(100, y_values[len(y_values)-1], label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
+            ax1.scatter(100, y_values_list_acc_5[1][len(y_values_list_acc_5[1])-1], label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
         else:
             ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
@@ -189,16 +194,16 @@ def main():
     #ax1.fill_between(x_values, y_values_list_acc_5[2], y_values_list_acc_5[1], color="red", where=np.array(y_values_list_acc_5[2]) < np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax1.grid(alpha=0.3)
     ax1.set_yticks(np.arange(0, 110, 10))
-    ax1.set_xticks(np.arange(0, 110, 10))
-    ax1.set_xlabel('Allowed modeling budget $b$ [%]')
+    ax1.set_xticks(np.arange(20, 110, 10))
+    ax1.set_xlabel('Allowed modeling budget $B$ [%]')
     ax1.set_ylabel('Models within $\pm5\%$ at $P_{eval}$ [%]')
-    ax1.legend(loc="lower right", prop={'size': 8})
+    ax1.legend(loc="upper left", prop={'size': 8})
     
     # plot the accuracy of bucket 10
     ls=["-",'dotted','--',':','-']
     lw = [1,2,2,5,2]
     #ax2.set_xscale("symlog")
-    ax2.set_xlim(0, 105)
+    ax2.set_xlim(19, 105)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]
@@ -212,8 +217,8 @@ def main():
     #ax2.fill_between(x_values, y_values_list_acc_10[2], y_values_list_acc_10[1], color="red", where=np.array(y_values_list_acc_10[2]) < np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax2.grid(alpha=0.3)
     ax2.set_yticks(np.arange(0, 110, 10))
-    ax2.set_xticks(np.arange(0, 110, 10))
-    ax2.set_xlabel('Allowed modeling budget $b$ [%]')
+    ax2.set_xticks(np.arange(20, 110, 10))
+    ax2.set_xlabel('Allowed modeling budget $B$ [%]')
     ax2.set_ylabel('Models within $\pm10\%$ at $P_{eval}$ [%]')
     ax2.legend(loc="lower right", prop={'size': 8})
     
@@ -221,13 +226,13 @@ def main():
     ls=["-",'dotted','--',':','-']
     lw = [1,2,2,5,2]
     #ax3.set_xscale("symlog")
-    ax3.set_xlim(0, 105)
+    ax3.set_xlim(19, 105)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_15, labels_acc, colors):
         if style_counter == 0:
-            ax3.scatter(100, y_values[len(y_values)-1], label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
+            ax3.scatter(100, y_values_list_acc_15[1][len(y_values_list_acc_15[1])-1], label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
         else:
             ax3.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
@@ -235,8 +240,8 @@ def main():
     #ax3.fill_between(x_values, y_values_list_acc_15[2], y_values_list_acc_15[1], color="red", where=np.array(y_values_list_acc_15[2]) < np.array(y_values_list_acc_15[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax3.grid(alpha=0.3)
     ax3.set_yticks(np.arange(0, 110, 10))
-    ax3.set_xticks(np.arange(0, 110, 10))
-    ax3.set_xlabel('Allowed modeling budget $b$ [%]')
+    ax3.set_xticks(np.arange(20, 110, 10))
+    ax3.set_xlabel('Allowed modeling budget $B$ [%]')
     ax3.set_ylabel('Models within $\pm15\%$ at $P_{eval}$ [%]')
     ax3.legend(loc="lower right", prop={'size': 8})
     
@@ -244,13 +249,13 @@ def main():
     ls=["-",'dotted','--',':','-']
     lw = [1,2,2,5,2]
     #ax4.set_xscale("symlog")
-    ax4.set_xlim(0, 105)
+    ax4.set_xlim(19, 105)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_20, labels_acc, colors):
         if style_counter == 0:
-            ax4.scatter(100, y_values[len(y_values)-1], label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
+            ax4.scatter(100, y_values_list_acc_20[1][len(y_values_list_acc_20[1])-1], label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
         else:
             ax4.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
@@ -258,8 +263,8 @@ def main():
     #ax4.fill_between(x_values, y_values_list_acc_20[2], y_values_list_acc_20[1], color="red", where=np.array(y_values_list_acc_20[2]) < np.array(y_values_list_acc_20[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
     ax4.grid(alpha=0.3)
     ax4.set_yticks(np.arange(0, 110, 10))
-    ax4.set_xticks(np.arange(0, 110, 10))
-    ax4.set_xlabel('Allowed modeling budget $b$ [%]')
+    ax4.set_xticks(np.arange(20, 110, 10))
+    ax4.set_xlabel('Allowed modeling budget $B$ [%]')
     ax4.set_ylabel('Models within $\pm20\%$ at $P_{eval}$ [%]')
     ax4.legend(loc="lower right", prop={'size': 8})
     
@@ -278,11 +283,11 @@ def main():
     #ax5.fill_between(x_values, y_values_list_cost[1], y_values_list_cost[0], color="red", where=np.array(y_values_list_cost[1]) < np.array(y_values_list_cost[0]), alpha=0.3, label='GPR worse than CPF', zorder=3, hatch="+", interpolate=True)
     ax5.grid(alpha=0.3)
     ax5.set_yticks(np.arange(0, 110, 10))
-    ax5.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax5.set_xticks([20,30,40,50,60,70,80,90,100])
     ax5.set_ylim(0,100)
-    ax5.set_xlim(0,100)
-    ax5.set_xlabel('Allowed modeling budget $b$ [%]')
-    ax5.set_ylabel('Mean used modeling budget $\\bar{b}_{u}$ [%]')
+    ax5.set_xlim(19,100)
+    ax5.set_xlabel('Allowed modeling budget $B$ [%]')
+    ax5.set_ylabel('Mean used modeling budget $\\bar{B}_{u}$ [%]')
     ax5.legend(loc='upper left', prop={'size': 8}).set_zorder(2)
     
     # plot the points
@@ -300,13 +305,13 @@ def main():
             ax6.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
     ax6.set_ylabel('Mean number of points used for modelnig $\\bar{p}$')
-    ax6.set_xlabel('Allowed modeling budget $b$ [%]')
+    ax6.set_xlabel('Allowed modeling budget $B$ [%]')
     ax6.grid(alpha=0.3)
     #ax6.set_yticks(np.arange(0, 110, 10))
-    #ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
-    ax6.set_xticks(np.arange(0, 110, 10))
-    ax6.set_yticks(np.arange(0, ((25-1)*reps)+5, 5))
-    ax6.set_xlim(0,105)
+    #ax6.set_xticks([20,30,40,50,60,70,80,90,100])
+    ax6.set_xticks(np.arange(20, 110, 10))
+    ax6.set_yticks(np.arange(0, ((25-1)*reps)+5, 10))
+    ax6.set_xlim(19,105)
     ax6.legend(loc="lower right", prop={'size': 8})
     
     fig.tight_layout(pad=2.0)
