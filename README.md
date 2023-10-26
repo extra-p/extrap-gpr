@@ -12,9 +12,11 @@ For all case studies, besides RELEARN, the path to the data needs to be changed.
 2. (single run) `python ../case_study.py --text relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20 --repetition 2`
 3. `./run_analysis.sh`
 4. `./process.sh`
-5. `./archive.sh final`
-6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 2`
-7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 2`
+5. `./archive.sh filtered`
+6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 2 --min 9 --filter 1`
+7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage --reps 2 --min 9`
+
+Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for run with all available kernels.
 
 ### LULESH:
 

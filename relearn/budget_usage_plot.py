@@ -28,7 +28,8 @@ def main():
     parser.add_argument('--path', type=str, help='The path to the results.', required=False)
     parser.add_argument('--name', type=str, help='Set name of the plot.', required=False)
     parser.add_argument('--reps', type=int, default=4, help='Set the number of repetitions per measurement point.', required=False)
-
+    parser.add_argument('--min', type=int, required=True, help='Set the minimum budget required for modeling')
+    
     # Parse the command-line arguments
     args = parser.parse_args()
     
@@ -79,6 +80,13 @@ def main():
         gpr_costs,
         hybrid_costs,
     ]
+    
+    if args.min < 10 and args.min > 1:
+        x_min_tick = 10
+    elif args.min < 20 and args.min > 10:
+        x_min_tick = 20
+    elif args.min < 1:
+        x_min_tick = 0
 
     labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy']
     
@@ -101,11 +109,11 @@ def main():
     #ax1.fill_between(x_values, y_values_list_cost[1], y_values_list_cost[0], color="red", where=np.array(y_values_list_cost[1]) < np.array(y_values_list_cost[0]), alpha=0.3, label='GPR worse than CPF', zorder=3, hatch="+", interpolate=True)
     ax1.grid(alpha=0.3)
     #ax1.set_yticks(np.arange(0, 110, 10))
-    ax1.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax1.set_xticks(np.arange(x_min_tick, 110, 10))
     #ax1.set_ylim(0,100)
-    ax1.set_xlim(0,100)
-    ax1.set_xlabel('Allowed modeling budget $b$ [%]')
-    ax1.set_ylabel('Mean unused modeling budget $\\bar{b}_{nu}$ [%]')
+    ax1.set_xlim(args.min,100)
+    ax1.set_xlabel('Allowed modeling budget $B$ [%]')
+    ax1.set_ylabel('Mean unused modeling budget $\\bar{B}_{nu}$ [%]')
     ax1.legend(loc='upper left', prop={'size': 8}).set_zorder(2)
 
     fig.tight_layout(pad=2.0)
