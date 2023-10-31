@@ -310,7 +310,7 @@ def main():
     #ax6.set_yticks(np.arange(0, 110, 10))
     #ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax6.set_xticks(np.arange(10, 110, 10))
-    ax6.set_yticks(np.arange(0, ((25-1)*reps)+5, 5))
+    ax6.set_yticks(np.arange(0, ((25-1)*reps)+10, 15))
     ax6.set_xlim(9,105)
     ax6.legend(loc="center right", prop={'size': 8})
     
