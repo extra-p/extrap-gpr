@@ -4,7 +4,7 @@ def main():
 
     counter = 0.3
 
-    while counter <= 100.0:
+    while counter < 2.0:
         
         counter_string = "{:0.1f}".format(counter)
         file = open("analysis_job_b"+str(counter_string)+".sh","w")

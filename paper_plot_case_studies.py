@@ -354,7 +354,7 @@ def main():
         points_generic_quicksilver.append(json_data["mean_add_points_generic"])
         points_gpr_quicksilver.append(json_data["mean_add_points_gpr"])
         points_hybrid_quicksilver.append(json_data["mean_add_points_hybrid"])
-        all_points_quicksilver.append(25*5)
+        all_points_quicksilver.append(503)
         base_points_quicksilver.append(json_data["min_points"])
         
     y_values_list_acc_quicksilver = [
@@ -723,7 +723,9 @@ def main():
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
-    ax13.set_xlim(x_values_quicksilver[0], 103)
+    ax13.set_xscale("symlog")
+    ax13.set_xlim(x_values_quicksilver[0], 120)
+    ax13.set_ylim(0, 110)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]
@@ -733,11 +735,15 @@ def main():
         else:
             ax13.plot(x_values_quicksilver, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    ax13.set_yticks(np.arange(0, 110, 20))
+    #ax13.set_xticks([20,30,40,50,60,70,80,90,100])
+    ax13.set_xticks([0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
+    ax13.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
+    locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
+    ax13.xaxis.set_minor_locator(locmin)
+    ax13.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     ax13.grid(alpha=0.3, which='major')
     ax13.grid(alpha=0.3, which='minor')
-    ax13.set_yticks(np.arange(0, np.max(y_values_list_acc_quicksilver)+5, 10))
-    ax13.set_xticks([20,30,40,50,60,70,80,90,100])
-    ax13.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
     
     ls=['dotted','--',':','dashdot']
     lw = [1.5,1.5,4,1.5]
@@ -768,7 +774,7 @@ def main():
     ax15.grid(alpha=0.3, which='major')
     ax15.grid(alpha=0.3, which='minor')
     ax15.set_xlim(x_values_quicksilver[0],103)
-    ax15.set_yticks(np.arange(0, 25*5+10, 15))
+    ax15.set_yticks(np.arange(0, 503+50, 75))
     ax15.set_xticks([20,30,40,50,60,70,80,90,100])
     ax15.set_ylabel('Mean number of points\n used for modelnig $\\bar{k}$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
@@ -781,7 +787,9 @@ def main():
     ax152.tick_params(right = False)
     ax152.set_yticks([])
     
-    #####################################
+    ###########
+    # RELeARN #
+    ###########
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
