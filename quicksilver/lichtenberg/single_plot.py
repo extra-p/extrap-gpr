@@ -195,15 +195,21 @@ def main():
     ax1.grid(alpha=0.3)
     ax1.set_yticks(np.arange(0, 110, 10))
     ax1.set_xticks(np.arange(0, 110, 10))
+    #ax1.set_xticks([0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax1.set_xlabel('Allowed modeling budget $B$ [%]')
     ax1.set_ylabel('Models within $\pm5\%$ at $P_{eval}$ [%]')
     ax1.legend(loc="lower right", prop={'size': 8})
+    #locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
+    #ax1.xaxis.set_minor_locator(locmin)
+    #ax1.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
+    #ax1.grid(alpha=0.3, which='major')
+    #ax1.grid(alpha=0.3, which='minor')
     
     # plot the accuracy of bucket 10
     ls=["-",'dotted','--',':','-']
     lw = [1,2,2,5,2]
     #ax2.set_xscale("symlog")
-    ax2.set_xlim(0, 105)
+    ax2.set_xlim(0.6, 105)
     style_counter = 0
     zorders=[5,4,3,2,1]
     colors=["gray", "blue", "red", "orange", "yellow"]

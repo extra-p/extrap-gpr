@@ -467,7 +467,7 @@ def main():
     
     # create the figure environment including subplots
     cm = 1/2.54 
-    fig, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9), (ax10, ax11, ax12), (ax13, ax14, ax15), (ax16, ax17, ax18)) = plt.subplots(6, 3, figsize=(18.5*cm, 24*cm))
+    fig, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9), (ax10, ax11, ax12), (ax13, ax14, ax15), (ax16, ax17, ax18)) = plt.subplots(6, 3, figsize=(18.5*cm, 20*cm))
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
