@@ -442,7 +442,7 @@ def main():
         logging.basicConfig(
             format="%(levelname)s: %(message)s", level=loglevel)
     
-    budget = int(args.budget)
+    budget = args.budget
     print("budget:",budget)
 
     processes = args.processes
