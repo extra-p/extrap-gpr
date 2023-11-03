@@ -12,4 +12,10 @@
 
 * make presentation with all results
 
+modeler_options = {'allow_log_terms': True,
+                   'use_crossvalidation': True,
+                   'compare_with_RSS': False,
+                   'poly_exponents': "0,1,2,3,4,5",
+                   'log_exponents': "0,1,2",
+                  }
 
