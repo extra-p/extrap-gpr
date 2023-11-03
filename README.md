@@ -71,6 +71,12 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 To check the number of measurements `ls /work/scratch/mr52jiti/data/quicksilver/ | wc -l`.
 Some of the measurements did not run successfully. See with `ls *.er /work/scratch/mr52jiti/data/quicksilver/quicksilver.p*/profile.cubex | wc -l` the ones that actually have a profile.cubex.
 
+## Create analysis plot for all case studies
+
+1. `python paper_plot_case_studies.py`
+
+Running this command will create one plot containing all key information of the case studies.
+
 ## Noise analysis for the case studies
 
 To reproduce the noise analysis plot for the case studies use the analysis script provided.

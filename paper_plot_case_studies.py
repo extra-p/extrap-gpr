@@ -44,7 +44,7 @@ def main():
     # FASTEST #
     ###########
     
-    path_1 = "fastest/final/analysis_results"
+    path_1 = "fastest/filtered/analysis_results"
     files_1 = find_files(path_1)
     files_1 = natsorted(files_1)
     
@@ -178,7 +178,7 @@ def main():
     # LULESH  #
     ###########
 
-    path_3 = "lulesh/lichtenberg/final/analysis_results"
+    path_3 = "lulesh/lichtenberg/filtered/analysis_results"
     files_3 = find_files(path_3)
     files_3 = natsorted(files_3)
 
@@ -312,7 +312,7 @@ def main():
     # Quicksilver #
     ###########
 
-    path_5 = "quicksilver/lichtenberg/final/analysis_results"
+    path_5 = "quicksilver/lichtenberg/filtered/analysis_results"
     files_5 = find_files(path_5)
     files_5 = natsorted(files_5)
 
@@ -459,7 +459,7 @@ def main():
     plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
     plt.rcParams.update({
-        #"text.usetex": True,
+        "text.usetex": True,
         "font.family": "sans-serif",
         #"font.sans-serif": "Helvetica",
         "font.size": 12
@@ -487,8 +487,8 @@ def main():
     ax1.set_yticks(np.arange(0, np.max(y_values_list_acc_fastest)+5, 10))
     ax1.set_xticks([20,30,40,50,60,70,80,90,100])
     ax1.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
-    ax1.tick_params(axis='x', labelsize=7)
-    ax1.tick_params(axis='y', labelsize=7)
+    #ax1.tick_params(axis='x', labelsize=7)
+    #ax1.tick_params(axis='y', labelsize=7)
     
     ls=['dotted','--',':','dashdot']
     lw = [1.5,1.5,4,1.5]
@@ -504,8 +504,8 @@ def main():
     ax2.set_yticks(np.arange(0, np.max(y_values_list_costs_fastest)+5, 5))
     ax2.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
     ax2.set_xlim(x_values_fastest[0],100)
-    ax2.tick_params(axis='x', labelsize=7)
-    ax2.tick_params(axis='y', labelsize=7)
+    #ax2.tick_params(axis='x', labelsize=7)
+    #ax2.tick_params(axis='y', labelsize=7)
     
     ls=["-",'dotted','--',':','dashdot']
     lw = [1,1.5,1.5,4,1.5]
@@ -531,11 +531,11 @@ def main():
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
     ax32 = ax3.twinx() 
-    ax32.set_ylabel("\textbf{FASTEST}\n $\\bar{B}_{min}="+str(x_values_fastest[0])+"\%$\n"+str(nr_func_modeled_fastest)+" kernels", fontsize=8)
+    ax32.set_ylabel("\\textbf{FASTEST}\n $\\bar{B}_{min}="+str(x_values_fastest[0])+"\%$\n"+str(nr_func_modeled_fastest)+" kernels", fontsize=8)
     ax32.tick_params(right = False)
     ax32.set_yticks([])
-    ax3.tick_params(axis='x', labelsize=7)
-    ax3.tick_params(axis='y', labelsize=7)
+    #ax3.tick_params(axis='x', labelsize=7)
+    #ax3.tick_params(axis='y', labelsize=7)
     
     ##########
     # Kripke #
@@ -556,8 +556,8 @@ def main():
     ax4.grid(alpha=0.3, which='major')
     ax4.grid(alpha=0.3, which='minor')
     ax4.set_ylim(0, np.max(y_values_list_acc_kripke)+5)
-    ax4.set_yticks(np.arange(0, np.max(y_values_list_acc_kripke)+5, 10))
-    ax4.set_xticks([10,20,30,40,50,60,70,80,90,100])
+    ax4.set_yticks(np.arange(0, np.max(y_values_list_acc_kripke)+5, 20))
+    ax4.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax4.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
     
     ls=['dotted','--',':','dashdot']
@@ -570,7 +570,7 @@ def main():
         style_counter += 1
     ax5.grid(alpha=0.3, which='major')
     ax5.grid(alpha=0.3, which='minor')
-    ax5.set_xticks([20,30,40,50,60,70,80,90,100])
+    ax5.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax5.set_yticks(np.arange(0, np.nanmax(y_values_list_costs_kripke)+5, 2.5))
     ax5.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
     ax5.set_xlim(x_values_kripke[0],100)
@@ -589,16 +589,13 @@ def main():
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax6.set_xlim(x_values_kripke[0],103)
-    ax6.set_yticks(np.arange(0, ((150-1)*5)+50, 75))
-    ax6.set_xticks([20,30,40,50,60,70,80,90,100])
+    ax6.set_yticks(np.arange(0, ((150-1)*5)+75, 100))
+    ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax6.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
-    locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
-    ax6.xaxis.set_minor_locator(locmin)
-    ax6.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax62 = ax6.twinx() 
-    ax62.set_ylabel("Kripke, $\\bar{B}_{min}="+str(x_values_kripke[0])+"\%$\n"+str(nr_func_modeled_kripke)+" kernels", fontsize=7)
+    ax62.set_ylabel("\\textbf{Kripke}\n $\\bar{B}_{min}="+str(x_values_kripke[0])+"\%$\n"+str(nr_func_modeled_kripke)+" kernels", fontsize=7)
     ax62.tick_params(right = False)
     ax62.set_yticks([])
     
@@ -623,8 +620,8 @@ def main():
     ax7.set_yticks(np.arange(0, np.max(y_values_list_acc_lulesh)+5, 10))
     ax7.set_xticks([10,20,30,40,50,60,70,80,90,100])
     ax7.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
-    ax7.tick_params(axis='x', labelsize=7)
-    ax7.tick_params(axis='y', labelsize=7)
+    #ax7.tick_params(axis='x', labelsize=7)
+    #ax7.tick_params(axis='y', labelsize=7)
     
     ls=['dotted','--',':','dashdot']
     lw = [1.5,1.5,4,1.5]
@@ -640,8 +637,8 @@ def main():
     ax8.set_yticks(np.arange(0, np.max(y_values_list_costs_lulesh)+5, 5))
     ax8.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
     ax8.set_xlim(x_values_lulesh[0],100)
-    ax8.tick_params(axis='x', labelsize=7)
-    ax8.tick_params(axis='y', labelsize=7)
+    #ax8.tick_params(axis='x', labelsize=7)
+    #ax8.tick_params(axis='y', labelsize=7)
     
     ls=["-",'dotted','--',':','dashdot']
     lw = [1,1.5,1.5,4,1.5]
@@ -666,11 +663,11 @@ def main():
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
     ax92 = ax9.twinx() 
-    ax92.set_ylabel("LULESH, $\\bar{B}_{min}="+str(x_values_lulesh[0])+"\%$\n"+str(nr_func_modeled_lulesh)+" kernels", fontsize=7)
+    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(x_values_lulesh[0])+"\%$\n"+str(nr_func_modeled_lulesh)+" kernels", fontsize=7)
     ax92.tick_params(right = False)
     ax92.set_yticks([])
-    ax9.tick_params(axis='x', labelsize=7)
-    ax9.tick_params(axis='y', labelsize=7)
+    #ax9.tick_params(axis='x', labelsize=7)
+    #ax9.tick_params(axis='y', labelsize=7)
     
     ##########
     # MiniFE #
@@ -690,7 +687,7 @@ def main():
         style_counter += 1
     ax10.grid(alpha=0.3, which='major')
     ax10.grid(alpha=0.3, which='minor')
-    ax10.set_yticks(np.arange(0, np.max(y_values_list_acc_minife)+5, 10))
+    ax10.set_yticks(np.arange(0, np.max(y_values_list_acc_minife)+5, 5))
     ax10.set_xticks([20,30,40,50,60,70,80,90,100])
     ax10.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
     
@@ -723,7 +720,7 @@ def main():
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
     ax12.set_xlim(x_values_minife[0],103)
-    ax12.set_yticks(np.arange(0, 25*5+15, 20))
+    ax12.set_yticks(np.arange(0, 25*5+20, 20))
     ax12.set_xticks([20,30,40,50,60,70,80,90,100])
     ax12.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
@@ -732,7 +729,7 @@ def main():
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
     ax122 = ax12.twinx() 
-    ax122.set_ylabel("MiniFE, $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n"+str(nr_func_modeled_minife)+" kernels", fontsize=7)
+    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n"+str(nr_func_modeled_minife)+" kernels", fontsize=7)
     ax122.tick_params(right = False)
     ax122.set_yticks([])
     
@@ -763,7 +760,7 @@ def main():
     #ax13.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     ax13.grid(alpha=0.3, which='major')
     ax13.grid(alpha=0.3, which='minor')
-    ax13.tick_params(axis='x', labelsize=7)
+    #ax13.tick_params(axis='x', labelsize=7)
     
     ls=['dotted','--',':','dashdot']
     lw = [1.5,1.5,4,1.5]
@@ -779,7 +776,7 @@ def main():
     ax14.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax14.set_yticks(np.arange(0, np.max(y_values_list_costs_quicksilver)+5, 5))
     ax14.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
-    ax14.tick_params(axis='x', labelsize=7)
+    #ax14.tick_params(axis='x', labelsize=7)
     
     ls=["-",'dotted','--',':','dashdot']
     lw = [1,1.5,1.5,4,1.5]
@@ -798,9 +795,9 @@ def main():
     ax15.set_yticks(np.arange(0, 503+55, 75))
     ax15.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax15.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
-    ax15.tick_params(axis='x', labelsize=7)
+    #ax15.tick_params(axis='x', labelsize=7)
     ax152 = ax15.twinx() 
-    ax152.set_ylabel("Quicksilver, $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n"+str(nr_func_modeled_quicksilver)+" kernels", fontsize=7)
+    ax152.set_ylabel("\\textbf{Quicksilver}\n $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n"+str(nr_func_modeled_quicksilver)+" kernels", fontsize=7)
     ax152.tick_params(right = False)
     ax152.set_yticks([])
     
@@ -825,7 +822,7 @@ def main():
     ax16.set_yticks(np.arange(0, 120, 20))
     ax16.set_xticks([20,30,40,50,60,70,80,90,100])
     ax16.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
-    ax16.tick_params(axis='x', labelsize=7)
+    #ax16.tick_params(axis='x', labelsize=7)
     
     ls=['dotted','--',':','dashdot']
     lw = [1.5,1.5,4,1.5]
@@ -841,7 +838,7 @@ def main():
     ax17.set_yticks(np.arange(0, np.max(y_values_list_costs_relearn)+5, 5))
     ax17.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
     ax17.set_xlim(x_values_relearn[0],100)
-    ax17.tick_params(axis='x', labelsize=7)
+    #ax17.tick_params(axis='x', labelsize=7)
     
     ls=["-",'dotted','--',':','dashdot']
     lw = [1,1.5,1.5,4,1.5]
@@ -865,9 +862,9 @@ def main():
     ax18.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
     ax18.grid(alpha=0.3, which='major')
     ax18.grid(alpha=0.3, which='minor')
-    ax18.tick_params(axis='x', labelsize=7)
+    #ax18.tick_params(axis='x', labelsize=7)
     ax182 = ax18.twinx() 
-    ax182.set_ylabel("RELeARN, $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n"+str(nr_func_modeled_relearn)+" kernels", fontsize=7)
+    ax182.set_ylabel("\\textbf{RELeARN}\n $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n"+str(nr_func_modeled_relearn)+" kernels", fontsize=7)
     ax182.tick_params(right = False)
     ax182.set_yticks([])
     
