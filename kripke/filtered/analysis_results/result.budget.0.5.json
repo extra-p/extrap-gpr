@@ -1,0 +1,42 @@
+{
+    "percentage_bucket_counter_full": {
+        "rest": 100.0,
+        "5": 75.0,
+        "10": 100.0,
+        "15": 100.0,
+        "20": 100.0
+    },
+    "percentage_bucket_counter_generic": {
+        "rest": 100.0,
+        "5": 0.0,
+        "10": 0.0,
+        "15": 25.0,
+        "20": 25.0
+    },
+    "mean_budget_generic": 0.49464480890057794,
+    "mean_add_points_generic": 305.0,
+    "nr_func_modeled_generic": 1,
+    "percentage_bucket_counter_gpr": {
+        "rest": 100.0,
+        "5": 50.0,
+        "10": 50.0,
+        "15": 50.0,
+        "20": 50.0
+    },
+    "mean_add_points_gpr": 376.5,
+    "mean_budget_gpr": 0.49823597171000644,
+    "nr_func_modeled_gpr": 2,
+    "percentage_bucket_counter_hybrid": {
+        "rest": 100.0,
+        "5": 50.0,
+        "10": 50.0,
+        "15": 50.0,
+        "20": 50.0
+    },
+    "mean_budget_hybrid": 0.4975782933501607,
+    "mean_add_points_hybrid": 376.5,
+    "nr_func_modeled_hybrid": 2,
+    "base_point_cost": 0.20490511850076626,
+    "min_points": 13,
+    "budget": 0.5
+}
