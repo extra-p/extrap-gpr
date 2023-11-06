@@ -111,7 +111,7 @@ def main():
     # KRIPKE #
     ###########
 
-    path_2 = "kripke/filtered/analysis_results"
+    path_2 = "kripke/all/analysis_results"
     files_2 = find_files(path_2)
     files_2 = natsorted(files_2)
 
@@ -557,7 +557,7 @@ def main():
     ax4.grid(alpha=0.3, which='minor')
     ax4.set_ylim(0, np.max(y_values_list_acc_kripke)+5)
     ax4.set_yticks(np.arange(0, np.max(y_values_list_acc_kripke)+5, 20))
-    ax4.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax4.set_xticks([2,10,20,30,40,50,60,70,80,90,100])
     ax4.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
     
     ls=['dotted','--',':','dashdot']
@@ -570,8 +570,8 @@ def main():
         style_counter += 1
     ax5.grid(alpha=0.3, which='major')
     ax5.grid(alpha=0.3, which='minor')
-    ax5.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
-    ax5.set_yticks(np.arange(0, np.nanmax(y_values_list_costs_kripke)+5, 2.5))
+    ax5.set_xticks([2,10,20,30,40,50,60,70,80,90,100])
+    ax5.set_yticks(np.arange(0, np.nanmax(y_values_list_costs_kripke)+2.5, 1.5))
     ax5.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
     ax5.set_xlim(x_values_kripke[0],100)
     
@@ -590,7 +590,7 @@ def main():
     ax6.grid(alpha=0.3, which='minor')
     ax6.set_xlim(x_values_kripke[0],103)
     ax6.set_yticks(np.arange(0, ((150-1)*5)+75, 100))
-    ax6.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
+    ax6.set_xticks([2,10,20,30,40,50,60,70,80,90,100])
     ax6.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
