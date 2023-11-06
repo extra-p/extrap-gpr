@@ -20,6 +20,11 @@ from temp import add_measurements_to_gpr
 from temp import add_measurement_to_gpr
 import sys
 from generic_strategy import add_additional_point_generic
+from extrap.util.options_parser import ModelerOptionsAction, ModelerHelpAction
+from extrap.util.options_parser import SINGLE_PARAMETER_MODELER_KEY, SINGLE_PARAMETER_OPTIONS_KEY
+from extrap.util.options_parser import ModelerOptionsAction, ModelerHelpAction
+from extrap.modelers import multi_parameter
+from extrap.modelers import single_parameter
 
 
 def create_experiment2(cord, experiment, new_value, callpath, metric):
