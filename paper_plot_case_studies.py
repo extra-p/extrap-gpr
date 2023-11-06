@@ -595,7 +595,7 @@ def main():
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax62 = ax6.twinx() 
-    ax62.set_ylabel("\\textbf{Kripke}\n $\\bar{B}_{min}="+str(x_values_kripke[0])+"\%$\n"+str(nr_func_modeled_kripke)+" kernels", fontsize=7)
+    ax62.set_ylabel("\\textbf{Kripke}\n $\\bar{B}_{min}="+str(x_values_kripke[0])+"\%$\n"+str(nr_func_modeled_kripke)+" kernels", fontsize=8)
     ax62.tick_params(right = False)
     ax62.set_yticks([])
     
@@ -663,7 +663,7 @@ def main():
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
     ax92 = ax9.twinx() 
-    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(x_values_lulesh[0])+"\%$\n"+str(nr_func_modeled_lulesh)+" kernels", fontsize=7)
+    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(x_values_lulesh[0])+"\%$\n"+str(nr_func_modeled_lulesh)+" kernels", fontsize=8)
     ax92.tick_params(right = False)
     ax92.set_yticks([])
     #ax9.tick_params(axis='x', labelsize=7)
@@ -729,7 +729,7 @@ def main():
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
     ax122 = ax12.twinx() 
-    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n"+str(nr_func_modeled_minife)+" kernels", fontsize=7)
+    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n"+str(nr_func_modeled_minife)+" kernels", fontsize=8)
     ax122.tick_params(right = False)
     ax122.set_yticks([])
     
@@ -797,7 +797,7 @@ def main():
     ax15.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     #ax15.tick_params(axis='x', labelsize=7)
     ax152 = ax15.twinx() 
-    ax152.set_ylabel("\\textbf{Quicksilver}\n $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n"+str(nr_func_modeled_quicksilver)+" kernels", fontsize=7)
+    ax152.set_ylabel("\\textbf{Quicksilver}\n $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n"+str(nr_func_modeled_quicksilver)+" kernels", fontsize=8)
     ax152.tick_params(right = False)
     ax152.set_yticks([])
     
@@ -864,14 +864,14 @@ def main():
     ax18.grid(alpha=0.3, which='minor')
     #ax18.tick_params(axis='x', labelsize=7)
     ax182 = ax18.twinx() 
-    ax182.set_ylabel("\\textbf{RELeARN}\n $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n"+str(nr_func_modeled_relearn)+" kernels", fontsize=7)
+    ax182.set_ylabel("\\textbf{RELeARN}\n $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n"+str(nr_func_modeled_relearn)+" kernels", fontsize=8)
     ax182.tick_params(right = False)
     ax182.set_yticks([])
     
     handles, labels = ax1.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', ncol=5, bbox_to_anchor=(0.5, 1.04), frameon=False, fontsize=8, columnspacing=0.8)
+    fig.legend(handles, labels, loc='upper center', ncol=5, bbox_to_anchor=(0.5, 1.04), frameon=False, fontsize=9, columnspacing=0.8)
     
-    fig.text(0.5, -0.025, 'Allowed modeling budget $B$ [\%]', ha='center', fontsize=8)
+    fig.text(0.5, -0.025, 'Allowed modeling budget $B$ [\%]', ha='center', fontsize=9)
     
     fig.tight_layout(pad=0.2)
     plt.savefig(plot_name, bbox_inches="tight")
