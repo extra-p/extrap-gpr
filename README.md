@@ -24,9 +24,9 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/lulesh/ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
-5. `./archive.sh final`
-6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
-7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
+5. `./archive.sh filtered`
+6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
+7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
 ### MiniFE:
 
@@ -34,9 +34,9 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
-5. `./archive.sh final`
-6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
-7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
+5. `./archive.sh filtered`
+6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
+7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
 ### FASTEST:
 
@@ -44,9 +44,9 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/fastest/ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
-5. `./archive.sh final`
-6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
-7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
+5. `./archive.sh filtered`
+6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
+7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
 ### Kripke:
 
@@ -54,9 +54,9 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/kripke/ --processes 0 --parameters "p","d","g" --eval_point "32768","12","160" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
-5. `./archive.sh final`
-6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
-7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
+5. `./archive.sh filtered`
+6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
+7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
 ### Quicksilver:
 
@@ -64,9 +64,9 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/quicksilver/ --processes 0 --parameters "p","m","n" --eval_point "512","20","60" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
 3. `./run_analysis.sh`
 4. `./process.sh`
-5. `./archive.sh final`
-6. `python single_plot.py --path final/analysis_results/ --name results_final --reps 5`
-7. `python budget_usage_plot.py --path final/analysis_results/ --name budget_usage --reps 5`
+5. `./archive.sh filtered`
+6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
+7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
 To check the number of measurements `ls /work/scratch/mr52jiti/data/quicksilver/ | wc -l`.
 Some of the measurements did not run successfully. See with `ls *.er /work/scratch/mr52jiti/data/quicksilver/quicksilver.p*/profile.cubex | wc -l` the ones that actually have a profile.cubex.
