@@ -178,7 +178,7 @@ def main():
     # LULESH  #
     ###########
 
-    path_3 = "lulesh/lichtenberg/filtered/analysis_results"
+    path_3 = "lulesh/lichtenberg/all/analysis_results"
     files_3 = find_files(path_3)
     files_3 = natsorted(files_3)
 
@@ -618,7 +618,7 @@ def main():
     ax7.grid(alpha=0.3, which='major')
     ax7.grid(alpha=0.3, which='minor')
     ax7.set_yticks(np.arange(0, np.max(y_values_list_acc_lulesh)+5, 10))
-    ax7.set_xticks([10,20,30,40,50,60,70,80,90,100])
+    ax7.set_xticks([20,30,40,50,60,70,80,90,100])
     ax7.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
     #ax7.tick_params(axis='x', labelsize=7)
     #ax7.tick_params(axis='y', labelsize=7)
@@ -633,7 +633,7 @@ def main():
         style_counter += 1
     ax8.grid(alpha=0.3, which='major')
     ax8.grid(alpha=0.3, which='minor')
-    ax8.set_xticks([10,20,30,40,50,60,70,80,90,100])
+    ax8.set_xticks([20,30,40,50,60,70,80,90,100])
     ax8.set_yticks(np.arange(0, np.max(y_values_list_costs_lulesh)+5, 5))
     ax8.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
     ax8.set_xlim(x_values_lulesh[0],100)
@@ -655,7 +655,7 @@ def main():
     ax9.grid(alpha=0.3, which='minor')
     ax9.set_xlim(x_values_lulesh[0],103)
     ax9.set_yticks(np.arange(0, 25*5+20, 20))
-    ax9.set_xticks([10,20,30,40,50,60,70,80,90,100])
+    ax9.set_xticks([20,30,40,50,60,70,80,90,100])
     ax9.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
     ax9.xaxis.set_minor_locator(locmin)
@@ -663,7 +663,7 @@ def main():
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
     ax92 = ax9.twinx() 
-    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(x_values_lulesh[0])+"\%$\n"+str(nr_func_modeled_lulesh)+" kernels", fontsize=8)
+    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(x_values_lulesh[0])+"\%$\n 7 kernels", fontsize=8)
     ax92.tick_params(right = False)
     ax92.set_yticks([])
     #ax9.tick_params(axis='x', labelsize=7)
@@ -729,7 +729,7 @@ def main():
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
     ax122 = ax12.twinx() 
-    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n"+str(nr_func_modeled_minife)+" kernels", fontsize=8)
+    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n 23 kernels", fontsize=8)
     ax122.tick_params(right = False)
     ax122.set_yticks([])
     
