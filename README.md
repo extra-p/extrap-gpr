@@ -1,18 +1,26 @@
 # Cost-Effective Empirical Performance Modeling with Extra-P using Gaussian Process Regression (GPR)
 
-Evaluation code for the paper "Cost-Effective Empirical Performance Modeling". Contains the code to do a synthetic and case study analysis for different parameter-value selection strategies to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points.
+Evaluation code for the paper "Cost-Effective Empirical Performance Modeling." This repository contains the code that was used to run the synthetic analysis and the case study analysis to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points when using different measurement point selection strategies. The evaluated strategies are: Cheapest Point First (CPF), measurement point prediction via Gaussian Process Regression (GPR), and Hybrid (a combination of the CPF+GPR strategy).
 
-## Quick Setup using the Dockerfile
+## Quick setup using Docker
 
-For a quick setup of the evaluation environment we provide a Dockerfile that can be used to build an image that has all dependencies installed to run the evaluations scripts.
-The Dockerfile also downloads the required performance measurement dataset automatically.
+For a quick setup of the evaluation environment, we provide a Dockerfile that can be used to build an image that has all dependencies installed to run the evaluation scripts. The Dockerfile also downloads the required performance measurement dataset automatically.
 
-Build the docker: ``.
-Create an image: ``.
-Run the docker container: ``.
-Sample evaluation script usage sinde docker container: ``.
+NOTE: building the image from the Dockerfile might take several minutes up to half an hour as many dependencies have to be installed including tex to generate the plots.
 
-## Run the evaluation tool for the case studies
+Build a docker image from the provided Dockerfile: `docker build -t extrap-gpr .`.
+Run the image in a container: `docker run -it extrap-gpr /bin/bash`.
+
+### Reproduction of the Evaluation & Case Study results using Docker
+
+
+
+## Manual setup
+
+* install pip package dependencies `pip install sympy,scikit-learn,natsort,pandas`
+* install latex (used for plotting) `sudo apt-get install -y texlive-latex-extra`
+
+### Run the evaluation tool for the case studies
 
 ### Performance measurement dataset
 
@@ -238,7 +246,7 @@ arithmetic mean and then used as input value for a WhiteKernel() that is added t
 
 For the hybrid strategy the same applies as for the GPR strategy regarding the repetitions of measurement points and their selection.
 
-### License
+## License
 
 [BSD 3-Clause "New" or "Revised" License](LICENSE)
 
