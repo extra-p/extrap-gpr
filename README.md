@@ -168,9 +168,11 @@ For individual runs use:
 * MiniFE: `python noise_analysis.py --cube /work/scratch/mr52jiti/data/minife/ --name minife`
 * Quicksilver: `python noise_analysis.py --cube /work/scratch/mr52jiti/data/quicksilver/ --name quicksilver`
 
-## Run the evaluation tool for the synthetic evaluation:
+#### Synthetic Evaluation:
 
-Navigate to the folder, the analysis you want to reproduce, e.g., `cd 2_parameters/1_noise/`.
+Navigate to the folder, the analysis you want to reproduce, e.g., `cd 2_parameters/1_noise/`. Then follow the below steps.
+
+Steps:
 
 1. `./run_analysis.sh` to run the analysis in parallel on a cluster.
 2. `./process.sh` to run the postprocessing after all jobs have finished.
@@ -185,7 +187,6 @@ Use `--noise <noise_percent>` to set the artificially induced noise (+-) into th
 Use `--nr-functions <nr_functions>` the number of synthetically generated functions to run the evalutation for.
 
 Leave all other parameters as is. There values have been carefully selected doing a grid search for the best configurations for all supported number of model parameters and noise levels.
-
 
 ## Quick Introduction of the Measurement Point Selection Strategies
 
