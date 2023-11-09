@@ -19,6 +19,7 @@ Run the image in a container: `docker run -it extrap-gpr /bin/bash`.
 
 * install pip package dependencies `pip install sympy,scikit-learn,natsort,pandas`
 * install latex (used for plotting) `sudo apt-get install -y texlive-latex-extra`
+* https://zenodo.org/records/10092353?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjczNzY4Njg1LTQ2NDAtNGFhOC05ZGU1LWU3OGU1YmQ0ZWY3ZiIsImRhdGEiOnt9LCJyYW5kb20iOiI4Y2MwMzc5MzQxOTJlZjkwMzllMWZkMDUwMzlmMjdlNSJ9.4r0-tpFyYPOttuUlZkMglPgNS21oqR_AvXpyMRPJuSlr5ZJ-S28MtmcmQUGm7aujNKyDiypwPl8t7qqwNuk_Dw
 
 ### Run the evaluation tool for the case studies
 
@@ -252,7 +253,23 @@ For the hybrid strategy the same applies as for the GPR strategy regarding the r
 
 ## Citation
 
-Please cite the performance measurement dataset in your publications if it helps your research using:
+Please cite Extra-P in your publications as follows if it helps your research:
+
+```
+@inproceedings{calotoiu_ea:2013:modeling,
+  author = {Calotoiu, Alexandru and Hoefler, Torsten and Poke, Marius and Wolf, Felix},
+  month = {November},
+  title = {Using Automated Performance Modeling to Find Scalability Bugs in Complex Codes},
+  booktitle = {Proc. of the ACM/IEEE Conference on Supercomputing (SC13), Denver, CO, USA},
+  year = {2013},
+  pages = {1--12},
+  publisher = {ACM},
+  isbn = {978-1-4503-2378-9},
+  doi = {10.1145/2503210.2503277}
+}
+```
+
+Please cite the performance measurement dataset used for this work in your publications if it helps your research using:
 
 ```
 @dataset{ritter_2023_10085298,
@@ -275,7 +292,7 @@ Please cite the performance measurement dataset in your publications if it helps
 }
 ```
 
-Please cite the version of Extra-P used for the evaluation of this paper in your publications if it helps your research using:
+Please cite the version of Extra-P used for the evaluation of this work in your publications if it helps your research using:
 
 ```
 @software{ritter_2023_10086772,
@@ -291,5 +308,22 @@ Please cite the version of Extra-P used for the evaluation of this paper in your
   version      = {1.0},
   doi          = {10.5281/zenodo.10086772},
   url          = {https://doi.org/10.5281/zenodo.10086772}
+}
+```
+
+Please cite the version of pyCubexR used for the evaluation of this work in your publications if it helps your research using:
+
+```
+@software{ritter_2023_10092353,
+  author       = {Ritter, Marcus and
+                  Geiß, Alexander},
+  title        = {{pyCubexR: a Python package for reading the Cube4 
+                   (.cubex) file format}},
+  month        = nov,
+  year         = 2023,
+  publisher    = {Zenodo},
+  version      = {1.0},
+  doi          = {10.5281/zenodo.10092353},
+  url          = {https://doi.org/10.5281/zenodo.10092353}
 }
 ```
