@@ -1,10 +1,24 @@
-# extrap-gpr
+# Cost-Effective Empirical Performance Modeling with Extra-P using Gaussian Process Regression (GPR)
 
-Evaluation code for the GPR journal paper. Contains the code to do a synthetic and case study analysis for different parameter-value selection strategies to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points.
+Evaluation code for the paper "Cost-Effective Empirical Performance Modeling". Contains the code to do a synthetic and case study analysis for different parameter-value selection strategies to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points.
+
+## Quick Setup using the Dockerfile
+
+For a quick setup of the evaluation environment we provide a Dockerfile that can be used to build an image that has all dependencies installed to run the evaluations scripts.
+The Dockerfile also downloads the required performance measurement dataset automatically.
+
+Build the docker: ``.
+Create an image: ``.
+Run the docker container: ``.
+Sample evaluation script usage sinde docker container: ``.
 
 ## Run the evaluation tool for the case studies
 
-For all case studies, besides RELEARN, the path to the data needs to be changed. The data can be found at: [Link](#).
+### Performance measurement dataset
+
+To run and reproduce the results for each benchmark, one first needs to obtain the performance measurements that were conducted by us for the evaluation. The performance measurement datasets can be found and downloaded at: [Datasets](https://zenodo.org/records/10085298?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJlZTI0ZGJhLTExZTktNDFhMi04ZGNjLTBjOTcxOTFiZGRkYSIsImRhdGEiOnt9LCJyYW5kb20iOiI2OWFkMjQyNmVmZGQwMmE2OWYwY2E5YmFlOWQ0OTAyMyJ9.43J0zSoKDZTC6aOI8xLqNP2fIf-AFV4DNvW3AvpW2aHLbz8Rjeq-bvVst2y7WCJY1hcJMkB8wDtB-92hhZh8zA). There is one .tar.gz file for each benchmark. Download and then unpack them.
+
+Using the following commands and provided scripts one can reproduce the results shown in the paper. For all case studies, besides RELEARN, the path to the data needs to be changed, depending on to which directory you unpacked/downloaded the datasets.
 
 ### RELEARN:
 
@@ -114,13 +128,21 @@ Leave all other parameters as is. There values have been carefully selected doin
 
 ## Bulding Extra-P from source
 
-1. `git clone https://github.com/extra-p/extrap.git`
+To run the code in this repo a specific version of Extra-P is required to ensure compatability.
+Therefore, please use the version that can be found at: [Extra-P](https://zenodo.org/records/10086772?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImI4ZmMwMjVjLWZkMTEtNGJkMy04NTQwLTBhZWYwYjc1ZDc3YiIsImRhdGEiOnt9LCJyYW5kb20iOiJmNTdiYmEzODc2YTc1Nzg0NjU3NTQwM2I2MTE4ZGFjMSJ9.ZKA8J_7Ejj9GtfaI0M3B50N-6aKwnzvYOk61QtYggdPl47B-7iPEu-6Qq0bTrBSckDcg7afh2XeyjioU3jVl4w)
+
+1. download the `.zip` file
+2. unzip the downloaded file
 2. `cd extrap`
 3. `python setup.py sdist bdist_wheel`
 4. `cd ..`
 5. `pip install -e extrap/`
 
 After installation add extrap in user installation to path if necessary: `export PATH="$HOME/.local/bin:$PATH"`.
+
+If you do not use the Dockerfile for the quick setup you have to install other python packages that are used by the analysis codes in this repo on the fly, e.g., scipy, pandas, if you do not have them installed already.
+
+## Measurement Point Selection Strategies
 
 ### CPF (cheapest points first) Strategy
 
@@ -216,8 +238,50 @@ arithmetic mean and then used as input value for a WhiteKernel() that is added t
 
 For the hybrid strategy the same applies as for the GPR strategy regarding the repetitions of measurement points and their selection.
 
-### Notes
+### License
 
-* Term contribution: Checking the term contribution makes a difference, since the functions are easier to model then, but there is no difference between the strategies wheter I check it or not. Overall the model accuracy of our approach looks worse if we don't check it.
-* Function Building Blocks: Using different building blocks, e.g., (a+b) (a*b) (a*b+a) (a*b+b), for 2,3,4 parameters does also make an impact on the overall model accuracy of our approach, but not on the different strategies. This is the case because it makes the modeling problem harder with a bigger variety of functions to model.
-* To make the results more readable in the plots, we generate the functions for evaluation once, and then use them again for the experiments with different budget values. We also set a random seed for the noise generation, so that the noise level generated does not vary for this experiments. Otherwise it looks like the accuracy differs for the baseline modeler that is using the full set of points all the time, even nothing is changed. This comes from the changing noise level on the data in fact.
+[BSD 3-Clause "New" or "Revised" License](LICENSE)
+
+## Citation
+
+Please cite the performance measurement dataset in your publications if it helps your research using:
+
+```
+@dataset{ritter_2023_10085298,
+  author       = {Ritter, Marcus and
+                  Calotoiu, Alexandru and
+                  Rinke, Sebastian and
+                  Reimann, Thorsten and
+                  Hoefler, Torsten and
+                  Wolf, Felix},
+  title        = {{Performance Measurement Dataset of the HPC 
+                   Benchmarks FASTEST, Kripke, LULESH, MiniFE,
+                   Quicksilver, and RELeARN for Scalability Studies
+                   with Extra-P}},
+  month        = nov,
+  year         = 2023,
+  publisher    = {Zenodo},
+  version      = {1.0},
+  doi          = {10.5281/zenodo.10085298},
+  url          = {https://doi.org/10.5281/zenodo.10085298}
+}
+```
+
+Please cite the version of Extra-P used for the evaluation of this paper in your publications if it helps your research using:
+
+```
+@software{ritter_2023_10086772,
+  author       = {Ritter, Marcus and
+                  Geiß, Alexander and
+                  Calotoiu, Alexandru and
+                  Wolf, Felix},
+  title        = {{Extra-P: Automated performance modeling for HPC 
+                   applications}},
+  month        = nov,
+  year         = 2023,
+  publisher    = {Zenodo},
+  version      = {1.0},
+  doi          = {10.5281/zenodo.10086772},
+  url          = {https://doi.org/10.5281/zenodo.10086772}
+}
+```
