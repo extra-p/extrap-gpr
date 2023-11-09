@@ -1,19 +1,52 @@
 # Cost-Effective Empirical Performance Modeling with Extra-P using Gaussian Process Regression (GPR)
 
-Evaluation code for the paper "Cost-Effective Empirical Performance Modeling." This repository contains the code that was used to run the synthetic analysis and the case study analysis to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points when using different measurement point selection strategies. The evaluated strategies are: Cheapest Point First (CPF), measurement point prediction via Gaussian Process Regression (GPR), and Hybrid (a combination of the CPF+GPR strategy).
+Evaluation code for the paper "Cost-Effective Empirical Performance Modeling." This repository contains the code that was used to run the synthetic analysis and the case study analysis to study Extra-P's accuracy, predictive power, budget usage/modeling cost, and number of used measurement points when using different measurement point selection strategies. The evaluated strategies are: Cheapest Point First (CPF), measurement point prediction via Gaussian Process Regression (GPR), and Hybrid (a combination of the CPF+GPR strategy). The code in this repository can be used to reproduce the results and plots.
 
 ## Quick setup using Docker
 
 For a quick setup of the evaluation environment, we provide a Dockerfile that can be used to build an image that has all dependencies installed to run the evaluation scripts. The Dockerfile also downloads the required performance measurement dataset automatically.
 
-NOTE: building the image from the Dockerfile might take several minutes up to half an hour as many dependencies have to be installed including tex to generate the plots.
+Steps: 
 
-Build a docker image from the provided Dockerfile: `docker build -t extrap-gpr .`.
-Run the image in a container: `docker run -it extrap-gpr /bin/bash`.
+1. Build a docker image from the provided Dockerfile: `docker build -t extrap-gpr .`
+2. Run the image in a container: `docker run -it extrap-gpr /bin/bash`
+3. Run the analysis scripts inside the Docker container.
+
+NOTE: Building the image from the Dockerfile might take several minutes to half an hour as many dependencies have to be installed including tex to generate the plots, the datasets, Extra-P, pycubexr, ...
+
+NOTE: Ideally you do the manual setup and run the analysis scripts on a HPC system in parallel. The analysis, especially for the case studies and synthetic evaluation runs with 4 parameters and large number of evaluation functions are very slow when run in serial and might take days to finish one config.
 
 ### Reproduction of the Evaluation & Case Study results using Docker
 
+xxx
 
+## Performance measurement dataset
+
+To run and reproduce the results for each benchmark, one first needs to obtain the performance measurements that were conducted by us for the evaluation. The performance measurement datasets can be found and downloaded at: [Datasets](https://zenodo.org/records/10085298?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJlZTI0ZGJhLTExZTktNDFhMi04ZGNjLTBjOTcxOTFiZGRkYSIsImRhdGEiOnt9LCJyYW5kb20iOiI2OWFkMjQyNmVmZGQwMmE2OWYwY2E5YmFlOWQ0OTAyMyJ9.43J0zSoKDZTC6aOI8xLqNP2fIf-AFV4DNvW3AvpW2aHLbz8Rjeq-bvVst2y7WCJY1hcJMkB8wDtB-92hhZh8zA). There is one .tar.gz file for each benchmark. Download and then unpack them.
+
+## Extra-P installation
+
+The code in this repository uses a specific version of Extra-P for the analysis. If not using the provided Dockerfile you have to build this version of Extra-P from source. This specific version of Extra-P can be found at [Extra-P](https://zenodo.org/records/10086772?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImI4ZmMwMjVjLWZkMTEtNGJkMy04NTQwLTBhZWYwYjc1ZDc3YiIsImRhdGEiOnt9LCJyYW5kb20iOiJmNTdiYmEzODc2YTc1Nzg0NjU3NTQwM2I2MTE4ZGFjMSJ9.ZKA8J_7Ejj9GtfaI0M3B50N-6aKwnzvYOk61QtYggdPl47B-7iPEu-6Qq0bTrBSckDcg7afh2XeyjioU3jVl4w). You can do this by following the below steps.
+
+Steps:
+
+1. download the `.zip` file at [Extra-P](https://zenodo.org/records/10086772?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImI4ZmMwMjVjLWZkMTEtNGJkMy04NTQwLTBhZWYwYjc1ZDc3YiIsImRhdGEiOnt9LCJyYW5kb20iOiJmNTdiYmEzODc2YTc1Nzg0NjU3NTQwM2I2MTE4ZGFjMSJ9.ZKA8J_7Ejj9GtfaI0M3B50N-6aKwnzvYOk61QtYggdPl47B-7iPEu-6Qq0bTrBSckDcg7afh2XeyjioU3jVl4w)
+2. unzip the downloaded file `unzip extrap.zip -d extrap`
+3. `pip install -e extrap/extrap-vNext/`
+
+After installation add extrap in user installation to path if necessary: `export PATH="$HOME/.local/bin:$PATH"`.
+
+If you do not use the Dockerfile for the quick setup you have to install other python packages that are used by the analysis codes in this repo on the fly, e.g., scipy, pandas, if you do not have them installed already.
+
+## pyCubexR installation
+
+The code in this repository uses a specific version of pyCubexR for the analysis. This software is used by Extra-P to read in files in the Cube4 format. If not using the provided Dockerfile you have to build this version of pyCubexR from source. The specific version of pyCubexR is available at [pyCubexR](https://zenodo.org/records/10092353?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjczNzY4Njg1LTQ2NDAtNGFhOC05ZGU1LWU3OGU1YmQ0ZWY3ZiIsImRhdGEiOnt9LCJyYW5kb20iOiI4Y2MwMzc5MzQxOTJlZjkwMzllMWZkMDUwMzlmMjdlNSJ9.4r0-tpFyYPOttuUlZkMglPgNS21oqR_AvXpyMRPJuSlr5ZJ-S28MtmcmQUGm7aujNKyDiypwPl8t7qqwNuk_Dw). You can do this by following the below steps.
+
+Steps:
+
+1. download the `.zip` file at [pyCubexR](https://zenodo.org/records/10092353?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjczNzY4Njg1LTQ2NDAtNGFhOC05ZGU1LWU3OGU1YmQ0ZWY3ZiIsImRhdGEiOnt9LCJyYW5kb20iOiI4Y2MwMzc5MzQxOTJlZjkwMzllMWZkMDUwMzlmMjdlNSJ9.4r0-tpFyYPOttuUlZkMglPgNS21oqR_AvXpyMRPJuSlr5ZJ-S28MtmcmQUGm7aujNKyDiypwPl8t7qqwNuk_Dw)
+2. unzip the downloaded file `unzip pycubexr-master.zip -d pycubexr`
+3. `pip install -e pycubexr/pycubexr-master/`
 
 ## Manual setup
 
@@ -21,15 +54,16 @@ Run the image in a container: `docker run -it extrap-gpr /bin/bash`.
 * install latex (used for plotting) `sudo apt-get install -y texlive-latex-extra`
 * https://zenodo.org/records/10092353?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjczNzY4Njg1LTQ2NDAtNGFhOC05ZGU1LWU3OGU1YmQ0ZWY3ZiIsImRhdGEiOnt9LCJyYW5kb20iOiI4Y2MwMzc5MzQxOTJlZjkwMzllMWZkMDUwMzlmMjdlNSJ9.4r0-tpFyYPOttuUlZkMglPgNS21oqR_AvXpyMRPJuSlr5ZJ-S28MtmcmQUGm7aujNKyDiypwPl8t7qqwNuk_Dw
 
-### Run the evaluation tool for the case studies
+### Reproduction of the Evaluation & Case Study results using Manual Setup
 
-### Performance measurement dataset
+To recreate the evaluation and case study results using the manual setup follow the instructions in the following sections.
 
-To run and reproduce the results for each benchmark, one first needs to obtain the performance measurements that were conducted by us for the evaluation. The performance measurement datasets can be found and downloaded at: [Datasets](https://zenodo.org/records/10085298?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJlZTI0ZGJhLTExZTktNDFhMi04ZGNjLTBjOTcxOTFiZGRkYSIsImRhdGEiOnt9LCJyYW5kb20iOiI2OWFkMjQyNmVmZGQwMmE2OWYwY2E5YmFlOWQ0OTAyMyJ9.43J0zSoKDZTC6aOI8xLqNP2fIf-AFV4DNvW3AvpW2aHLbz8Rjeq-bvVst2y7WCJY1hcJMkB8wDtB-92hhZh8zA). There is one .tar.gz file for each benchmark. Download and then unpack them.
+#### Case Studies
 
 Using the following commands and provided scripts one can reproduce the results shown in the paper. For all case studies, besides RELEARN, the path to the data needs to be changed, depending on to which directory you unpacked/downloaded the datasets.
+The `./run_analysis.sh` and `./process.sh` scripts are build for usage on a Cluster or HPC system. The parallelize the analysis process using jobs to speed it up.
 
-### RELEARN:
+##### RELEARN:
 
 1. `cd relearn`
 2. (single run) `python ../case_study.py --text relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20 --repetition 2`
@@ -41,7 +75,7 @@ Using the following commands and provided scripts one can reproduce the results 
 
 Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for run with all available kernels.
 
-### LULESH:
+##### LULESH:
 
 1. `cd lulesh/lichtenberg`
 2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/lulesh/ --processes 0 --parameters "p","s" --eval_point "1000","35" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
@@ -51,7 +85,7 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
 7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
-### MiniFE:
+##### MiniFE:
 
 1. `cd minife/lichtenberg`
 2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
@@ -61,7 +95,7 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
 7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
-### FASTEST:
+##### FASTEST:
 
 1. `cd fastest`
 2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/fastest/ --processes 0 --parameters "p","size" --eval_point "512","65536" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
@@ -71,7 +105,7 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
 7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
-### Kripke:
+##### Kripke:
 
 1. `cd kripke`
 2. (single run) `python ../case_study.py --cube /work/scratch/mr52jiti/data/kripke/ --processes 0 --parameters "p","d","g" --eval_point "32768","12","160" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
@@ -81,7 +115,7 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 6. `python single_plot.py --path filtered/analysis_results/ --name results_filtered --reps 5`
 7. `python budget_usage_plot.py --path filtered/analysis_results/ --name budget_usage_filtered --reps 5`
 
-### Quicksilver:
+##### Quicksilver:
 
 1. `cd quicksilver`
 2. (single run) `python ../../case_study.py --cube /work/scratch/mr52jiti/data/quicksilver/ --processes 0 --parameters "p","m","n" --eval_point "512","20","60" --filter 1 --budget 100 --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5`
@@ -94,13 +128,15 @@ Use `--min 9` for filtered run with `>1%` runtime kernels. Use `--min 13` for ru
 To check the number of measurements `ls /work/scratch/mr52jiti/data/quicksilver/ | wc -l`.
 Some of the measurements did not run successfully. See with `ls *.er /work/scratch/mr52jiti/data/quicksilver/quicksilver.p*/profile.cubex | wc -l` the ones that actually have a profile.cubex.
 
-## Create analysis plot for all case studies
+#### Create analysis plot for all case studies
+
+After completing the analysis for all of the above case studies you can follow the below steps to recreate the plots containing the results for all case studies.
+
+Steps:
 
 1. `python paper_plot_case_studies.py`
 
-Running this command will create one plot containing all key information of the case studies.
-
-## Noise analysis for the case studies
+#### Noise analysis for the case studies
 
 To reproduce the noise analysis plot for the case studies use the analysis script provided.
 
@@ -135,25 +171,10 @@ Use `--nr-functions <nr_functions>` the number of synthetically generated functi
 
 Leave all other parameters as is. There values have been carefully selected doing a grid search for the best configurations for all supported number of model parameters and noise levels.
 
-## Bulding Extra-P from source
 
-To run the code in this repo a specific version of Extra-P is required to ensure compatability.
-Therefore, please use the version that can be found at: [Extra-P](https://zenodo.org/records/10086772?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImI4ZmMwMjVjLWZkMTEtNGJkMy04NTQwLTBhZWYwYjc1ZDc3YiIsImRhdGEiOnt9LCJyYW5kb20iOiJmNTdiYmEzODc2YTc1Nzg0NjU3NTQwM2I2MTE4ZGFjMSJ9.ZKA8J_7Ejj9GtfaI0M3B50N-6aKwnzvYOk61QtYggdPl47B-7iPEu-6Qq0bTrBSckDcg7afh2XeyjioU3jVl4w)
+## Quick Introduction of the Measurement Point Selection Strategies
 
-1. download the `.zip` file
-2. unzip the downloaded file
-2. `cd extrap`
-3. `python setup.py sdist bdist_wheel`
-4. `cd ..`
-5. `pip install -e extrap/`
-
-After installation add extrap in user installation to path if necessary: `export PATH="$HOME/.local/bin:$PATH"`.
-
-If you do not use the Dockerfile for the quick setup you have to install other python packages that are used by the analysis codes in this repo on the fly, e.g., scipy, pandas, if you do not have them installed already.
-
-## Measurement Point Selection Strategies
-
-### CPF (cheapest points first) Strategy
+### CPF (Cheapest Points First) Strategy
 
 1. Measure the cheapest available lines of five points per
 parameter. Use these points to create a first model using
@@ -170,7 +191,7 @@ return to step 2. (or if there is more budget available for modeling...)
 
 This strategy always uses 4 repetitions per measurement point. In the previous paper we found that our results showed that 4 repetitions are optimal. 
 
-### GPR strategy
+### GPR (Gaussian Progress Regression) Strategy
 
 1. Measure the cheapest available lines of five points per
 parameter. Use these points to create a first model using
@@ -230,8 +251,7 @@ Our GPR kernel then looks like this:
 
 `kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=mean_noise)`
 
-
-### Hybrid strategy
+### Hybrid Strategy (CPF+GPR)
 
 1. Measure the cheapest available lines of five points per
 parameter. Use these points to create a first model using
