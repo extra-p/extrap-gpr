@@ -22,7 +22,22 @@ xxx
 
 ## Performance measurement dataset
 
-To run and reproduce the results for each benchmark, one first needs to obtain the performance measurements that were conducted by us for the evaluation. The performance measurement datasets can be found and downloaded at: [Datasets](https://zenodo.org/records/10085298?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJlZTI0ZGJhLTExZTktNDFhMi04ZGNjLTBjOTcxOTFiZGRkYSIsImRhdGEiOnt9LCJyYW5kb20iOiI2OWFkMjQyNmVmZGQwMmE2OWYwY2E5YmFlOWQ0OTAyMyJ9.43J0zSoKDZTC6aOI8xLqNP2fIf-AFV4DNvW3AvpW2aHLbz8Rjeq-bvVst2y7WCJY1hcJMkB8wDtB-92hhZh8zA). There is one .tar.gz file for each benchmark. Download and then unpack them.
+To run and reproduce the results for each benchmark, one first needs to obtain the performance measurements that were conducted by us for the evaluation. The performance measurement datasets can be found and downloaded at: [Datasets](https://zenodo.org/records/10085298?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImJlZTI0ZGJhLTExZTktNDFhMi04ZGNjLTBjOTcxOTFiZGRkYSIsImRhdGEiOnt9LCJyYW5kb20iOiI2OWFkMjQyNmVmZGQwMmE2OWYwY2E5YmFlOWQ0OTAyMyJ9.43J0zSoKDZTC6aOI8xLqNP2fIf-AFV4DNvW3AvpW2aHLbz8Rjeq-bvVst2y7WCJY1hcJMkB8wDtB-92hhZh8zA). There is one .tar.gz file for each benchmark. Download and then unpack them. You can do this by following the below steps.
+
+Steps:
+
+1. wget https://zenodo.org/records/10085298/files/fastest.tar.gz
+2. wget https://zenodo.org/records/10085298/files/kripke.tar.gz
+3. wget https://zenodo.org/records/10085298/files/lulesh.tar.gz
+4. wget https://zenodo.org/records/10085298/files/minife.tar.gz
+5. wget https://zenodo.org/records/10085298/files/quicksilver.tar.gz
+6. wget https://zenodo.org/records/10085298/files/relearn.tar.gz
+7. tar -xzf fastest.tar.gz
+8. tar -xzf kripke.tar.gz
+9. tar -xzf lulesh.tar.gz
+10. tar -xzf minife.tar.gz
+11. tar -xzf quicksilver.tar.gz
+12. tar -xzf relearn.tar.gz
 
 ## Extra-P installation
 
