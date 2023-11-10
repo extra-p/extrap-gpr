@@ -14,6 +14,6 @@ mkdir results
 mv accuracy_*.png results/
 mv additional_points.png results/
 mv cost.png results/
-./archive.sh all
-python3 single_plot.py --path all/analysis_results/ --name results_all --reps 2 --min 9 --filter 1
-python3 budget_usage_plot.py --path all/analysis_results/ --name budget_usage_all --reps 2 --min 9
+./archive.sh final
+python3 single_plot.py --path final/analysis_results/ --name results_final --reps 4
+python3 budget_usage_plot.py --path final/analysis_results/ --name budget_usage_final --reps 4
