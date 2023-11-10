@@ -5,7 +5,7 @@ import math
 
 def main():
 
-    counter = 9.0
+    counter = 15.0
 
     while counter <= 100.0:
         
@@ -28,7 +28,7 @@ ml restore lulesh
 
 SECONDS=0;
 
-python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 1 --budget """+str(counter)+""" --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5
+python ../../case_study.py --cube /work/scratch/mr52jiti/data/minife/ --processes 0 --parameters "p","n" --eval_point "2048","350" --filter 0 --budget """+str(counter)+""" --plot True --normalization True --grid-search 3 --base-values 2 --hybrid-switch 20 --repetition 5
 
 echo $SECONDS"""
 
