@@ -5,7 +5,7 @@ import math
 
 def main():
 
-    counter = 9.0
+    counter = 13.0
 
     while counter <= 100.0:
         
@@ -28,7 +28,7 @@ ml restore lulesh
 
 SECONDS=0;
 
-python ../case_study.py --text relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 1 --budget """+str(counter)+""" --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20 --repetition 2
+python ../case_study.py --text relearn_data.txt --processes 0 --parameters "p","n" --eval_point "512","9000" --filter 0 --budget """+str(counter)+""" --plot True --normalization True --grid-search 3 --base-values 1 --hybrid-switch 20 --repetition 2
 
 echo $SECONDS"""
 
