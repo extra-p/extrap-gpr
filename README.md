@@ -32,7 +32,17 @@ Second, in the root folder, create the plots for the case studies and run the no
 
 #### Synthetic Evaluation
 
-Text.
+First, run the analysis for each combination of the number of model parameters and noise level. The following steps are an example for 2 parameters and 1% noise; follow the same steps for all other experiments.
+
+1. `cd synthetic_evaluation/2_parameter/1_noise/`
+2. `./docker_run_analysis.sh`
+
+Second, in the folder `synthetic_evaluation/` run the scripts to plot the results of the synthetic data experiments.
+
+1. `python paper_plot.py`
+2. `python paper_plot_buckets.py`
+3. `python paper_plot_costs.py`
+4. `python paper_plot_points.py`
 
 ## Performance measurement dataset
 
