@@ -12,13 +12,27 @@ Steps:
 2. Run the image in a container: `docker run -it extrap-gpr /bin/bash`
 3. Run the analysis scripts inside the Docker container.
 
-NOTE: Building the image from the Dockerfile might take several minutes to half an hour as many dependencies have to be installed including tex to generate the plots, the datasets, Extra-P, pycubexr, ...
+NOTE: Building the image from the Dockerfile might take several minutes to half an hour as many dependencies have to be installed, including tex to generate the plots, the datasets, Extra-P, pycubexr, ...
 
-NOTE: Ideally you do the manual setup and run the analysis scripts on a HPC system in parallel. The analysis, especially for the case studies and synthetic evaluation runs with 4 parameters and large number of evaluation functions are very slow when run in serial and might take days to finish one config.
+NOTE: Ideally, you do the manual setup and run the analysis scripts on an HPC system in parallel. The analysis, especially for the case studies and synthetic evaluation, runs with four parameters and many evaluation functions that are very slow when run in serial and might take days to finish one config.
 
 ### Reproduction of the Evaluation & Case Study results using Docker
 
-xxx
+#### Case Studies
+
+First, run the analysis for each case study. The following steps are an example for RELeARN; follow the same steps for all other case studies.
+
+1. `cd relearn`
+2. `./docker_run_analysis.sh`
+
+Second, in the root folder, create the plots for the case studies and run the noise analysis.
+
+1. `python paper_plot_case_studies.py`
+2. `./analyze_noise.sh`
+
+#### Synthetic Evaluation
+
+Text.
 
 ## Performance measurement dataset
 
