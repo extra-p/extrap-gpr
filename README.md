@@ -89,9 +89,28 @@ Steps:
 
 ## Manual setup
 
-* install pip package dependencies `pip install sympy,scikit-learn,natsort,pandas`
-* install latex (used for plotting) `sudo apt-get install -y texlive-latex-extra`
-* https://zenodo.org/records/10092353?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjczNzY4Njg1LTQ2NDAtNGFhOC05ZGU1LWU3OGU1YmQ0ZWY3ZiIsImRhdGEiOnt9LCJyYW5kb20iOiI4Y2MwMzc5MzQxOTJlZjkwMzllMWZkMDUwMzlmMjdlNSJ9.4r0-tpFyYPOttuUlZkMglPgNS21oqR_AvXpyMRPJuSlr5ZJ-S28MtmcmQUGm7aujNKyDiypwPl8t7qqwNuk_Dw
+General dependencies that should be installed:
+
+* python3
+* wget
+* git
+* unzip
+* texlive
+* latex
+
+Install the specific version of Extra-P used for this analysis:
+
+1. `wget https://zenodo.org/records/10086772/files/extrap.zip`
+2. `unzip extrap.zip -d extrap`
+3. `pip install -e extrap/extrap-vNext/`
+
+Install the specific verison of [pyCubexR](https://zenodo.org/records/10092353?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjczNzY4Njg1LTQ2NDAtNGFhOC05ZGU1LWU3OGU1YmQ0ZWY3ZiIsImRhdGEiOnt9LCJyYW5kb20iOiI4Y2MwMzc5MzQxOTJlZjkwMzllMWZkMDUwMzlmMjdlNSJ9.4r0-tpFyYPOttuUlZkMglPgNS21oqR_AvXpyMRPJuSlr5ZJ-S28MtmcmQUGm7aujNKyDiypwPl8t7qqwNuk_Dw) used for this analysis:
+
+1. `wget https://zenodo.org/records/10092353/files/pycubexr-master.zip`
+2. `unzip pycubexr-master.zip -d pycubexr`
+3. `pip install -e pycubexr/pycubexr-master/`
+
+Install the pip dependencies: sympy, scikit-learn, natsort, pandas.
 
 ### Reproduction of the Evaluation & Case Study results using Manual Setup
 
