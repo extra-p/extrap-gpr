@@ -241,6 +241,8 @@ def main():
         hybrid_costs_lulesh,
     ]
     
+    print(max(gpr_costs_lulesh), max(generic_costs_lulesh))
+    
     ###########
     # MiniFE #
     ###########
@@ -442,6 +444,9 @@ def main():
         hybrid_costs_relearn,
     ]
     
+    print("relearn")
+    print(max(full_values_relearn), max(generic_values_relearn), max(gpr_values_relearn))
+    
     labels_acc = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy']
     labels_points = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Minimum points required $\\bar{p}_{min}$']
     labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. modeling requirement $\\bar{b}_{min}$']
@@ -521,8 +526,8 @@ def main():
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
     ax3.set_xlim(x_values_fastest[0],103)
-    ax3.set_ylim(0,135)
-    ax3.set_yticks(np.arange(0, 140, 20))
+    ax3.set_ylim(50,135)
+    ax3.set_yticks(np.arange(50, 140, 15))
     ax3.set_xticks([20,30,40,50,60,70,80,90,100])
     ax3.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
@@ -531,7 +536,7 @@ def main():
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
     ax32 = ax3.twinx() 
-    ax32.set_ylabel("\\textbf{FASTEST}\n $\\bar{B}_{min}="+str(x_values_fastest[0])+"\%$\n"+str(nr_func_modeled_fastest)+" kernels", fontsize=8)
+    ax32.set_ylabel("\\textbf{FASTEST}\n $\\bar{B}_{min}="+str(x_values_fastest[0])+"\%$\n"+str(nr_func_modeled_fastest)+" kernels\n $\\bar{n}=8.17\%$", fontsize=8)
     ax32.tick_params(right = False)
     ax32.set_yticks([])
     #ax3.tick_params(axis='x', labelsize=7)
@@ -589,13 +594,14 @@ def main():
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax6.set_xlim(x_values_kripke[0],103)
-    ax6.set_yticks(np.arange(0, ((150-1)*5)+75, 100))
+    ax6.set_ylim(400,800)
+    ax6.set_yticks(np.arange(400, ((150-1)*5)+75, 75))
     ax6.set_xticks([2,10,20,30,40,50,60,70,80,90,100])
     ax6.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax62 = ax6.twinx() 
-    ax62.set_ylabel("\\textbf{Kripke}\n $\\bar{B}_{min}="+str(x_values_kripke[0])+"\%$\n"+str(nr_func_modeled_kripke)+" kernels", fontsize=8)
+    ax62.set_ylabel("\\textbf{Kripke}\n $\\bar{B}_{min}="+str(int(x_values_kripke[0]))+"\%$\n"+str(nr_func_modeled_kripke)+" kernels\n $\\bar{n}=2.17\%$", fontsize=8)
     ax62.tick_params(right = False)
     ax62.set_yticks([])
     
@@ -654,7 +660,8 @@ def main():
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
     ax9.set_xlim(x_values_lulesh[0],103)
-    ax9.set_yticks(np.arange(0, 25*5+20, 20))
+    ax9.set_ylim(40,130)
+    ax9.set_yticks(np.arange(40, 25*5+20, 20))
     ax9.set_xticks([20,30,40,50,60,70,80,90,100])
     ax9.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
@@ -663,7 +670,7 @@ def main():
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
     ax92 = ax9.twinx() 
-    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(x_values_lulesh[0])+"\%$\n 7 kernels", fontsize=8)
+    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(int(x_values_lulesh[0]))+"\%$\n 7 kernels\n $\\bar{n}=4.72\%$", fontsize=8)
     ax92.tick_params(right = False)
     ax92.set_yticks([])
     #ax9.tick_params(axis='x', labelsize=7)
@@ -720,7 +727,8 @@ def main():
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
     ax12.set_xlim(x_values_minife[0],103)
-    ax12.set_yticks(np.arange(0, 25*5+20, 20))
+    ax12.set_ylim(35,130)
+    ax12.set_yticks(np.arange(35, 25*5+20, 20))
     ax12.set_xticks([20,30,40,50,60,70,80,90,100])
     ax12.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
@@ -729,7 +737,7 @@ def main():
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
     ax122 = ax12.twinx() 
-    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n 23 kernels", fontsize=8)
+    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n 23 kernels\n $\\bar{n}=10.22\%$", fontsize=8)
     ax122.tick_params(right = False)
     ax122.set_yticks([])
     
@@ -792,12 +800,13 @@ def main():
     ax15.grid(alpha=0.3, which='major')
     ax15.grid(alpha=0.3, which='minor')
     ax15.set_xlim(x_values_quicksilver[0],103)
-    ax15.set_yticks(np.arange(0, 503+55, 75))
+    ax15.set_ylim(75,525)
+    ax15.set_yticks(np.arange(75, 503+55, 75))
     ax15.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax15.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     #ax15.tick_params(axis='x', labelsize=7)
     ax152 = ax15.twinx() 
-    ax152.set_ylabel("\\textbf{Quicksilver}\n $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n"+str(nr_func_modeled_quicksilver)+" kernels", fontsize=8)
+    ax152.set_ylabel("\\textbf{Quicksilver}\n $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n"+str(nr_func_modeled_quicksilver)+" kernels\n $\\bar{n}=5.66\%$", fontsize=8)
     ax152.tick_params(right = False)
     ax152.set_yticks([])
     
@@ -854,7 +863,8 @@ def main():
     ax18.grid(alpha=0.3, which='major')
     ax18.grid(alpha=0.3, which='minor')
     ax18.set_xlim(x_values_relearn[0],103)
-    ax18.set_yticks(np.arange(0, ((25-1)*2)+5, 10))
+    ax18.set_ylim(15,50)
+    ax18.set_yticks(np.arange(15, ((25-1)*2)+5, 5))
     ax18.set_xticks([20,30,40,50,60,70,80,90,100])
     ax18.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
@@ -864,7 +874,7 @@ def main():
     ax18.grid(alpha=0.3, which='minor')
     #ax18.tick_params(axis='x', labelsize=7)
     ax182 = ax18.twinx() 
-    ax182.set_ylabel("\\textbf{RELeARN}\n $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n"+str(nr_func_modeled_relearn)+" kernels", fontsize=8)
+    ax182.set_ylabel("\\textbf{RELeARN}\n $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n"+str(nr_func_modeled_relearn)+" kernels\n $\\bar{n}=4.5\%$", fontsize=8)
     ax182.tick_params(right = False)
     ax182.set_yticks([])
     
