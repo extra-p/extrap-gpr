@@ -241,8 +241,6 @@ def main():
         hybrid_costs_lulesh,
     ]
     
-    print(max(gpr_costs_lulesh), max(generic_costs_lulesh))
-    
     ###########
     # MiniFE #
     ###########
@@ -443,9 +441,6 @@ def main():
         gpr_costs_relearn,
         hybrid_costs_relearn,
     ]
-    
-    print("relearn")
-    print(max(full_values_relearn), max(generic_values_relearn), max(gpr_values_relearn))
     
     labels_acc = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy']
     labels_points = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Minimum points required $\\bar{p}_{min}$']
