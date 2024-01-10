@@ -148,7 +148,7 @@ def main():
         elif "kripke" in f:
             x_label = "Kripke\n(Vulcan)"
         elif "relearn" in f:
-            x_label = "RELaARN\n(Lichtenberg)"
+            x_label = "RELeARN\n(Lichtenberg)"
         elif "quicksilver" in f:
             x_label = "Quicksilver\n(Lichtenberg)"
         elif "fastest" in f:
@@ -161,10 +161,16 @@ def main():
             )
         
         dataset.append(x)
-        
-    #print(dataset)
     
-    plot_noise(dataset)
+    new_dataset = []
+    new_dataset.append(dataset[3])
+    new_dataset.append(dataset[0])
+    new_dataset.append(dataset[1])
+    new_dataset.append(dataset[2])
+    new_dataset.append(dataset[4])
+    new_dataset.append(dataset[5])
+    
+    plot_noise(new_dataset)
 
 
 if __name__ == "__main__":
