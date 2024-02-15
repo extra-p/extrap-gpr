@@ -106,6 +106,12 @@ def main():
         gpr_costs_fastest,
         hybrid_costs_fastest,
     ]
+
+    print("fastest")
+    a = max(generic_costs_fastest)
+    b = max(gpr_costs_fastest)
+    print(a,b)
+    print(a/b)
     
     ###########
     # KRIPKE #
@@ -173,6 +179,12 @@ def main():
         gpr_costs_kripke,
         hybrid_costs_kripke,
     ]
+
+    print("kripke")
+    a = max(generic_costs_kripke)
+    b = max(gpr_costs_kripke)
+    print(a,b)
+    print(a/b)
     
     ###########
     # LULESH  #
@@ -240,6 +252,12 @@ def main():
         gpr_costs_lulesh,
         hybrid_costs_lulesh,
     ]
+
+    print("lulesh")
+    a = max(generic_costs_lulesh)
+    b = max(gpr_costs_lulesh)
+    print(a,b)
+    print(a/b)
     
     ###########
     # MiniFE #
@@ -307,6 +325,12 @@ def main():
         gpr_costs_minife,
         hybrid_costs_minife,
     ]
+
+    print("minife")
+    a = max(generic_costs_minife)
+    b = max(gpr_costs_minife)
+    print(a,b)
+    print(a/b)
     
     ###########
     # Quicksilver #
@@ -374,7 +398,13 @@ def main():
         gpr_costs_quicksilver,
         hybrid_costs_quicksilver,
     ]
-    
+
+    print("quicksilver")
+    a = max(generic_costs_quicksilver)
+    b = max(gpr_costs_quicksilver)
+    print(a,b)
+    print(a/b)
+
     ###########
     # relearn #
     ###########
@@ -441,6 +471,12 @@ def main():
         gpr_costs_relearn,
         hybrid_costs_relearn,
     ]
+
+    print("relearn")
+    a = max(generic_costs_relearn)
+    b = max(gpr_costs_relearn)
+    print(a,b)
+    print(a/b)
     
     labels_acc = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy']
     labels_points = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Minimum points required $\\bar{p}_{min}$']
