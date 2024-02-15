@@ -312,9 +312,6 @@ def analyze_callpath(inputs):
 
     # create copy of the cost dict
     remaining_points = copy.deepcopy(cost)
-
-    #TODO: debug only remove!!!
-    print("DEBUG remaining_points:",remaining_points)
     
     # create copy of the cost dict for the minimum experiment with gpr and hybrid strategies
     remaining_points_min = copy.deepcopy(cost)
