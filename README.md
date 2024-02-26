@@ -278,23 +278,26 @@ depending on factors such as the noise level on the measurements, the number of 
 The weight function looks as follows:
 
 $$w_n=tanh(\frac{1}{4} \cdot n-\frac{5}{2})$$
+
 $$w_r=2^{\frac{1}{2} \cdot r - \frac{1}{2}}$$
+
 $$w=w_n + w_r$$
 
-The weight function is optimized so that at low noise levels taking new points is cheaper, as more repetitions of the same measurement point are less usefull. For high noise levels, repetitions are favored over new points if they are cheaper to counter the effects of noise.
+Where $n$ is the mean noise level found in the measurements, $w$ is the weight for a points cost, the sum of the individual noise $w_n$ and repetitions weights $w_r$, considering the noise level on the measurements $n$ and the number of repetitions of this point that have already been measured $r$.
 
-$$h(x) = \frac{cost(x)^2 \cdot w}{gp_{cov}(x,x')^2}$$
-
-where $n$ is the mean noise level found in the measurements,
-$w$ is the weight for a points cost, the sum of the individual noise $w_n$ and repetitions weights $w_r$, considering the noise level on the measurements $n$ and the number of repetitions of this point that have already been measured $r$.
-
-$h(x)$ is the cost of a specific measurement point $x$, cost information of the so far
-already selected measurement points $cost(x)$, the covariance function of the
-Gaussian process $gp_{cov}(x,x')$, which expresses the expectation that points with similar predictor values, $x$ and $x'$ will have similar response values...
+Lower and upper bound for $r$ and $n$ are:
 
 $0\leq n \leq 100$
 
 $1\leq r \leq 10$
+
+The weight function is optimized so that at low noise levels, taking new points is cheaper, as more repetitions of the same measurement point are less useful. For high noise levels, repetitions are favored over new points if they are cheaper to counter the effects of noise.
+
+$$h(x) = \frac{cost(x)^2 \cdot w}{gp_{cov}(x,x')^2}$$
+
+$h(x)$ is the cost of a specific measurement point $x$, cost information of the so far
+already selected measurement points $cost(x)$, the covariance function of the
+Gaussian process $gp_{cov}(x,x')$, which expresses the expectation that points with similar predictor values, $x$ and $x'$ will have similar response values...
 
 we use a [Matern](https://en.wikipedia.org/wiki/Mat%C3%A9rn_covariance_function) $K_{Matern}$ covariance function, see also [here](https://scikit-learn.org/stable/modules/gaussian_process.html):
 
