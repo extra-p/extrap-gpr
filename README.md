@@ -293,7 +293,7 @@ $1\leq r \leq 10$
 
 The weight function is optimized so that at low noise levels, taking new points is cheaper, as more repetitions of the same measurement point are less useful. For high noise levels, repetitions are favored over new points if they are cheaper to counter the effects of noise.
 
-$$h(x) = \frac{cost(x)^2 \cdot w}{gp_{cov}(x,x')^2}$$
+$$h(x) = \frac{cost(x)^2 \cdot w}{K_{Matern}(x,x')^2}$$
 
 $h(x)$ is the cost of a specific measurement point $x$, cost information of the so far
 already selected measurement points $cost(x)$, the covariance function of the
