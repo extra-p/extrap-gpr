@@ -277,7 +277,7 @@ depending on factors such as the noise level on the measurements, the number of 
 
 The weight function looks as follows:
 
-$$w_n=tanh(\frac{1}{4} \cdot n-\frac{5}{2})$$
+$$w_n=-tanh(\frac{1}{4} \cdot n-\frac{5}{2})$$
 
 $$w_r=2^{\frac{1}{2} \cdot r - \frac{1}{2}}$$
 
@@ -301,14 +301,18 @@ Gaussian process $gp_{cov}(x,x')$, which expresses the expectation that points w
 
 we use a [Matern](https://en.wikipedia.org/wiki/Mat%C3%A9rn_covariance_function) $K_{Matern}$ covariance function, see also [here](https://scikit-learn.org/stable/modules/gaussian_process.html):
 
-$$K_{Matern}=(x,x')=\frac{2^{1-\nu}}{\Gamma(\nu)}\left(\frac{\sqrt{2\nu|d|}}{\ell}\right) K_{\nu} \left( \frac{\sqrt{2\nu|d|}}{\ell} \right)$$
+$$K_{Matern}(x_i,x_j)=\frac{1}{\Gamma(\nu)2^{\nu-1}}\left(\frac{\sqrt{2\nu}}{\ell}d(x_i,x_j) \right)^\nu K_{\nu} \left( \frac{\sqrt{2\nu}}{\ell} d(x_i,x_j) \right)$$
 
 The distance is $d=x-x'$. $\ell$ is the characteristic length-scale of the process (practically, "how close" two points x and x' have to be to influence each other significantly).
 
 $K_{\nu}$ is the modified [Bessel](https://en.wikipedia.org/wiki/Bessel_function#Modified_Bessel_functions) function of order $\nu$. $\Gamma(\nu)$ is the [gamma](https://en.wikipedia.org/wiki/Gamma_function) function evaluated at $\nu$.
 
-In addition we use a white kernel to explain the noise of the signal as independently and identically normally-distributed. The parameter noise_level equals the variance of this noise.
+In addition, we use a white kernel to explain the noise of the signal as independently and identically normally distributed. The parameter noise_level equals the variance of this noise.
 
+The white kernel:
+
+if $x_i=x_j$ then $k(x_i,x_j) = n$, else $k(x_i,x_j) = 0$.
+ 
 Our GPR kernel then looks like this:
 
 `kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=mean_noise)`
