@@ -359,6 +359,168 @@ def main():
         #hybrid_values_10
     ]
     
+    ############################################################################################################
+    
+    print("m=2, n=+-1%")
+    
+    full_B_max_2_1 = 0
+    maxv = 0
+    for i in range(len(full_values_1)):
+        if full_values_1[i] >= maxv:
+            full_B_max_2_1 = x_values[i]
+    full_max_2_1 = max(full_values_1)
+    print("Max. accuracy Full:",full_max_2_1,"% at B=",full_B_max_2_1,"%.")
+    
+    cpf_B_max_2_1 = 0
+    maxv = 0
+    for i in range(len(full_values_1)):
+        if full_values_1[i] >= maxv:
+            cpf_B_max_2_1 = x_values[i]
+    cpf_max_2_1 = max(full_values_1)
+    print("Max. accuracy Full:",cpf_max_2_1,"% at B=",cpf_B_max_2_1,"%.")
+    
+    gpr_B_max_2_1 = 0
+    maxv = 0
+    for i in range(len(full_values_1)):
+        if full_values_1[i] >= maxv:
+            gpr_B_max_2_1 = x_values[i]
+    gpr_max_2_1 = max(full_values_1)
+    print("Max. accuracy Full:",gpr_max_2_1,"% at B=",gpr_B_max_2_1,"%.")
+    
+    maxv_2_1 = 0
+    Bv_2_1 = 0
+    cpfv_2_1 = 0
+    gprv_2_1 = 0
+    #TODO: need to add these values to the other calculations as well!
+    for i in range(len(gpr_values_1)):
+        diff = gpr_values_1[i] - generic_values_1[i]
+        if diff >= maxv_2_1:
+            maxv_2_1 = diff
+            Bv_2_1 = x_values[i]
+            cpfv_2_1 = generic_values_1[i]
+            gprv_2_1 = gpr_values_1[i]
+    print("max. difference GPR/CPF:",maxv_2_1,"at B=",Bv_2_1,"%.")
+    print("")
+
+    ##################################################################################################
+    
+    print("m=2, n=+-2%")
+    
+    full_B_max_2_2 = 0
+    maxv = 0
+    for i in range(len(full_values_2)):
+        if full_values_2[i] >= maxv:
+            full_B_max_2_2 = x_values[i]
+    full_max_2_2 = max(full_values_2)
+    print("Max. accuracy Full:",full_max_2_2,"% at B=",full_B_max_2_2,"%.")
+    
+    cpf_B_max_2_2 = 0
+    maxv = 0
+    for i in range(len(full_values_2)):
+        if full_values_2[i] >= maxv:
+            cpf_B_max_2_2 = x_values[i]
+    cpf_max_2_2 = max(full_values_2)
+    print("Max. accuracy Full:",cpf_max_2_2,"% at B=",cpf_B_max_2_2,"%.")
+    
+    gpr_B_max_2_2 = 0
+    maxv = 0
+    for i in range(len(full_values_2)):
+        if full_values_2[i] >= maxv:
+            gpr_B_max_2_2 = x_values[i]
+    gpr_max_2_2 = max(full_values_2)
+    print("Max. accuracy Full:",gpr_max_2_2,"% at B=",gpr_B_max_2_2,"%.")
+    
+    maxv_2_2 = 0
+    Bv_2_2 = 0
+    for i in range(len(gpr_values_2)):
+        diff = gpr_values_2[i] - generic_values_2[i]
+        if diff >= maxv_2_2:
+            maxv_2_2 = diff
+            Bv_2_2 = x_values[i]
+    print("max. difference GPR/CPF:",maxv_2_2,"at B=",Bv_2_2,"%.")
+    
+    print("")
+    
+    ################################################################################################################
+    
+    print("m=2, n=+-5%")
+    
+    full_B_max_2_5 = 0
+    maxv = 0
+    for i in range(len(full_values_5)):
+        if full_values_5[i] >= maxv:
+            full_B_max_2_5 = x_values[i]
+    full_max_2_5 = max(full_values_5)
+    print("Max. accuracy Full:",full_max_2_5,"% at B=",full_B_max_2_5,"%.")
+    
+    cpf_B_max_2_5 = 0
+    maxv = 0
+    for i in range(len(full_values_5)):
+        if full_values_5[i] >= maxv:
+            cpf_B_max_2_5 = x_values[i]
+    cpf_max_2_5 = max(full_values_5)
+    print("Max. accuracy Full:",cpf_max_2_5,"% at B=",cpf_B_max_2_5,"%.")
+    
+    gpr_B_max_2_5 = 0
+    maxv = 0
+    for i in range(len(full_values_5)):
+        if full_values_5[i] >= maxv:
+            gpr_B_max_2_5 = x_values[i]
+    gpr_max_2_5 = max(full_values_5)
+    print("Max. accuracy Full:",gpr_max_2_5,"% at B=",gpr_B_max_2_5,"%.")
+    
+    maxv_2_5 = 0
+    Bv_2_5 = 0
+    for i in range(len(gpr_values_5)):
+        diff = gpr_values_5[i] - generic_values_5[i]
+        if diff >= maxv_2_5:
+            maxv_2_5 = diff
+            Bv_2_5 = x_values[i]
+    print("max. difference GPR/CPF:",maxv_2_5,"at B=",Bv_2_5,"%.")
+    
+    print("")
+    
+    ##############################################################################################################
+    
+    print("m=2, n=+-10%")
+    
+    full_B_max_2_10 = 0
+    maxv = 0
+    for i in range(len(full_values_10)):
+        if full_values_10[i] >= maxv:
+            full_B_max_2_10 = x_values[i]
+    full_max_2_10 = max(full_values_10)
+    print("Max. accuracy Full:",full_max_2_10,"% at B=",full_B_max_2_10,"%.")
+    
+    cpf_B_max_2_10 = 0
+    maxv = 0
+    for i in range(len(full_values_10)):
+        if full_values_10[i] >= maxv:
+            cpf_B_max_2_10 = x_values[i]
+    cpf_max_2_10 = max(full_values_10)
+    print("Max. accuracy Full:",cpf_max_2_10,"% at B=",cpf_B_max_2_10,"%.")
+    
+    gpr_B_max_2_10 = 0
+    maxv = 0
+    for i in range(len(full_values_10)):
+        if full_values_10[i] >= maxv:
+            gpr_B_max_2_10 = x_values[i]
+    gpr_max_2_10 = max(full_values_10)
+    print("Max. accuracy Full:",gpr_max_2_10,"% at B=",gpr_B_max_2_10,"%.")
+    
+    maxv_2_10 = 0
+    Bv_2_10 = 0
+    for i in range(len(gpr_values_10)):
+        diff = gpr_values_10[i] - generic_values_10[i]
+        if diff >= maxv_2_10:
+            maxv_2_10 = diff
+            Bv_2_10 = x_values[i]
+    print("max. difference GPR/CPF:",maxv_2_10,"at B=",Bv_2_10,"%.")
+    print("")
+    
+    #########################################################################################################################
+    #########################################################################################################################
+    
     y_values_list_acc_1_3 = [
         full_values_1_3 ,
         generic_values_1_3 ,
@@ -465,6 +627,11 @@ def main():
         else:
             ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    ax1.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax1.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    #TODO: here!
     ax1.grid(alpha=0.3, which='major')
     ax1.grid(alpha=0.3, which='minor')
     ax1.set_yticks(np.arange(0, 100, 10))
