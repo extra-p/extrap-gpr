@@ -557,6 +557,178 @@ def main():
         #hybrid_values_10_3
     ]
     
+    ############################################################################################################
+
+    print("m=3, n=+-1%")
+
+    full_B_max_3_1 = 0
+    maxv = 0
+    for i in range(len(full_values_1_3)):
+        if full_values_1_3[i] >= maxv:
+            full_B_max_3_1 = x_values[i]
+    full_max_3_1 = max(full_values_1_3)
+    print("Max. accuracy Full:",full_max_3_1,"% at B=",full_B_max_3_1,"%.")
+
+    cpf_B_max_3_1 = 0
+    maxv = 0
+    for i in range(len(full_values_1_3)):
+        if full_values_1_3[i] >= maxv:
+            cpf_B_max_3_1 = x_values[i]
+    cpf_max_3_1 = max(full_values_1_3)
+    print("Max. accuracy Full:",cpf_max_3_1,"% at B=",cpf_B_max_3_1,"%.")
+
+    gpr_B_max_3_1 = 0
+    maxv = 0
+    for i in range(len(full_values_1_3)):
+        if full_values_1_3[i] >= maxv:
+            gpr_B_max_3_1 = x_values[i]
+    gpr_max_3_1 = max(full_values_1_3)
+    print("Max. accuracy Full:",gpr_max_3_1,"% at B=",gpr_B_max_3_1,"%.")
+
+    maxv_3_1 = 0
+    Bv_3_1 = 0
+    cpfv_3_1 = 0
+    gprv_3_1 = 0
+    for i in range(len(gpr_values_1_3)):
+        diff = gpr_values_1_3[i] - generic_values_1_3[i]
+        if diff >= maxv_3_1:
+            maxv_3_1 = diff
+            Bv_3_1 = x_values[i]
+            cpfv_3_1 = generic_values_1_3[i]
+            gprv_3_1 = gpr_values_1_3[i]
+    print("max. difference GPR/CPF:",maxv_3_1,"at B=",Bv_3_1,"%.")
+    print("")
+
+    ##################################################################################################
+
+    print("m=3, n=+-2%")
+
+    full_B_max_3_2 = 0
+    maxv = 0
+    for i in range(len(full_values_2_3)):
+        if full_values_2_3[i] >= maxv:
+            full_B_max_3_2 = x_values[i]
+    full_max_3_2 = max(full_values_2_3)
+    print("Max. accuracy Full:",full_max_3_2,"% at B=",full_B_max_3_2,"%.")
+
+    cpf_B_max_3_2 = 0
+    maxv = 0
+    for i in range(len(full_values_2_3)):
+        if full_values_2_3[i] >= maxv:
+            cpf_B_max_3_2 = x_values[i]
+    cpf_max_3_2 = max(full_values_2_3)
+    print("Max. accuracy Full:",cpf_max_3_2,"% at B=",cpf_B_max_3_2,"%.")
+
+    gpr_B_max_3_2 = 0
+    maxv = 0
+    for i in range(len(full_values_2_3)):
+        if full_values_2_3[i] >= maxv:
+            gpr_B_max_3_2 = x_values[i]
+    gpr_max_3_2 = max(full_values_2_3)
+    print("Max. accuracy Full:",gpr_max_3_2,"% at B=",gpr_B_max_3_2,"%.")
+
+    maxv_3_2 = 0
+    Bv_3_2 = 0
+    cpfv_3_2 = 0
+    gprv_3_2 = 0
+    for i in range(len(gpr_values_2_3)):
+        diff = gpr_values_2_3[i] - generic_values_2_3[i]
+        if diff >= maxv_3_2:
+            maxv_3_2 = diff
+            Bv_3_2 = x_values[i]
+            cpfv_3_2 = generic_values_2_3[i]
+            gprv_3_2 = gpr_values_2_3[i]
+    print("max. difference GPR/CPF:",maxv_3_2,"at B=",Bv_3_2,"%.")
+
+    print("")
+
+    ################################################################################################################
+
+    print("m=3, n=+-5%")
+
+    full_B_max_3_5 = 0
+    maxv = 0
+    for i in range(len(full_values_5_3)):
+        if full_values_5_3[i] >= maxv:
+            full_B_max_3_5 = x_values[i]
+    full_max_3_5 = max(full_values_5_3)
+    print("Max. accuracy Full:",full_max_3_5,"% at B=",full_B_max_3_5,"%.")
+
+    cpf_B_max_3_5 = 0
+    maxv = 0
+    for i in range(len(full_values_5_3)):
+        if full_values_5_3[i] >= maxv:
+            cpf_B_max_3_5 = x_values[i]
+    cpf_max_3_5 = max(full_values_5_3)
+    print("Max. accuracy Full:",cpf_max_3_5,"% at B=",cpf_B_max_3_5,"%.")
+
+    gpr_B_max_3_5 = 0
+    maxv = 0
+    for i in range(len(full_values_5_3)):
+        if full_values_5_3[i] >= maxv:
+            gpr_B_max_3_5 = x_values[i]
+    gpr_max_3_5 = max(full_values_5_3)
+    print("Max. accuracy Full:",gpr_max_3_5,"% at B=",gpr_B_max_3_5,"%.")
+
+    maxv_3_5 = 0
+    Bv_3_5 = 0
+    cpfv_3_5 = 0
+    gprv_3_5 = 0
+    for i in range(len(gpr_values_5_3)):
+        diff = gpr_values_5_3[i] - generic_values_5_3[i]
+        if diff >= maxv_3_5:
+            maxv_3_5 = diff
+            Bv_3_5 = x_values[i]
+            cpfv_3_5 = generic_values_5_3[i]
+            gprv_3_5 = gpr_values_5_3[i]
+    print("max. difference GPR/CPF:",maxv_3_5,"at B=",Bv_3_5,"%.")
+
+    print("")
+
+    ##############################################################################################################
+
+    print("m=3, n=+-10%")
+
+    full_B_max_3_10 = 0
+    maxv = 0
+    for i in range(len(full_values_1_30)):
+        if full_values_1_30[i] >= maxv:
+            full_B_max_3_10 = x_values[i]
+    full_max_3_10 = max(full_values_1_30)
+    print("Max. accuracy Full:",full_max_3_10,"% at B=",full_B_max_3_10,"%.")
+
+    cpf_B_max_3_10 = 0
+    maxv = 0
+    for i in range(len(full_values_1_30)):
+        if full_values_1_30[i] >= maxv:
+            cpf_B_max_3_10 = x_values[i]
+    cpf_max_3_10 = max(full_values_1_30)
+    print("Max. accuracy Full:",cpf_max_3_10,"% at B=",cpf_B_max_3_10,"%.")
+
+    gpr_B_max_3_10 = 0
+    maxv = 0
+    for i in range(len(full_values_1_30)):
+        if full_values_1_30[i] >= maxv:
+            gpr_B_max_3_10 = x_values[i]
+    gpr_max_3_10 = max(full_values_1_30)
+    print("Max. accuracy Full:",gpr_max_3_10,"% at B=",gpr_B_max_3_10,"%.")
+
+    maxv_3_10 = 0
+    Bv_3_10 = 0
+    cpfv_3_10 = 0
+    gprv_3_10 = 0
+    for i in range(len(gpr_values_10_3)):
+        diff = gpr_values_10_3[i] - generic_values_1_30[i]
+        if diff >= maxv_3_10:
+            maxv_3_10 = diff
+            Bv_3_10 = x_values[i]
+            cpfv_3_10 = generic_values_1_30[i]
+            gprv_3_10 = gpr_values_10_3[i]
+    print("max. difference GPR/CPF:",maxv_3_10,"at B=",Bv_3_10,"%.")
+    print("")
+
+    #########################################################################################################################
+    #########################################################################################################################
     
     y_values_list_acc_1_4 = [
         full_values_1_4 ,
@@ -582,6 +754,10 @@ def main():
         gpr_values_10_4,
         #hybrid_values_10_4
     ]
+
+    #TODO
+
+
     
     y_values_list_cost = [
         generic_costs,
