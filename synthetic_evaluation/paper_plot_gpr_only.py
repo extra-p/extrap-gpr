@@ -691,26 +691,26 @@ def main():
 
     full_B_max_3_10 = 0
     maxv = 0
-    for i in range(len(full_values_1_30)):
-        if full_values_1_30[i] >= maxv:
+    for i in range(len(full_values_10_3)):
+        if full_values_10_3[i] >= maxv:
             full_B_max_3_10 = x_values[i]
-    full_max_3_10 = max(full_values_1_30)
+    full_max_3_10 = max(full_values_10_3)
     print("Max. accuracy Full:",full_max_3_10,"% at B=",full_B_max_3_10,"%.")
 
     cpf_B_max_3_10 = 0
     maxv = 0
-    for i in range(len(full_values_1_30)):
-        if full_values_1_30[i] >= maxv:
+    for i in range(len(full_values_10_3)):
+        if full_values_10_3[i] >= maxv:
             cpf_B_max_3_10 = x_values[i]
-    cpf_max_3_10 = max(full_values_1_30)
+    cpf_max_3_10 = max(full_values_10_3)
     print("Max. accuracy Full:",cpf_max_3_10,"% at B=",cpf_B_max_3_10,"%.")
 
     gpr_B_max_3_10 = 0
     maxv = 0
-    for i in range(len(full_values_1_30)):
-        if full_values_1_30[i] >= maxv:
+    for i in range(len(full_values_10_3)):
+        if full_values_10_3[i] >= maxv:
             gpr_B_max_3_10 = x_values[i]
-    gpr_max_3_10 = max(full_values_1_30)
+    gpr_max_3_10 = max(full_values_10_3)
     print("Max. accuracy Full:",gpr_max_3_10,"% at B=",gpr_B_max_3_10,"%.")
 
     maxv_3_10 = 0
@@ -718,11 +718,11 @@ def main():
     cpfv_3_10 = 0
     gprv_3_10 = 0
     for i in range(len(gpr_values_10_3)):
-        diff = gpr_values_10_3[i] - generic_values_1_30[i]
+        diff = gpr_values_10_3[i] - generic_values_10_3[i]
         if diff >= maxv_3_10:
             maxv_3_10 = diff
             Bv_3_10 = x_values[i]
-            cpfv_3_10 = generic_values_1_30[i]
+            cpfv_3_10 = generic_values_10_3[i]
             gprv_3_10 = gpr_values_10_3[i]
     print("max. difference GPR/CPF:",maxv_3_10,"at B=",Bv_3_10,"%.")
     print("")
@@ -961,6 +961,19 @@ def main():
         else:
             ax5.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax5.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax5.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax5.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax5.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax5.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax5.grid(alpha=0.3, which='major')
     ax5.grid(alpha=0.3, which='minor')
     ax5.set_yticks(np.arange(0, 100, 10))
@@ -981,6 +994,19 @@ def main():
         else:
             ax6.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax6.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax6.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax6.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax6.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax6.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax6.set_yticks(np.arange(0, 100, 10))
@@ -1000,6 +1026,19 @@ def main():
         else:
             ax7.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax7.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax7.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax7.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax7.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax7.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax7.grid(alpha=0.3, which='major')
     ax7.grid(alpha=0.3, which='minor')
     ax7.set_yticks(np.arange(0, 100, 10))
@@ -1019,6 +1058,19 @@ def main():
         else:
             ax8.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax8.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax8.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax8.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax8.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax8.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax8.grid(alpha=0.3, which='major')
     ax8.grid(alpha=0.3, which='minor')
     ax8.set_yticks(np.arange(0, 100, 10))
@@ -1029,6 +1081,8 @@ def main():
     ax82.tick_params(right = False)
     ax82.set_yticks([])
     
+    #### 4 parameters ######
+
     # plot the accuracy of bucket 5 and n=1%
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
@@ -1043,6 +1097,19 @@ def main():
         else:
             ax9.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax9.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax9.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax9.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax9.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax9.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
     ax9.set_yticks(np.arange(0, 100, 10))
@@ -1063,6 +1130,19 @@ def main():
         else:
             ax10.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax10.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax10.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax10.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax10.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax10.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax10.grid(alpha=0.3, which='major')
     ax10.grid(alpha=0.3, which='minor')
     ax10.set_yticks(np.arange(0, 100, 10))
@@ -1082,6 +1162,19 @@ def main():
         else:
             ax11.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax11.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax11.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax11.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax11.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax11.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax11.grid(alpha=0.3, which='major')
     ax11.grid(alpha=0.3, which='minor')
     ax11.set_yticks(np.arange(0, 100, 10))
@@ -1101,6 +1194,19 @@ def main():
         else:
             ax12.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    
+    # annotations
+    ax12.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_1 - (maxv_2_1/2)
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    ax12.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax12.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax12.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax12.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax12.set_yticks(np.arange(0, 100, 10))
     ax12.set_xticks([0, 1, 10, 100])
     ax12.set_xlabel('$n=\pm10\%$')
