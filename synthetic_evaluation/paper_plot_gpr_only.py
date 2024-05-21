@@ -391,7 +391,6 @@ def main():
     Bv_2_1 = 0
     cpfv_2_1 = 0
     gprv_2_1 = 0
-    #TODO: need to add these values to the other calculations as well!
     for i in range(len(gpr_values_1)):
         diff = gpr_values_1[i] - generic_values_1[i]
         if diff >= maxv_2_1:
@@ -432,11 +431,15 @@ def main():
     
     maxv_2_2 = 0
     Bv_2_2 = 0
+    cpfv_2_2 = 0
+    gprv_2_2 = 0
     for i in range(len(gpr_values_2)):
         diff = gpr_values_2[i] - generic_values_2[i]
         if diff >= maxv_2_2:
             maxv_2_2 = diff
             Bv_2_2 = x_values[i]
+            cpfv_2_2 = generic_values_2[i]
+            gprv_2_2 = gpr_values_2[i]
     print("max. difference GPR/CPF:",maxv_2_2,"at B=",Bv_2_2,"%.")
     
     print("")
@@ -471,11 +474,15 @@ def main():
     
     maxv_2_5 = 0
     Bv_2_5 = 0
+    cpfv_2_5 = 0
+    gprv_2_5 = 0
     for i in range(len(gpr_values_5)):
         diff = gpr_values_5[i] - generic_values_5[i]
         if diff >= maxv_2_5:
             maxv_2_5 = diff
             Bv_2_5 = x_values[i]
+            cpfv_2_5 = generic_values_5[i]
+            gprv_2_5 = gpr_values_5[i]
     print("max. difference GPR/CPF:",maxv_2_5,"at B=",Bv_2_5,"%.")
     
     print("")
@@ -510,11 +517,15 @@ def main():
     
     maxv_2_10 = 0
     Bv_2_10 = 0
+    cpfv_2_10 = 0
+    gprv_2_10 = 0
     for i in range(len(gpr_values_10)):
         diff = gpr_values_10[i] - generic_values_10[i]
         if diff >= maxv_2_10:
             maxv_2_10 = diff
             Bv_2_10 = x_values[i]
+            cpfv_2_10 = generic_values_10[i]
+            gprv_2_10 = gpr_values_10[i]
     print("max. difference GPR/CPF:",maxv_2_10,"at B=",Bv_2_10,"%.")
     print("")
     
@@ -627,11 +638,19 @@ def main():
         else:
             ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    
+    # annotations
     ax1.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
     ytemp = gprv_2_1 - (maxv_2_1/2)
-    strtemp = str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
+    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
     ax1.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    #TODO: here!
+    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
+    ax1.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
+    ax1.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
+    ax1.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax1.grid(alpha=0.3, which='major')
     ax1.grid(alpha=0.3, which='minor')
     ax1.set_yticks(np.arange(0, 100, 10))
@@ -653,6 +672,19 @@ def main():
         else:
             ax2.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+
+    # annotations
+    ax2.plot([Bv_2_2,Bv_2_2], [cpfv_2_2,gprv_2_2], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_2 - (maxv_2_2/2)
+    strtemp = "+"+str(maxv_2_2)+"\% at \nB="+str(Bv_2_2)+"\%"
+    ax2.annotate(strtemp, xy=(Bv_2_2, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_2)+"\% at \nB="+str(cpf_B_max_2_2)+"\%"
+    ax2.annotate(strtemp, xy=(cpf_B_max_2_2, cpf_max_2_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_2)+"\% at \nB="+str(gpr_B_max_2_2)+"\%"
+    ax2.annotate(strtemp, xy=(gpr_B_max_2_2, gpr_max_2_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_2)+"\% at \nB="+str(full_B_max_2_2)+"\%"
+    ax2.annotate(strtemp, xy=(full_B_max_2_2, full_max_2_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+
     ax2.grid(alpha=0.3, which='major')
     ax2.grid(alpha=0.3, which='minor')
     ax2.set_yticks(np.arange(0, 100, 10))
@@ -675,6 +707,19 @@ def main():
         style_counter += 1
     #ax3.fill_between(x_values, y_values_list_acc_5[1], y_values_list_acc_5[2], color="green", where=np.array(y_values_list_acc_5[2]) > np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
     #ax3.fill_between(x_values, y_values_list_acc_5[2], y_values_list_acc_5[1], color="red", where=np.array(y_values_list_acc_5[2]) < np.array(y_values_list_acc_5[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    
+    # annotations
+    ax3.plot([Bv_2_5,Bv_2_5], [cpfv_2_5,gprv_2_5], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_5 - (maxv_2_5/2)
+    strtemp = "+"+str(maxv_2_5)+"\% at \nB="+str(Bv_2_5)+"\%"
+    ax3.annotate(strtemp, xy=(Bv_2_5, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_5)+"\% at \nB="+str(cpf_B_max_2_5)+"\%"
+    ax3.annotate(strtemp, xy=(cpf_B_max_2_5, cpf_max_2_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_5)+"\% at \nB="+str(gpr_B_max_2_5)+"\%"
+    ax3.annotate(strtemp, xy=(gpr_B_max_2_5, gpr_max_2_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_5)+"\% at \nB="+str(full_B_max_2_5)+"\%"
+    ax3.annotate(strtemp, xy=(full_B_max_2_5, full_max_2_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
     ax3.set_yticks(np.arange(0, 100, 10))
@@ -699,6 +744,19 @@ def main():
         style_counter += 1
     #ax4.fill_between(x_values, y_values_list_acc_10[1], y_values_list_acc_10[2], color="green", where=np.array(y_values_list_acc_10[2]) > np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR better than CPF', hatch="x", interpolate=True)
     #ax4.fill_between(x_values, y_values_list_acc_10[2], y_values_list_acc_10[1], color="red", where=np.array(y_values_list_acc_10[2]) < np.array(y_values_list_acc_10[1]), alpha=0.4, label='GPR worse than CPF', hatch="+", zorder=5, interpolate=True)
+    
+    # annotations
+    ax4.plot([Bv_2_10,Bv_2_10], [cpfv_2_10,gprv_2_10], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_2_10 - (maxv_2_10/2)
+    strtemp = "+"+str(maxv_2_10)+"\% at \nB="+str(Bv_2_10)+"\%"
+    ax4.annotate(strtemp, xy=(Bv_2_10, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
+    strtemp = str(cpf_max_2_10)+"\% at \nB="+str(cpf_B_max_2_10)+"\%"
+    ax4.annotate(strtemp, xy=(cpf_B_max_2_10, cpf_max_2_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
+    strtemp = str(gpr_max_2_10)+"\% at \nB="+str(gpr_B_max_2_10)+"\%"
+    ax4.annotate(strtemp, xy=(gpr_B_max_2_10, gpr_max_2_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
+    strtemp = str(full_max_2_10)+"\% at \nB="+str(full_B_max_2_10)+"\%"
+    ax4.annotate(strtemp, xy=(full_B_max_2_10, full_max_2_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    
     ax4.grid(alpha=0.3, which='major')
     ax4.grid(alpha=0.3, which='minor')
     ax4.set_yticks(np.arange(0, 100, 10))
@@ -710,6 +768,8 @@ def main():
     ax42.set_ylabel("$m=2$")
     ax42.tick_params(right = False)
     ax42.set_yticks([])
+
+    #### 3 parameters #####
     
     # plot the accuracy of bucket 5 and n=1%
     ls=["-",'dotted','--',':','-']
