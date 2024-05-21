@@ -27,7 +27,7 @@ First, run the analysis for each case study. The following steps are an example 
 
 Second, in the root folder, create the plots for the case studies and run the noise analysis.
 
-1. `python paper_plot_case_studies.py`
+1. `python paper_plot_case_studies_gpr_only.py`
 2. `./analyze_noise.sh`
 
 #### Synthetic Evaluation
@@ -39,10 +39,10 @@ First, run the analysis for each combination of the number of model parameters a
 
 Second, in the folder `synthetic_evaluation/` run the scripts to plot the results of the synthetic data experiments.
 
-1. `python paper_plot.py`
-2. `python paper_plot_buckets.py`
-3. `python paper_plot_costs.py`
-4. `python paper_plot_points.py`
+1. `python paper_plot_gpr_only.py`
+2. `python paper_plot_buckets_gpr_only.py`
+3. `python paper_plot_costs_gpr_only.py`
+4. `python paper_plot_points_gpr_only.py`
 
 ## Performance measurement dataset
 
@@ -192,7 +192,7 @@ After completing the analysis for all of the above case studies you can follow t
 
 Steps:
 
-1. `python paper_plot_case_studies.py`
+1. `python paper_plot_case_studies_gpr_only.py`
 
 #### Noise analysis for the case studies
 
