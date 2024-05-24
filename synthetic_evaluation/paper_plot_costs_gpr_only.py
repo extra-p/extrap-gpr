@@ -154,6 +154,49 @@ def main():
         #base_point_costs_4
     ]
     
+    B_CPF_max_2 = 0
+    maxv = 0
+    for i in range(len(generic_costs_2)):
+        if generic_costs_2[i] >= maxv:
+            maxv = generic_costs_2[i]
+            B_CPF_max_2 = x_values[i]
+            
+    B_GPR_max_2 = 0
+    maxv = 0
+    for i in range(len(gpr_costs_2)):
+        if gpr_costs_2[i] >= maxv:
+            maxv = gpr_costs_2[i]
+            B_GPR_max_2 = x_values[i]
+            
+    B_CPF_max_3 = 0
+    maxv = 0
+    for i in range(len(generic_costs_3)):
+        if generic_costs_3[i] >= maxv:
+            maxv = generic_costs_3[i]
+            B_CPF_max_3 = x_values[i]
+            
+    B_GPR_max_3 = 0
+    maxv = 0
+    for i in range(len(gpr_costs_3)):
+        if gpr_costs_3[i] >= maxv:
+            maxv = gpr_costs_3[i]
+            B_GPR_max_3 = x_values[i]
+            
+    B_CPF_max_4 = 0
+    maxv = 0
+    for i in range(len(generic_costs_4)):
+        if generic_costs_4[i] >= maxv:
+            maxv = generic_costs_4[i]
+            B_CPF_max_4 = x_values[i]
+            
+    B_GPR_max_4 = 0
+    maxv = 0
+    for i in range(len(gpr_costs_4)):
+        if gpr_costs_4[i] >= maxv:
+            maxv = gpr_costs_4[i]
+            B_GPR_max_4 = x_values[i]
+
+    
     labels_points = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Minimum points required $\\bar{p}_{min}$']
     labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. modeling requirement $\\bar{b}_{min}$']
     
@@ -188,6 +231,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_2, labels_cost):
         ax1.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+    
+    # annotations
+    strtemp = str('{0:.2f}'.format(np.nanmax(generic_costs_2)))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_max_2))+"\%"
+    ax1.annotate(strtemp, xy=(B_CPF_max_2, np.nanmax(generic_costs_2)), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(np.nanmax(gpr_costs_2)))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_max_2))+"\%"
+    ax1.annotate(strtemp, xy=(B_GPR_max_2, np.nanmax(gpr_costs_2)), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax1.grid(alpha=0.3, which='major')
     ax1.grid(alpha=0.3, which='minor')
     ax1.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
@@ -204,6 +254,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_3, labels_cost):
         ax2.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+        
+    # annotations
+    strtemp = str('{0:.2f}'.format(np.nanmax(generic_costs_3)))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_max_3))+"\%"
+    ax2.annotate(strtemp, xy=(B_CPF_max_3, np.nanmax(generic_costs_3)), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(np.nanmax(gpr_costs_3)))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_max_3))+"\%"
+    ax2.annotate(strtemp, xy=(B_GPR_max_3, np.nanmax(gpr_costs_3)), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax2.grid(alpha=0.3, which='major')
     ax2.grid(alpha=0.3, which='minor')
     ax2.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
@@ -220,6 +277,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_4, labels_cost):
         ax3.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+        
+    # annotations
+    strtemp = str('{0:.2f}'.format(np.nanmax(generic_costs_4)))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_max_4))+"\%"
+    ax3.annotate(strtemp, xy=(B_CPF_max_4, np.nanmax(generic_costs_4)), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(np.nanmax(gpr_costs_4)))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_max_4))+"\%"
+    ax3.annotate(strtemp, xy=(B_GPR_max_4, np.nanmax(gpr_costs_4)), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
     #ax3.set_xticks([1,10,20,30,40,50,60,70,80,90,100])

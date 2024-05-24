@@ -1,0 +1,8 @@
+m=3, n=+-10%
+max. difference GPR/CPF: 21.500000000000007 at B= 3.0 %.
+
+max. difference GPR/CPF: 27.1 at B= 3.0 %.
+
+max. difference GPR/CPF: 26.70000000000001 at B= 3.0 %.
+
+max. difference GPR/CPF: 25.800000000000004 at B= 3.0 %.
