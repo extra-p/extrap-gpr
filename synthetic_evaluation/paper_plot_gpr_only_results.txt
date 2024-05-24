@@ -1,0 +1,71 @@
+m=2, n=+-1%
+Max. accuracy Full: 85.67 % at B= 100.0 %.
+Max. accuracy Full: 85.67 % at B= 100.0 %.
+Max. accuracy Full: 85.84 % at B= 72.0 %.
+max. difference GPR/CPF: 30.36 at B= 11.0 %.
+
+m=2, n=+-2%
+Max. accuracy Full: 84.02 % at B= 100.0 %.
+Max. accuracy Full: 84.09 % at B= 99.0 %.
+Max. accuracy Full: 85.66 % at B= 71.0 %.
+max. difference GPR/CPF: 30.17000000000001 at B= 11.0 %.
+
+m=2, n=+-5%
+Max. accuracy Full: 66.01 % at B= 100.0 %.
+Max. accuracy Full: 83.02000000000001 % at B= 51.0 %.
+Max. accuracy Full: 84.09 % at B= 41.0 %.
+max. difference GPR/CPF: 30.57999999999999 at B= 10.0 %.
+
+m=2, n=+-10%
+Max. accuracy Full: 22.43 % at B= 100.0 %.
+Max. accuracy Full: 78.45 % at B= 71.0 %.
+Max. accuracy Full: 81.39 % at B= 47.0 %.
+max. difference GPR/CPF: 27.6 at B= 10.0 %.
+
+m=3, n=+-1%
+Max. accuracy Full: 87.9 % at B= 100.0 %.
+Max. accuracy Full: 87.9 % at B= 100.0 %.
+Max. accuracy Full: 87.9 % at B= 100.0 %.
+max. difference GPR/CPF: 27.599999999999994 at B= 3.0 %.
+
+m=3, n=+-2%
+Max. accuracy Full: 87.9 % at B= 100.0 %.
+Max. accuracy Full: 87.9 % at B= 100.0 %.
+Max. accuracy Full: 87.9 % at B= 100.0 %.
+max. difference GPR/CPF: 26.500000000000007 at B= 3.0 %.
+
+m=3, n=+-5%
+Max. accuracy Full: 86.9 % at B= 100.0 %.
+Max. accuracy Full: 86.9 % at B= 100.0 %.
+Max. accuracy Full: 87.2 % at B= 96.0 %.
+max. difference GPR/CPF: 26.299999999999997 at B= 3.0 %.
+
+m=3, n=+-10%
+Max. accuracy Full: 87.0 % at B= 100.0 %.
+Max. accuracy Full: 87.0 % at B= 100.0 %.
+Max. accuracy Full: 87.0 % at B= 100.0 %.
+max. difference GPR/CPF: 21.500000000000007 at B= 3.0 %.
+
+m=4, n=+-1%
+Max. accuracy Full: 84.89999999999999 % at B= 100.0 %.
+Max. accuracy Full: 84.89999999999999 % at B= 100.0 %.
+Max. accuracy Full: 85.3 % at B= 99.0 %.
+max. difference GPR/CPF: 36.2 at B= 0.5 %.
+
+m=4, n=+-2%
+Max. accuracy Full: 82.69999999999999 % at B= 100.0 %.
+Max. accuracy Full: 82.89999999999999 % at B= 94.0 %.
+Max. accuracy Full: 83.1 % at B= 96.0 %.
+max. difference GPR/CPF: 33.9 at B= 0.5 %.
+
+m=4, n=+-5%
+Max. accuracy Full: 79.5 % at B= 100.0 %.
+Max. accuracy Full: 80.9 % at B= 66.0 %.
+Max. accuracy Full: 81.2 % at B= 70.0 %.
+max. difference GPR/CPF: 34.6 at B= 0.4 %.
+
+m=4, n=+-10%
+Max. accuracy Full: 71.1 % at B= 100.0 %.
+Max. accuracy Full: 80.5 % at B= 81.0 %.
+Max. accuracy Full: 80.7 % at B= 76.0 %.
+max. difference GPR/CPF: 24.9 at B= 0.4 %.

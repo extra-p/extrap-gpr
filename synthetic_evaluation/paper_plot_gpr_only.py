@@ -367,24 +367,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_1)):
         if full_values_1[i] >= maxv:
+            maxv = full_values_1[i]
             full_B_max_2_1 = x_values[i]
     full_max_2_1 = max(full_values_1)
     print("Max. accuracy Full:",full_max_2_1,"% at B=",full_B_max_2_1,"%.")
     
     cpf_B_max_2_1 = 0
     maxv = 0
-    for i in range(len(full_values_1)):
-        if full_values_1[i] >= maxv:
+    for i in range(len(generic_values_1)):
+        if generic_values_1[i] >= maxv:
+            maxv = generic_values_1[i]
             cpf_B_max_2_1 = x_values[i]
-    cpf_max_2_1 = max(full_values_1)
+    cpf_max_2_1 = max(generic_values_1)
     print("Max. accuracy Full:",cpf_max_2_1,"% at B=",cpf_B_max_2_1,"%.")
     
     gpr_B_max_2_1 = 0
     maxv = 0
-    for i in range(len(full_values_1)):
-        if full_values_1[i] >= maxv:
+    for i in range(len(gpr_values_1)):
+        if gpr_values_1[i] >= maxv:
+            maxv = gpr_values_1[i]
             gpr_B_max_2_1 = x_values[i]
-    gpr_max_2_1 = max(full_values_1)
+    gpr_max_2_1 = max(gpr_values_1)
     print("Max. accuracy Full:",gpr_max_2_1,"% at B=",gpr_B_max_2_1,"%.")
     
     maxv_2_1 = 0
@@ -409,24 +412,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_2)):
         if full_values_2[i] >= maxv:
+            maxv = full_values_2[i]
             full_B_max_2_2 = x_values[i]
     full_max_2_2 = max(full_values_2)
     print("Max. accuracy Full:",full_max_2_2,"% at B=",full_B_max_2_2,"%.")
     
     cpf_B_max_2_2 = 0
     maxv = 0
-    for i in range(len(full_values_2)):
-        if full_values_2[i] >= maxv:
+    for i in range(len(generic_values_2)):
+        if generic_values_2[i] >= maxv:
+            maxv = generic_values_2[i]
             cpf_B_max_2_2 = x_values[i]
-    cpf_max_2_2 = max(full_values_2)
+    cpf_max_2_2 = max(generic_values_2)
     print("Max. accuracy Full:",cpf_max_2_2,"% at B=",cpf_B_max_2_2,"%.")
     
     gpr_B_max_2_2 = 0
     maxv = 0
-    for i in range(len(full_values_2)):
-        if full_values_2[i] >= maxv:
+    for i in range(len(gpr_values_2)):
+        if gpr_values_2[i] >= maxv:
+            maxv = gpr_values_2[i]
             gpr_B_max_2_2 = x_values[i]
-    gpr_max_2_2 = max(full_values_2)
+    gpr_max_2_2 = max(gpr_values_2)
     print("Max. accuracy Full:",gpr_max_2_2,"% at B=",gpr_B_max_2_2,"%.")
     
     maxv_2_2 = 0
@@ -452,24 +458,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_5)):
         if full_values_5[i] >= maxv:
+            maxv = full_values_5[i]
             full_B_max_2_5 = x_values[i]
     full_max_2_5 = max(full_values_5)
     print("Max. accuracy Full:",full_max_2_5,"% at B=",full_B_max_2_5,"%.")
     
     cpf_B_max_2_5 = 0
     maxv = 0
-    for i in range(len(full_values_5)):
-        if full_values_5[i] >= maxv:
+    for i in range(len(generic_values_5)):
+        if generic_values_5[i] >= maxv:
+            maxv = generic_values_5[i]
             cpf_B_max_2_5 = x_values[i]
-    cpf_max_2_5 = max(full_values_5)
+    cpf_max_2_5 = max(generic_values_5)
     print("Max. accuracy Full:",cpf_max_2_5,"% at B=",cpf_B_max_2_5,"%.")
     
     gpr_B_max_2_5 = 0
     maxv = 0
-    for i in range(len(full_values_5)):
-        if full_values_5[i] >= maxv:
+    for i in range(len(gpr_values_5)):
+        if gpr_values_5[i] >= maxv:
+            maxv = gpr_values_5[i]
             gpr_B_max_2_5 = x_values[i]
-    gpr_max_2_5 = max(full_values_5)
+    gpr_max_2_5 = max(gpr_values_5)
     print("Max. accuracy Full:",gpr_max_2_5,"% at B=",gpr_B_max_2_5,"%.")
     
     maxv_2_5 = 0
@@ -495,24 +504,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_10)):
         if full_values_10[i] >= maxv:
+            maxv = full_values_10[i]
             full_B_max_2_10 = x_values[i]
     full_max_2_10 = max(full_values_10)
     print("Max. accuracy Full:",full_max_2_10,"% at B=",full_B_max_2_10,"%.")
     
     cpf_B_max_2_10 = 0
     maxv = 0
-    for i in range(len(full_values_10)):
-        if full_values_10[i] >= maxv:
+    for i in range(len(generic_values_10)):
+        if generic_values_10[i] >= maxv:
+            maxv = generic_values_10[i]
             cpf_B_max_2_10 = x_values[i]
-    cpf_max_2_10 = max(full_values_10)
+    cpf_max_2_10 = max(generic_values_10)
     print("Max. accuracy Full:",cpf_max_2_10,"% at B=",cpf_B_max_2_10,"%.")
     
     gpr_B_max_2_10 = 0
     maxv = 0
-    for i in range(len(full_values_10)):
-        if full_values_10[i] >= maxv:
+    for i in range(len(gpr_values_10)):
+        if gpr_values_10[i] >= maxv:
+            maxv = gpr_values_10[i]
             gpr_B_max_2_10 = x_values[i]
-    gpr_max_2_10 = max(full_values_10)
+    gpr_max_2_10 = max(gpr_values_10)
     print("Max. accuracy Full:",gpr_max_2_10,"% at B=",gpr_B_max_2_10,"%.")
     
     maxv_2_10 = 0
@@ -565,24 +577,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_1_3)):
         if full_values_1_3[i] >= maxv:
+            maxv = full_values_1_3[i]
             full_B_max_3_1 = x_values[i]
     full_max_3_1 = max(full_values_1_3)
     print("Max. accuracy Full:",full_max_3_1,"% at B=",full_B_max_3_1,"%.")
 
     cpf_B_max_3_1 = 0
     maxv = 0
-    for i in range(len(full_values_1_3)):
-        if full_values_1_3[i] >= maxv:
+    for i in range(len(generic_values_1_3)):
+        if generic_values_1_3[i] >= maxv:
+            maxv = generic_values_1_3[i]
             cpf_B_max_3_1 = x_values[i]
-    cpf_max_3_1 = max(full_values_1_3)
+    cpf_max_3_1 = max(generic_values_1_3)
     print("Max. accuracy Full:",cpf_max_3_1,"% at B=",cpf_B_max_3_1,"%.")
 
     gpr_B_max_3_1 = 0
     maxv = 0
-    for i in range(len(full_values_1_3)):
-        if full_values_1_3[i] >= maxv:
+    for i in range(len(gpr_values_1_3)):
+        if gpr_values_1_3[i] >= maxv:
+            maxv = gpr_values_1_3[i]
             gpr_B_max_3_1 = x_values[i]
-    gpr_max_3_1 = max(full_values_1_3)
+    gpr_max_3_1 = max(gpr_values_1_3)
     print("Max. accuracy Full:",gpr_max_3_1,"% at B=",gpr_B_max_3_1,"%.")
 
     maxv_3_1 = 0
@@ -607,24 +622,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_2_3)):
         if full_values_2_3[i] >= maxv:
+            maxv = full_values_2_3[i]
             full_B_max_3_2 = x_values[i]
     full_max_3_2 = max(full_values_2_3)
     print("Max. accuracy Full:",full_max_3_2,"% at B=",full_B_max_3_2,"%.")
 
     cpf_B_max_3_2 = 0
     maxv = 0
-    for i in range(len(full_values_2_3)):
-        if full_values_2_3[i] >= maxv:
+    for i in range(len(generic_values_2_3)):
+        if generic_values_2_3[i] >= maxv:
+            maxv = generic_values_2_3[i]
             cpf_B_max_3_2 = x_values[i]
-    cpf_max_3_2 = max(full_values_2_3)
+    cpf_max_3_2 = max(generic_values_2_3)
     print("Max. accuracy Full:",cpf_max_3_2,"% at B=",cpf_B_max_3_2,"%.")
 
     gpr_B_max_3_2 = 0
     maxv = 0
-    for i in range(len(full_values_2_3)):
-        if full_values_2_3[i] >= maxv:
+    for i in range(len(gpr_values_2_3)):
+        if gpr_values_2_3[i] >= maxv:
+            maxv = gpr_values_2_3[i]
             gpr_B_max_3_2 = x_values[i]
-    gpr_max_3_2 = max(full_values_2_3)
+    gpr_max_3_2 = max(gpr_values_2_3)
     print("Max. accuracy Full:",gpr_max_3_2,"% at B=",gpr_B_max_3_2,"%.")
 
     maxv_3_2 = 0
@@ -650,24 +668,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_5_3)):
         if full_values_5_3[i] >= maxv:
+            maxv = full_values_5_3[i]
             full_B_max_3_5 = x_values[i]
     full_max_3_5 = max(full_values_5_3)
     print("Max. accuracy Full:",full_max_3_5,"% at B=",full_B_max_3_5,"%.")
 
     cpf_B_max_3_5 = 0
     maxv = 0
-    for i in range(len(full_values_5_3)):
-        if full_values_5_3[i] >= maxv:
+    for i in range(len(generic_values_5_3)):
+        if generic_values_5_3[i] >= maxv:
+            maxv = generic_values_5_3[i]
             cpf_B_max_3_5 = x_values[i]
-    cpf_max_3_5 = max(full_values_5_3)
+    cpf_max_3_5 = max(generic_values_5_3)
     print("Max. accuracy Full:",cpf_max_3_5,"% at B=",cpf_B_max_3_5,"%.")
 
     gpr_B_max_3_5 = 0
     maxv = 0
-    for i in range(len(full_values_5_3)):
-        if full_values_5_3[i] >= maxv:
+    for i in range(len(gpr_values_5_3)):
+        if gpr_values_5_3[i] >= maxv:
+            maxv = gpr_values_5_3[i]
             gpr_B_max_3_5 = x_values[i]
-    gpr_max_3_5 = max(full_values_5_3)
+    gpr_max_3_5 = max(gpr_values_5_3)
     print("Max. accuracy Full:",gpr_max_3_5,"% at B=",gpr_B_max_3_5,"%.")
 
     maxv_3_5 = 0
@@ -693,24 +714,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_10_3)):
         if full_values_10_3[i] >= maxv:
+            maxv = full_values_10_3[i]
             full_B_max_3_10 = x_values[i]
     full_max_3_10 = max(full_values_10_3)
     print("Max. accuracy Full:",full_max_3_10,"% at B=",full_B_max_3_10,"%.")
 
     cpf_B_max_3_10 = 0
     maxv = 0
-    for i in range(len(full_values_10_3)):
-        if full_values_10_3[i] >= maxv:
+    for i in range(len(generic_values_10_3)):
+        if generic_values_10_3[i] >= maxv:
+            maxv = generic_values_10_3[i]
             cpf_B_max_3_10 = x_values[i]
-    cpf_max_3_10 = max(full_values_10_3)
+    cpf_max_3_10 = max(generic_values_10_3)
     print("Max. accuracy Full:",cpf_max_3_10,"% at B=",cpf_B_max_3_10,"%.")
 
     gpr_B_max_3_10 = 0
     maxv = 0
-    for i in range(len(full_values_10_3)):
-        if full_values_10_3[i] >= maxv:
+    for i in range(len(gpr_values_10_3)):
+        if gpr_values_10_3[i] >= maxv:
+            maxv = gpr_values_10_3[i]
             gpr_B_max_3_10 = x_values[i]
-    gpr_max_3_10 = max(full_values_10_3)
+    gpr_max_3_10 = max(gpr_values_10_3)
     print("Max. accuracy Full:",gpr_max_3_10,"% at B=",gpr_B_max_3_10,"%.")
 
     maxv_3_10 = 0
@@ -763,24 +787,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_1_4)):
         if full_values_1_4[i] >= maxv:
+            maxv = full_values_1_4[i]
             full_B_max_4_1 = x_values[i]
     full_max_4_1 = max(full_values_1_4)
     print("Max. accuracy Full:",full_max_4_1,"% at B=",full_B_max_4_1,"%.")
 
     cpf_B_max_4_1 = 0
     maxv = 0
-    for i in range(len(full_values_1_4)):
-        if full_values_1_4[i] >= maxv:
+    for i in range(len(generic_values_1_4)):
+        if generic_values_1_4[i] >= maxv:
+            maxv = generic_values_1_4[i]
             cpf_B_max_4_1 = x_values[i]
-    cpf_max_4_1 = max(full_values_1_4)
+    cpf_max_4_1 = max(generic_values_1_4)
     print("Max. accuracy Full:",cpf_max_4_1,"% at B=",cpf_B_max_4_1,"%.")
 
     gpr_B_max_4_1 = 0
     maxv = 0
-    for i in range(len(full_values_1_4)):
-        if full_values_1_4[i] >= maxv:
+    for i in range(len(gpr_values_1_4)):
+        if gpr_values_1_4[i] >= maxv:
+            maxv = gpr_values_1_4[i]
             gpr_B_max_4_1 = x_values[i]
-    gpr_max_4_1 = max(full_values_1_4)
+    gpr_max_4_1 = max(gpr_values_1_4)
     print("Max. accuracy Full:",gpr_max_4_1,"% at B=",gpr_B_max_4_1,"%.")
 
     maxv_4_1 = 0
@@ -805,24 +832,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_2_4)):
         if full_values_2_4[i] >= maxv:
+            maxv = full_values_2_4[i]
             full_B_max_4_2 = x_values[i]
     full_max_4_2 = max(full_values_2_4)
     print("Max. accuracy Full:",full_max_4_2,"% at B=",full_B_max_4_2,"%.")
 
     cpf_B_max_4_2 = 0
     maxv = 0
-    for i in range(len(full_values_2_4)):
-        if full_values_2_4[i] >= maxv:
+    for i in range(len(generic_values_2_4)):
+        if generic_values_2_4[i] >= maxv:
+            maxv = generic_values_2_4[i]
             cpf_B_max_4_2 = x_values[i]
-    cpf_max_4_2 = max(full_values_2_4)
+    cpf_max_4_2 = max(generic_values_2_4)
     print("Max. accuracy Full:",cpf_max_4_2,"% at B=",cpf_B_max_4_2,"%.")
 
     gpr_B_max_4_2 = 0
     maxv = 0
-    for i in range(len(full_values_2_4)):
-        if full_values_2_4[i] >= maxv:
+    for i in range(len(gpr_values_2_4)):
+        if gpr_values_2_4[i] >= maxv:
+            maxv = gpr_values_2_4[i]
             gpr_B_max_4_2 = x_values[i]
-    gpr_max_4_2 = max(full_values_2_4)
+    gpr_max_4_2 = max(gpr_values_2_4)
     print("Max. accuracy Full:",gpr_max_4_2,"% at B=",gpr_B_max_4_2,"%.")
 
     maxv_4_2 = 0
@@ -848,24 +878,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_5_4)):
         if full_values_5_4[i] >= maxv:
+            maxv = full_values_5_4[i]
             full_B_max_4_5 = x_values[i]
     full_max_4_5 = max(full_values_5_4)
     print("Max. accuracy Full:",full_max_4_5,"% at B=",full_B_max_4_5,"%.")
 
     cpf_B_max_4_5 = 0
     maxv = 0
-    for i in range(len(full_values_5_4)):
-        if full_values_5_4[i] >= maxv:
+    for i in range(len(generic_values_5_4)):
+        if generic_values_5_4[i] >= maxv:
+            maxv = generic_values_5_4[i]
             cpf_B_max_4_5 = x_values[i]
-    cpf_max_4_5 = max(full_values_5_4)
+    cpf_max_4_5 = max(generic_values_5_4)
     print("Max. accuracy Full:",cpf_max_4_5,"% at B=",cpf_B_max_4_5,"%.")
 
     gpr_B_max_4_5 = 0
     maxv = 0
-    for i in range(len(full_values_5_4)):
-        if full_values_5_4[i] >= maxv:
+    for i in range(len(gpr_values_5_4)):
+        if gpr_values_5_4[i] >= maxv:
+            maxv = gpr_values_5_4[i]
             gpr_B_max_4_5 = x_values[i]
-    gpr_max_4_5 = max(full_values_5_4)
+    gpr_max_4_5 = max(gpr_values_5_4)
     print("Max. accuracy Full:",gpr_max_4_5,"% at B=",gpr_B_max_4_5,"%.")
 
     maxv_4_5 = 0
@@ -891,24 +924,27 @@ def main():
     maxv = 0
     for i in range(len(full_values_10_4)):
         if full_values_10_4[i] >= maxv:
+            maxv = full_values_10_4[i]
             full_B_max_4_10 = x_values[i]
     full_max_4_10 = max(full_values_10_4)
     print("Max. accuracy Full:",full_max_4_10,"% at B=",full_B_max_4_10,"%.")
 
     cpf_B_max_4_10 = 0
     maxv = 0
-    for i in range(len(full_values_10_4)):
-        if full_values_10_4[i] >= maxv:
+    for i in range(len(generic_values_10_4)):
+        if generic_values_10_4[i] >= maxv:
+            maxv = generic_values_10_4[i]
             cpf_B_max_4_10 = x_values[i]
-    cpf_max_4_10 = max(full_values_10_4)
+    cpf_max_4_10 = max(generic_values_10_4)
     print("Max. accuracy Full:",cpf_max_4_10,"% at B=",cpf_B_max_4_10,"%.")
 
     gpr_B_max_4_10 = 0
     maxv = 0
-    for i in range(len(full_values_10_4)):
-        if full_values_10_4[i] >= maxv:
+    for i in range(len(gpr_values_10_4)):
+        if gpr_values_10_4[i] >= maxv:
+            maxv = gpr_values_10_4[i]
             gpr_B_max_4_10 = x_values[i]
-    gpr_max_4_10 = max(full_values_10_4)
+    gpr_max_4_10 = max(gpr_values_10_4)
     print("Max. accuracy Full:",gpr_max_4_10,"% at B=",gpr_B_max_4_10,"%.")
 
     maxv_4_10 = 0
@@ -987,14 +1023,14 @@ def main():
     # annotations
     ax1.plot([Bv_2_1,Bv_2_1], [cpfv_2_1,gprv_2_1], color = "black", linewidth=1, marker="_")
     ytemp = gprv_2_1 - (maxv_2_1/2)
-    strtemp = "+"+str(maxv_2_1)+"\% at \nB="+str(Bv_2_1)+"\%"
-    ax1.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_2_1)+"\% at \nB="+str(cpf_B_max_2_1)+"\%"
-    ax1.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_2_1)+"\% at \nB="+str(gpr_B_max_2_1)+"\%"
-    ax1.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_2_1)+"\% at \nB="+str(full_B_max_2_1)+"\%"
-    ax1.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_2_1))+"\% for \nB="+str('{0:.0f}'.format(Bv_2_1))+"\%"
+    ax1.annotate(strtemp, xy=(Bv_2_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    #strtemp = str('{0:.2f}'.format(cpf_max_2_1))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_2_1))+"\%"
+    #ax1.annotate(strtemp, xy=(cpf_B_max_2_1, cpf_max_2_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="blue")
+    #strtemp = str('{0:.2f}'.format(gpr_max_2_1))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_2_1))+"\%"
+    #ax1.annotate(strtemp, xy=(gpr_B_max_2_1, gpr_max_2_1), xycoords='data', xytext=(0, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_2_1))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_2_1))+"\%"
+    #ax1.annotate(strtemp, xy=(full_B_max_2_1, full_max_2_1), xycoords='data', xytext=(50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="dimgray")
 
     ax1.grid(alpha=0.3, which='major')
     ax1.grid(alpha=0.3, which='minor')
@@ -1021,14 +1057,14 @@ def main():
     # annotations
     ax2.plot([Bv_2_2,Bv_2_2], [cpfv_2_2,gprv_2_2], color = "black", linewidth=1, marker="_")
     ytemp = gprv_2_2 - (maxv_2_2/2)
-    strtemp = "+"+str(maxv_2_2)+"\% at \nB="+str(Bv_2_2)+"\%"
-    ax2.annotate(strtemp, xy=(Bv_2_2, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_2_2)+"\% at \nB="+str(cpf_B_max_2_2)+"\%"
-    ax2.annotate(strtemp, xy=(cpf_B_max_2_2, cpf_max_2_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_2_2)+"\% at \nB="+str(gpr_B_max_2_2)+"\%"
-    ax2.annotate(strtemp, xy=(gpr_B_max_2_2, gpr_max_2_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_2_2)+"\% at \nB="+str(full_B_max_2_2)+"\%"
-    ax2.annotate(strtemp, xy=(full_B_max_2_2, full_max_2_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_2_2))+"\% for \nB="+str('{0:.0f}'.format(Bv_2_2))+"\%"
+    ax2.annotate(strtemp, xy=(Bv_2_2, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    #strtemp = str('{0:.2f}'.format(cpf_max_2_2))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_2_2))+"\%"
+    #ax2.annotate(strtemp, xy=(cpf_B_max_2_2, cpf_max_2_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="blue")
+    #strtemp = str('{0:.2f}'.format(gpr_max_2_2))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_2_2))+"\%"
+    #ax2.annotate(strtemp, xy=(gpr_B_max_2_2, gpr_max_2_2), xycoords='data', xytext=(-50, -25), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_2_2))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_2_2))+"\%"
+    #ax2.annotate(strtemp, xy=(full_B_max_2_2, full_max_2_2), xycoords='data', xytext=(-50, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="dimgray")
 
     ax2.grid(alpha=0.3, which='major')
     ax2.grid(alpha=0.3, which='minor')
@@ -1056,14 +1092,14 @@ def main():
     # annotations
     ax3.plot([Bv_2_5,Bv_2_5], [cpfv_2_5,gprv_2_5], color = "black", linewidth=1, marker="_")
     ytemp = gprv_2_5 - (maxv_2_5/2)
-    strtemp = "+"+str(maxv_2_5)+"\% at \nB="+str(Bv_2_5)+"\%"
-    ax3.annotate(strtemp, xy=(Bv_2_5, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_2_5)+"\% at \nB="+str(cpf_B_max_2_5)+"\%"
-    ax3.annotate(strtemp, xy=(cpf_B_max_2_5, cpf_max_2_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_2_5)+"\% at \nB="+str(gpr_B_max_2_5)+"\%"
-    ax3.annotate(strtemp, xy=(gpr_B_max_2_5, gpr_max_2_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_2_5)+"\% at \nB="+str(full_B_max_2_5)+"\%"
-    ax3.annotate(strtemp, xy=(full_B_max_2_5, full_max_2_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_2_5))+"\% for \nB="+str('{0:.0f}'.format(Bv_2_5))+"\%"
+    ax3.annotate(strtemp, xy=(Bv_2_5, ytemp), xycoords='data', xytext=(-60, -25), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = str('{0:.2f}'.format(cpf_max_2_5))+"\% \nB="+str('{0:.0f}'.format(cpf_B_max_2_5))+"\%"
+    ax3.annotate(strtemp, xy=(cpf_B_max_2_5, cpf_max_2_5), xycoords='data', xytext=(-20, -40), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_2_5))+"\% \nB="+str('{0:.0f}'.format(gpr_B_max_2_5))+"\%"
+    ax3.annotate(strtemp, xy=(gpr_B_max_2_5, gpr_max_2_5), xycoords='data', xytext=(-70, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_2_5))+"\% for \nB="+str('{0:.0f}'.format(full_B_max_2_5))+"\%"
+    ax3.annotate(strtemp, xy=(full_B_max_2_5, full_max_2_5), xycoords='data', xytext=(-35, -55), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color='dimgray'), fontsize=7, color="dimgray")
     
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
@@ -1093,14 +1129,14 @@ def main():
     # annotations
     ax4.plot([Bv_2_10,Bv_2_10], [cpfv_2_10,gprv_2_10], color = "black", linewidth=1, marker="_")
     ytemp = gprv_2_10 - (maxv_2_10/2)
-    strtemp = "+"+str(maxv_2_10)+"\% at \nB="+str(Bv_2_10)+"\%"
-    ax4.annotate(strtemp, xy=(Bv_2_10, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_2_10)+"\% at \nB="+str(cpf_B_max_2_10)+"\%"
-    ax4.annotate(strtemp, xy=(cpf_B_max_2_10, cpf_max_2_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_2_10)+"\% at \nB="+str(gpr_B_max_2_10)+"\%"
-    ax4.annotate(strtemp, xy=(gpr_B_max_2_10, gpr_max_2_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_2_10)+"\% at \nB="+str(full_B_max_2_10)+"\%"
-    ax4.annotate(strtemp, xy=(full_B_max_2_10, full_max_2_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_2_10))+"\% for \nB="+str('{0:.0f}'.format(Bv_2_10))+"\%"
+    ax4.annotate(strtemp, xy=(Bv_2_10, ytemp), xycoords='data', xytext=(-60, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = str('{0:.2f}'.format(cpf_max_2_10))+"\% \nB="+str('{0:.0f}'.format(cpf_B_max_2_10))+"\%"
+    ax4.annotate(strtemp, xy=(cpf_B_max_2_10, cpf_max_2_10), xycoords='data', xytext=(-25, -40), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_2_10))+"\% for \nB="+str('{0:.0f}'.format(gpr_B_max_2_10))+"\%"
+    ax4.annotate(strtemp, xy=(gpr_B_max_2_10, gpr_max_2_10), xycoords='data', xytext=(-60, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_2_10))+"\% for \nB="+str('{0:.0f}'.format(full_B_max_2_10))+"\%"
+    ax4.annotate(strtemp, xy=(full_B_max_2_10, full_max_2_10), xycoords='data', xytext=(-40, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
     
     ax4.grid(alpha=0.3, which='major')
     ax4.grid(alpha=0.3, which='minor')
@@ -1134,14 +1170,14 @@ def main():
     # annotations
     ax5.plot([Bv_3_1,Bv_3_1], [cpfv_3_1,gprv_3_1], color = "black", linewidth=1, marker="_")
     ytemp = gprv_3_1 - (maxv_3_1/2)
-    strtemp = "+"+str(maxv_3_1)+"\% at \nB="+str(Bv_3_1)+"\%"
-    ax5.annotate(strtemp, xy=(Bv_3_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_3_1)+"\% at \nB="+str(cpf_B_max_3_1)+"\%"
-    ax5.annotate(strtemp, xy=(cpf_B_max_3_1, cpf_max_3_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_3_1)+"\% at \nB="+str(gpr_B_max_3_1)+"\%"
-    ax5.annotate(strtemp, xy=(gpr_B_max_3_1, gpr_max_3_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_3_1)+"\% at \nB="+str(full_B_max_3_1)+"\%"
-    ax5.annotate(strtemp, xy=(full_B_max_3_1, full_max_3_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_3_1))+"\% for \nB="+str('{0:.0f}'.format(Bv_3_1))+"\%"
+    ax5.annotate(strtemp, xy=(Bv_3_1, ytemp), xycoords='data', xytext=(10, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    #strtemp = str('{0:.2f}'.format(cpf_max_3_1))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_3_1))+"\%"
+    #ax5.annotate(strtemp, xy=(cpf_B_max_3_1, cpf_max_3_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    #strtemp = str('{0:.2f}'.format(gpr_max_3_1))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_3_1))+"\%"
+    #ax5.annotate(strtemp, xy=(gpr_B_max_3_1, gpr_max_3_1), xycoords='data', xytext=(-50, -25), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_3_1))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_3_1))+"\%"
+    #ax5.annotate(strtemp, xy=(full_B_max_3_1, full_max_3_1), xycoords='data', xytext=(-50, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
 
     ax5.grid(alpha=0.3, which='major')
     ax5.grid(alpha=0.3, which='minor')
@@ -1167,14 +1203,14 @@ def main():
     # annotations
     ax6.plot([Bv_3_2,Bv_3_2], [cpfv_3_2,gprv_3_2], color = "black", linewidth=1, marker="_")
     ytemp = gprv_3_2 - (maxv_3_2/2)
-    strtemp = "+"+str(maxv_3_2)+"\% at \nB="+str(Bv_3_2)+"\%"
-    ax6.annotate(strtemp, xy=(Bv_3_2, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_3_2)+"\% at \nB="+str(cpf_B_max_3_2)+"\%"
-    ax6.annotate(strtemp, xy=(cpf_B_max_3_2, cpf_max_3_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_3_2)+"\% at \nB="+str(gpr_B_max_3_2)+"\%"
-    ax6.annotate(strtemp, xy=(gpr_B_max_3_2, gpr_max_3_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_3_2)+"\% at \nB="+str(full_B_max_3_2)+"\%"
-    ax6.annotate(strtemp, xy=(full_B_max_3_2, full_max_3_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_3_2))+"\% for \nB="+str('{0:.0f}'.format(Bv_3_2))+"\%"
+    ax6.annotate(strtemp, xy=(Bv_3_2, ytemp), xycoords='data', xytext=(10, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    #strtemp = str('{0:.2f}'.format(cpf_max_3_2))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_3_2))+"\%"
+    #ax6.annotate(strtemp, xy=(cpf_B_max_3_2, cpf_max_3_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="blue")
+    #strtemp = str('{0:.2f}'.format(gpr_max_3_2))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_3_2))+"\%"
+    #ax6.annotate(strtemp, xy=(gpr_B_max_3_2, gpr_max_3_2), xycoords='data', xytext=(-50, -25), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_3_2))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_3_2))+"\%"
+    #ax6.annotate(strtemp, xy=(full_B_max_3_2, full_max_3_2), xycoords='data', xytext=(-50, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="dimgray")
 
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
@@ -1199,14 +1235,14 @@ def main():
     # annotations
     ax7.plot([Bv_3_5,Bv_3_5], [cpfv_3_5,gprv_3_5], color = "black", linewidth=1, marker="_")
     ytemp = gprv_3_5 - (maxv_3_5/2)
-    strtemp = "+"+str(maxv_3_5)+"\% at \nB="+str(Bv_3_5)+"\%"
-    ax7.annotate(strtemp, xy=(Bv_3_5, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_3_5)+"\% at \nB="+str(cpf_B_max_3_5)+"\%"
-    ax7.annotate(strtemp, xy=(cpf_B_max_3_5, cpf_max_3_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_3_5)+"\% at \nB="+str(gpr_B_max_3_5)+"\%"
-    ax7.annotate(strtemp, xy=(gpr_B_max_3_5, gpr_max_3_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_3_5)+"\% at \nB="+str(full_B_max_3_5)+"\%"
-    ax7.annotate(strtemp, xy=(full_B_max_3_5, full_max_3_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_3_5))+"\% for \nB="+str('{0:.0f}'.format(Bv_3_5))+"\%"
+    ax7.annotate(strtemp, xy=(Bv_3_5, ytemp), xycoords='data', xytext=(10, -40), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = str('{0:.2f}'.format(cpf_max_3_5))+"\% for \nB="+str('{0:.0f}'.format(cpf_B_max_3_5))+"\%"
+    ax7.annotate(strtemp, xy=(cpf_B_max_3_5, cpf_max_3_5), xycoords='data', xytext=(-95, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_3_5))+"\% for \nB="+str('{0:.0f}'.format(gpr_B_max_3_5))+"\%"
+    ax7.annotate(strtemp, xy=(gpr_B_max_3_5, gpr_max_3_5), xycoords='data', xytext=(-40, -30), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_3_5))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_3_5))+"\%"
+    #ax7.annotate(strtemp, xy=(full_B_max_3_5, full_max_3_5), xycoords='data', xytext=(-50, -70), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="dimgray")
 
     ax7.grid(alpha=0.3, which='major')
     ax7.grid(alpha=0.3, which='minor')
@@ -1231,14 +1267,14 @@ def main():
     # annotations
     ax8.plot([Bv_3_10,Bv_3_10], [cpfv_3_10,gprv_3_10], color = "black", linewidth=1, marker="_")
     ytemp = gprv_3_10 - (maxv_3_10/2)
-    strtemp = "+"+str(maxv_3_10)+"\% at \nB="+str(Bv_3_10)+"\%"
-    ax8.annotate(strtemp, xy=(Bv_3_10, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_3_10)+"\% at \nB="+str(cpf_B_max_3_10)+"\%"
-    ax8.annotate(strtemp, xy=(cpf_B_max_3_10, cpf_max_3_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_3_10)+"\% at \nB="+str(gpr_B_max_3_10)+"\%"
-    ax8.annotate(strtemp, xy=(gpr_B_max_3_10, gpr_max_3_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_3_10)+"\% at \nB="+str(full_B_max_3_10)+"\%"
-    ax8.annotate(strtemp, xy=(full_B_max_3_10, full_max_3_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_3_10))+"\% for \nB="+str('{0:.0f}'.format(Bv_3_10))+"\%"
+    ax8.annotate(strtemp, xy=(Bv_3_10, ytemp), xycoords='data', xytext=(10, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    #strtemp = str('{0:.2f}'.format(cpf_max_3_10))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_3_10))+"\%"
+    #ax8.annotate(strtemp, xy=(cpf_B_max_3_10, cpf_max_3_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="blue")
+    #strtemp = str('{0:.2f}'.format(gpr_max_3_10))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_3_10))+"\%"
+    #ax8.annotate(strtemp, xy=(gpr_B_max_3_10, gpr_max_3_10), xycoords='data', xytext=(-50, -25), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_3_10))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_3_10))+"\%"
+    #ax8.annotate(strtemp, xy=(full_B_max_3_10, full_max_3_10), xycoords='data', xytext=(-50, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="dimgray")
 
     ax8.grid(alpha=0.3, which='major')
     ax8.grid(alpha=0.3, which='minor')
@@ -1270,14 +1306,14 @@ def main():
     # annotations
     ax9.plot([Bv_4_1,Bv_4_1], [cpfv_4_1,gprv_4_1], color = "black", linewidth=1, marker="_")
     ytemp = gprv_4_1 - (maxv_4_1/2)
-    strtemp = "+"+str(maxv_4_1)+"\% at \nB="+str(Bv_4_1)+"\%"
-    ax9.annotate(strtemp, xy=(Bv_4_1, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_4_1)+"\% at \nB="+str(cpf_B_max_4_1)+"\%"
-    ax9.annotate(strtemp, xy=(cpf_B_max_4_1, cpf_max_4_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_4_1)+"\% at \nB="+str(gpr_B_max_4_1)+"\%"
-    ax9.annotate(strtemp, xy=(gpr_B_max_4_1, gpr_max_4_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_4_1)+"\% at \nB="+str(full_B_max_4_1)+"\%"
-    ax9.annotate(strtemp, xy=(full_B_max_4_1, full_max_4_1), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_4_1))+"\% for \nB="+str('{0:.1f}'.format(Bv_4_1))+"\%"
+    ax9.annotate(strtemp, xy=(Bv_4_1, ytemp), xycoords='data', xytext=(15, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = str('{0:.2f}'.format(cpf_max_4_1))+"\% \nB="+str('{0:.0f}'.format(cpf_B_max_4_1))+"\%"
+    ax9.annotate(strtemp, xy=(cpf_B_max_4_1, cpf_max_4_1), xycoords='data', xytext=(-35, -30), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_4_1))+"\% \nB="+str('{0:.0f}'.format(gpr_B_max_4_1))+"\%"
+    ax9.annotate(strtemp, xy=(gpr_B_max_4_1, gpr_max_4_1), xycoords='data', xytext=(-25, -60), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_4_1))+"\% for \nB="+str('{0:.0f}'.format(full_B_max_4_1))+"\%"
+    #ax9.annotate(strtemp, xy=(full_B_max_4_1, full_max_4_1), xycoords='data', xytext=(-50, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="dimgray")
 
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
@@ -1303,14 +1339,14 @@ def main():
     # annotations
     ax10.plot([Bv_4_2,Bv_4_2], [cpfv_4_2,gprv_4_2], color = "black", linewidth=1, marker="_")
     ytemp = gprv_4_2 - (maxv_4_2/2)
-    strtemp = "+"+str(maxv_4_2)+"\% at \nB="+str(Bv_4_2)+"\%"
-    ax10.annotate(strtemp, xy=(Bv_4_2, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_4_2)+"\% at \nB="+str(cpf_B_max_4_2)+"\%"
-    ax10.annotate(strtemp, xy=(cpf_B_max_4_2, cpf_max_4_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_4_2)+"\% at \nB="+str(gpr_B_max_4_2)+"\%"
-    ax10.annotate(strtemp, xy=(gpr_B_max_4_2, gpr_max_4_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_4_2)+"\% at \nB="+str(full_B_max_4_2)+"\%"
-    ax10.annotate(strtemp, xy=(full_B_max_4_2, full_max_4_2), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_4_2))+"\% for \nB="+str('{0:.1f}'.format(Bv_4_2))+"\%"
+    ax10.annotate(strtemp, xy=(Bv_4_2, ytemp), xycoords='data', xytext=(15, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = str('{0:.2f}'.format(cpf_max_4_2))+"\% \nB="+str('{0:.0f}'.format(cpf_B_max_4_2))+"\%"
+    ax10.annotate(strtemp, xy=(cpf_B_max_4_2, cpf_max_4_2), xycoords='data', xytext=(-35, -30), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_4_2))+"\% \nB="+str('{0:.0f}'.format(gpr_B_max_4_2))+"\%"
+    ax10.annotate(strtemp, xy=(gpr_B_max_4_2, gpr_max_4_2), xycoords='data', xytext=(-25, -60), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    #strtemp = str('{0:.2f}'.format(full_max_4_2))+"\% for \nB="+str('{0:.0f}'.format(full_B_max_4_2))+"\%"
+    #ax10.annotate(strtemp, xy=(full_B_max_4_2, full_max_4_2), xycoords='data', xytext=(-50, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7, color="dimgray")
 
     ax10.grid(alpha=0.3, which='major')
     ax10.grid(alpha=0.3, which='minor')
@@ -1335,14 +1371,14 @@ def main():
     # annotations
     ax11.plot([Bv_4_5,Bv_4_5], [cpfv_4_5,gprv_4_5], color = "black", linewidth=1, marker="_")
     ytemp = gprv_4_5 - (maxv_4_5/2)
-    strtemp = "+"+str(maxv_4_5)+"\% at \nB="+str(Bv_4_5)+"\%"
-    ax11.annotate(strtemp, xy=(Bv_4_5, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_4_5)+"\% at \nB="+str(cpf_B_max_4_5)+"\%"
-    ax11.annotate(strtemp, xy=(cpf_B_max_4_5, cpf_max_4_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_4_5)+"\% at \nB="+str(gpr_B_max_4_5)+"\%"
-    ax11.annotate(strtemp, xy=(gpr_B_max_4_5, gpr_max_4_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_4_5)+"\% at \nB="+str(full_B_max_4_5)+"\%"
-    ax11.annotate(strtemp, xy=(full_B_max_4_5, full_max_4_5), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_4_5))+"\% for \nB="+str('{0:.1f}'.format(Bv_4_5))+"\%"
+    ax11.annotate(strtemp, xy=(Bv_4_5, ytemp), xycoords='data', xytext=(15, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = str('{0:.2f}'.format(cpf_max_4_5))+"\% for \nB="+str('{0:.0f}'.format(cpf_B_max_4_5))+"\%"
+    ax11.annotate(strtemp, xy=(cpf_B_max_4_5, cpf_max_4_5), xycoords='data', xytext=(-70, -5), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_4_5))+"\% \nB="+str('{0:.0f}'.format(gpr_B_max_4_5))+"\%"
+    ax11.annotate(strtemp, xy=(gpr_B_max_4_5, gpr_max_4_5), xycoords='data', xytext=(-30, -40), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_4_5))+"\% \nB="+str('{0:.0f}'.format(full_B_max_4_5))+"\%"
+    ax11.annotate(strtemp, xy=(full_B_max_4_5, full_max_4_5), xycoords='data', xytext=(-30, -70), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
 
     ax11.grid(alpha=0.3, which='major')
     ax11.grid(alpha=0.3, which='minor')
@@ -1367,14 +1403,14 @@ def main():
     # annotations
     ax12.plot([Bv_4_10,Bv_4_10], [cpfv_4_10,gprv_4_10], color = "black", linewidth=1, marker="_")
     ytemp = gprv_4_10 - (maxv_4_10/2)
-    strtemp = "+"+str(maxv_4_10)+"\% at \nB="+str(Bv_4_10)+"\%"
-    ax12.annotate(strtemp, xy=(Bv_4_10, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8)
-    strtemp = str(cpf_max_4_10)+"\% at \nB="+str(cpf_B_max_4_10)+"\%"
-    ax12.annotate(strtemp, xy=(cpf_B_max_4_10, cpf_max_4_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="blue")
-    strtemp = str(gpr_max_4_10)+"\% at \nB="+str(gpr_B_max_4_10)+"\%"
-    ax12.annotate(strtemp, xy=(gpr_B_max_4_10, gpr_max_4_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="red")
-    strtemp = str(full_max_4_10)+"\% at \nB="+str(full_B_max_4_10)+"\%"
-    ax12.annotate(strtemp, xy=(full_B_max_4_10, full_max_4_10), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=8, color="gray")
+    strtemp = "+"+str('{0:.2f}'.format(maxv_4_10))+"\% for \nB="+str('{0:.1f}'.format(Bv_4_10))+"\%"
+    ax12.annotate(strtemp, xy=(Bv_4_10, ytemp), xycoords='data', xytext=(15, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = str('{0:.2f}'.format(cpf_max_4_10))+"\% for \nB="+str('{0:.0f}'.format(cpf_B_max_4_10))+"\%"
+    ax12.annotate(strtemp, xy=(cpf_B_max_4_10, cpf_max_4_10), xycoords='data', xytext=(-70, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_4_10))+"\% \nB="+str('{0:.0f}'.format(gpr_B_max_4_10))+"\%"
+    ax12.annotate(strtemp, xy=(gpr_B_max_4_10, gpr_max_4_10), xycoords='data', xytext=(-40, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_4_10))+"\% \nB="+str('{0:.0f}'.format(full_B_max_4_10))+"\%"
+    ax12.annotate(strtemp, xy=(full_B_max_4_10, full_max_4_10), xycoords='data', xytext=(-25, -60), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
 
     ax12.set_yticks(np.arange(0, 100, 10))
     ax12.set_xticks([0, 1, 10, 100])
