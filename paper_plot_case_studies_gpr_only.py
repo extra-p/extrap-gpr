@@ -1002,9 +1002,9 @@ def main():
     
     # annotations
     strtemp = str('{0:.2f}'.format(B_NU_FASTEST_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_FASTEST))+"\%"
-    ax2.annotate(strtemp, xy=(B_CPF_FASTEST, B_NU_FASTEST_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    ax2.annotate(strtemp, xy=(B_CPF_FASTEST, B_NU_FASTEST_GENERIC), xycoords='data', xytext=(-60, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
     strtemp = str('{0:.2f}'.format(B_NU_FASTEST_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_FASTEST))+"\%"
-    ax2.annotate(strtemp, xy=(B_GPR_FASTEST, B_NU_FASTEST_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    ax2.annotate(strtemp, xy=(B_GPR_FASTEST, B_NU_FASTEST_GPR), xycoords='data', xytext=(-80, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
     
     ax2.grid(alpha=0.3, which='major')
     ax2.grid(alpha=0.3, which='minor')
@@ -1029,13 +1029,13 @@ def main():
     
     ax3.plot([B_points_FASTEST,B_points_FASTEST], [cpf_points_FASTEST,gpr_points_FASTEST], color = "black", linewidth=1, marker="_")
     ytemp = gpr_points_FASTEST - (max_points_FASTEST/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_FASTEST))+"\% for \nB="+str('{0:.0f}'.format(B_points_FASTEST))+"\%"
-    ax3.annotate(strtemp, xy=(B_points_FASTEST, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_FASTEST))+"\ for \nB="+str('{0:.0f}'.format(B_points_FASTEST))+"\%"
+    ax3.annotate(strtemp, xy=(B_points_FASTEST, ytemp), xycoords='data', xytext=(25, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax3.plot([B_points_FASTEST_2,B_points_FASTEST_2], [cpf_points_FASTEST_2,gpr_points_FASTEST_2], color = "black", linewidth=1, marker="_")
     ytemp = cpf_points_FASTEST_2 - (max_points_FASTEST_2/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_FASTEST_2))+"\% for \nB="+str('{0:.0f}'.format(B_points_FASTEST_2))+"\%"
-    ax3.annotate(strtemp, xy=(B_points_FASTEST_2, ytemp), xycoords='data', xytext=(10, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "-"+str('{0:.2f}'.format(max_points_FASTEST_2))+"\ for \nB="+str('{0:.0f}'.format(B_points_FASTEST_2))+"\%"
+    ax3.annotate(strtemp, xy=(B_points_FASTEST_2, ytemp), xycoords='data', xytext=(25, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
@@ -1103,9 +1103,9 @@ def main():
         
     # annotations
     strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GENERIC))+" for \nB="+str('{0:.0f}'.format(B_CPF_KRIPKE))+"\%"
-    ax5.annotate(strtemp, xy=(B_CPF_KRIPKE, B_NU_KRIPKE_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    ax5.annotate(strtemp, xy=(B_CPF_KRIPKE, B_NU_KRIPKE_GENERIC), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
     strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GPR))+" for \nB="+str('{0:.0f}'.format(B_GPR_KRIPKE))+"\%"
-    ax5.annotate(strtemp, xy=(B_GPR_KRIPKE, B_NU_KRIPKE_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    ax5.annotate(strtemp, xy=(B_GPR_KRIPKE, B_NU_KRIPKE_GPR), xycoords='data', xytext=(-70, 30), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
     
     ax5.grid(alpha=0.3, which='major')
     ax5.grid(alpha=0.3, which='minor')
@@ -1128,8 +1128,8 @@ def main():
         
     ax6.plot([B_points_KRIPKE,B_points_KRIPKE], [cpf_points_KRIPKE,gpr_points_KRIPKE], color = "black", linewidth=1, marker="_")
     ytemp = cpf_points_KRIPKE - (max_points_KRIPKE/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_KRIPKE))+" for \nB="+str('{0:.0f}'.format(B_points_KRIPKE))+"\%"
-    ax6.annotate(strtemp, xy=(B_points_KRIPKE, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "-"+str('{0:.2f}'.format(max_points_KRIPKE))+" for \nB="+str('{0:.0f}'.format(B_points_KRIPKE))+"\%"
+    ax6.annotate(strtemp, xy=(B_points_KRIPKE, ytemp), xycoords='data', xytext=(25, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
@@ -1193,9 +1193,9 @@ def main():
         
     # annotations
     strtemp = str('{0:.2f}'.format(B_NU_LULESH_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_LULESH))+"\%"
-    ax8.annotate(strtemp, xy=(B_CPF_LULESH, B_NU_LULESH_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    ax8.annotate(strtemp, xy=(B_CPF_LULESH, B_NU_LULESH_GENERIC), xycoords='data', xytext=(-50, -5), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
     strtemp = str('{0:.2f}'.format(B_NU_LULESH_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_LULESH))+"\%"
-    ax8.annotate(strtemp, xy=(B_GPR_LULESH, B_NU_LULESH_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    ax8.annotate(strtemp, xy=(B_GPR_LULESH, B_NU_LULESH_GPR), xycoords='data', xytext=(-60, 20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
     
     ax8.grid(alpha=0.3, which='major')
     ax8.grid(alpha=0.3, which='minor')
@@ -1220,8 +1220,8 @@ def main():
         
     ax9.plot([B_points_LULESH,B_points_LULESH], [cpf_points_LULESH,gpr_points_LULESH], color = "black", linewidth=1, marker="_")
     ytemp = cpf_points_LULESH - (max_points_LULESH/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_LULESH))+" for \nB="+str('{0:.0f}'.format(B_points_LULESH))+"\%"
-    ax9.annotate(strtemp, xy=(B_points_LULESH, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "-"+str('{0:.2f}'.format(max_points_LULESH))+" for \nB="+str('{0:.0f}'.format(B_points_LULESH))+"\%"
+    ax9.annotate(strtemp, xy=(B_points_LULESH, ytemp), xycoords='data', xytext=(25, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
@@ -1288,9 +1288,9 @@ def main():
         
     # annotations
     strtemp = str('{0:.2f}'.format(B_NU_MINIFE_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_MINIFE))+"\%"
-    ax11.annotate(strtemp, xy=(B_CPF_MINIFE, B_NU_MINIFE_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    ax11.annotate(strtemp, xy=(B_CPF_MINIFE, B_NU_MINIFE_GENERIC), xycoords='data', xytext=(-50, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
     strtemp = str('{0:.2f}'.format(B_NU_MINIFE_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_MINIFE))+"\%"
-    ax11.annotate(strtemp, xy=(B_GPR_MINIFE, B_NU_MINIFE_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    ax11.annotate(strtemp, xy=(B_GPR_MINIFE, B_NU_MINIFE_GPR), xycoords='data', xytext=(-70, 20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
     
     ax11.grid(alpha=0.3, which='major')
     ax11.grid(alpha=0.3, which='minor')
@@ -1313,8 +1313,8 @@ def main():
         
     ax12.plot([B_points_MINIFE,B_points_MINIFE], [cpf_points_MINIFE,gpr_points_MINIFE], color = "black", linewidth=1, marker="_")
     ytemp = cpf_points_MINIFE - (max_points_MINIFE/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_MINIFE))+" for \nB="+str('{0:.0f}'.format(B_points_MINIFE))+"\%"
-    ax12.annotate(strtemp, xy=(B_points_MINIFE, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "-"+str('{0:.2f}'.format(max_points_MINIFE))+" for \nB="+str('{0:.0f}'.format(B_points_MINIFE))+"\%"
+    ax12.annotate(strtemp, xy=(B_points_MINIFE, ytemp), xycoords='data', xytext=(25, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
@@ -1412,8 +1412,8 @@ def main():
     
     ax15.plot([B_points_QUICKSILVER,B_points_QUICKSILVER], [cpf_points_QUICKSILVER,gpr_points_QUICKSILVER], color = "black", linewidth=1, marker="_")
     ytemp = cpf_points_QUICKSILVER - (max_points_QUICKSILVER/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_QUICKSILVER))+" for \nB="+str('{0:.0f}'.format(B_points_QUICKSILVER))+"\%"
-    ax15.annotate(strtemp, xy=(B_points_QUICKSILVER, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "-"+str('{0:.2f}'.format(max_points_QUICKSILVER))+" for \nB="+str('{0:.0f}'.format(B_points_QUICKSILVER))+"\%"
+    ax15.annotate(strtemp, xy=(B_points_QUICKSILVER, ytemp), xycoords='data', xytext=(25, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax15.grid(alpha=0.3, which='major')
     ax15.grid(alpha=0.3, which='minor')
@@ -1475,9 +1475,9 @@ def main():
     
     # annotations
     strtemp = str('{0:.2f}'.format(B_NU_RELEARN_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_RELEARN))+"\%"
-    ax17.annotate(strtemp, xy=(B_CPF_RELEARN, B_NU_RELEARN_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    ax17.annotate(strtemp, xy=(B_CPF_RELEARN, B_NU_RELEARN_GENERIC), xycoords='data', xytext=(-60, -5), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
     strtemp = str('{0:.2f}'.format(B_NU_RELEARN_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_RELEARN))+"\%"
-    ax17.annotate(strtemp, xy=(B_GPR_RELEARN, B_NU_RELEARN_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    ax17.annotate(strtemp, xy=(B_GPR_RELEARN, B_NU_RELEARN_GPR), xycoords='data', xytext=(-35, -45), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
     
     ax17.grid(alpha=0.3, which='major')
     ax17.grid(alpha=0.3, which='minor')
@@ -1501,13 +1501,13 @@ def main():
         
     ax18.plot([B_points_RELEARN,B_points_RELEARN], [cpf_points_RELEARN,gpr_points_RELEARN], color = "black", linewidth=1, marker="_")
     ytemp = gpr_points_RELEARN - (max_points_RELEARN/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_RELEARN))+"\% for \nB="+str('{0:.0f}'.format(B_points_RELEARN))+"\%"
-    ax18.annotate(strtemp, xy=(B_points_RELEARN, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_RELEARN))+" for \nB="+str('{0:.0f}'.format(B_points_RELEARN))+"\%"
+    ax18.annotate(strtemp, xy=(B_points_RELEARN, ytemp), xycoords='data', xytext=(30, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax18.plot([B_points_RELEARN_2,B_points_RELEARN_2], [cpf_points_RELEARN_2,gpr_points_RELEARN_2], color = "black", linewidth=1, marker="_")
     ytemp = cpf_points_RELEARN_2 - (max_points_RELEARN_2/2)
-    strtemp = "+"+str('{0:.2f}'.format(max_points_RELEARN_2))+"\% for \nB="+str('{0:.0f}'.format(B_points_RELEARN_2))+"\%"
-    ax18.annotate(strtemp, xy=(B_points_RELEARN_2, ytemp), xycoords='data', xytext=(10, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    strtemp = "-"+str('{0:.2f}'.format(max_points_RELEARN_2))+" for \nB="+str('{0:.0f}'.format(B_points_RELEARN_2))+"\%"
+    ax18.annotate(strtemp, xy=(B_points_RELEARN_2, ytemp), xycoords='data', xytext=(30, -25), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     
     ax18.grid(alpha=0.3, which='major')
     ax18.grid(alpha=0.3, which='minor')
