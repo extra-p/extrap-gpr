@@ -107,11 +107,69 @@ def main():
         #hybrid_costs_fastest,
     ]
 
-    print("fastest")
-    a = max(generic_costs_fastest)
-    b = max(gpr_costs_fastest)
-    print(a,b)
-    print(a/b)
+    print("")
+    print("### FASTEST ###")
+    B_NU_FASTEST_GENERIC = np.nanmax(generic_costs_fastest)
+    B_NU_FASTEST_GPR = np.nanmax(gpr_costs_fastest)
+    #print(B_NU_FASTEST_GENERIC,B_NU_FASTEST_GPR)
+    print("unused budget factor CPF/GPR:",B_NU_FASTEST_GENERIC/B_NU_FASTEST_GPR)
+    
+    B_CPF_FASTEST = 0
+    maxv = 0
+    for i in range(len(generic_costs_fastest)):
+        if generic_costs_fastest[i] >= maxv:
+            maxv = generic_costs_fastest[i]
+            B_CPF_FASTEST = x_values_fastest[i]
+            
+    B_GPR_FASTEST = 0
+    maxv = 0
+    for i in range(len(gpr_costs_fastest)):
+        if gpr_costs_fastest[i] >= maxv:
+            maxv = gpr_costs_fastest[i]
+            B_GPR_FASTEST = x_values_fastest[i]
+
+    full_B_max_FASTEST = 0
+    maxv = 0
+    for i in range(len(full_values_fastest)):
+        if full_values_fastest[i] >= maxv:
+            maxv = full_values_fastest[i]
+            full_B_max_FASTEST = x_values_fastest[i]
+    full_max_FASTEST = max(full_values_fastest)
+    print("Max. accuracy Full:",full_max_FASTEST,"% at B=",full_B_max_FASTEST,"%.")
+    
+    cpf_B_max_FASTEST = 0
+    maxv = 0
+    for i in range(len(generic_values_fastest)):
+        if generic_values_fastest[i] >= maxv:
+            maxv = generic_values_fastest[i]
+            cpf_B_max_FASTEST = x_values_fastest[i]
+    cpf_max_FASTEST = max(generic_values_fastest)
+    print("Max. accuracy CPF:",cpf_max_FASTEST,"% at B=",cpf_B_max_FASTEST,"%.")
+    
+    gpr_B_max_FASTEST = 0
+    maxv = 0
+    for i in range(len(gpr_values_fastest)):
+        if gpr_values_fastest[i] >= maxv:
+            maxv = gpr_values_fastest[i]
+            gpr_B_max_FASTEST = x_values_fastest[i]
+    gpr_max_FASTEST = max(gpr_values_fastest)
+    print("Max. accuracy GPR:",gpr_max_FASTEST,"% at B=",gpr_B_max_FASTEST,"%.")
+    
+    maxv_FASTEST = 0
+    Bv_FASTEST = 0
+    cpfv_FASTEST = 0
+    gprv_FASTEST = 0
+    for i in range(len(gpr_values_fastest)):
+        diff = gpr_values_fastest[i] - generic_values_fastest[i]
+        if diff >= maxv_FASTEST:
+            maxv_FASTEST = diff
+            Bv_FASTEST = x_values_fastest[i]
+            cpfv_FASTEST = generic_values_fastest[i]
+            gprv_FASTEST = gpr_values_fastest[i]
+    print("max. difference GPR/CPF:",maxv_FASTEST,"at B=",Bv_FASTEST,"%.")
+
+    print("############")   
+    print("")
     
     ###########
     # KRIPKE #
@@ -180,11 +238,69 @@ def main():
         #hybrid_costs_kripke,
     ]
 
-    print("kripke")
-    a = max(generic_costs_kripke)
-    b = max(gpr_costs_kripke)
-    print(a,b)
-    print(a/b)
+    print("")
+    print("### Kripke ###")
+    B_NU_KRIPKE_GENERIC = np.nanmax(generic_costs_kripke)
+    B_NU_KRIPKE_GPR = np.nanmax(gpr_costs_kripke)
+    #print(B_NU_KRIPKE_GENERIC,B_NU_KRIPKE_GPR)
+    print("unused budget factor CPF/GPR:",B_NU_KRIPKE_GENERIC/B_NU_KRIPKE_GPR)
+    
+    B_CPF_KRIPKE = 0
+    maxv = 0
+    for i in range(len(generic_costs_kripke)):
+        if generic_costs_kripke[i] >= maxv:
+            maxv = generic_costs_kripke[i]
+            B_CPF_KRIPKE = x_values_kripke[i]
+            
+    B_GPR_KRIPKE = 0
+    maxv = 0
+    for i in range(len(gpr_costs_kripke)):
+        if gpr_costs_kripke[i] >= maxv:
+            maxv = gpr_costs_kripke[i]
+            B_GPR_KRIPKE = x_values_kripke[i]
+
+    full_B_max_KRIPKE = 0
+    maxv = 0
+    for i in range(len(full_values_kripke)):
+        if full_values_kripke[i] >= maxv:
+            maxv = full_values_kripke[i]
+            full_B_max_KRIPKE = x_values_kripke[i]
+    full_max_KRIPKE = max(full_values_kripke)
+    print("Max. accuracy Full:",full_max_KRIPKE,"% at B=",full_B_max_KRIPKE,"%.")
+    
+    cpf_B_max_KRIPKE = 0
+    maxv = 0
+    for i in range(len(generic_values_kripke)):
+        if generic_values_kripke[i] >= maxv:
+            maxv = generic_values_kripke[i]
+            cpf_B_max_KRIPKE = x_values_kripke[i]
+    cpf_max_KRIPKE = max(generic_values_kripke)
+    print("Max. accuracy CPF:",cpf_max_KRIPKE,"% at B=",cpf_B_max_KRIPKE,"%.")
+    
+    gpr_B_max_KRIPKE = 0
+    maxv = 0
+    for i in range(len(gpr_values_kripke)):
+        if gpr_values_kripke[i] >= maxv:
+            maxv = gpr_values_kripke[i]
+            gpr_B_max_KRIPKE = x_values_kripke[i]
+    gpr_max_KRIPKE = max(gpr_values_kripke)
+    print("Max. accuracy GPR:",gpr_max_KRIPKE,"% at B=",gpr_B_max_KRIPKE,"%.")
+    
+    maxv_KRIPKE = 0
+    Bv_KRIPKE = 0
+    cpfv_KRIPKE = 0
+    gprv_KRIPKE = 0
+    for i in range(len(gpr_values_kripke)):
+        diff = gpr_values_kripke[i] - generic_values_kripke[i]
+        if diff >= maxv_KRIPKE:
+            maxv_KRIPKE = diff
+            Bv_KRIPKE = x_values_kripke[i]
+            cpfv_KRIPKE = generic_values_kripke[i]
+            gprv_KRIPKE = gpr_values_kripke[i]
+    print("max. difference GPR/CPF:",maxv_KRIPKE,"at B=",Bv_KRIPKE,"%.")
+
+    print("############")
+    print("")
     
     ###########
     # LULESH  #
@@ -253,11 +369,69 @@ def main():
         #hybrid_costs_lulesh,
     ]
 
-    print("lulesh")
-    a = max(generic_costs_lulesh)
-    b = max(gpr_costs_lulesh)
-    print(a,b)
-    print(a/b)
+    print("")
+    print("### LULESH ###")
+    B_NU_LULESH_GENERIC = np.nanmax(generic_costs_lulesh)
+    B_NU_LULESH_GPR = np.nanmax(gpr_costs_lulesh)
+    #print(B_NU_LULESH_GENERIC,B_NU_LULESH_GPR)
+    print("unused budget factor CPF/GPR:",B_NU_LULESH_GENERIC/B_NU_LULESH_GPR)
+    
+    B_CPF_LULESH = 0
+    maxv = 0
+    for i in range(len(generic_costs_lulesh)):
+        if generic_costs_lulesh[i] >= maxv:
+            maxv = generic_costs_lulesh[i]
+            B_CPF_LULESH = x_values_lulesh[i]
+            
+    B_GPR_LULESH = 0
+    maxv = 0
+    for i in range(len(gpr_costs_lulesh)):
+        if gpr_costs_lulesh[i] >= maxv:
+            maxv = gpr_costs_lulesh[i]
+            B_GPR_LULESH = x_values_lulesh[i]
+
+    full_B_max_LULESH = 0
+    maxv = 0
+    for i in range(len(full_values_lulesh)):
+        if full_values_lulesh[i] >= maxv:
+            maxv = full_values_lulesh[i]
+            full_B_max_LULESH = x_values_lulesh[i]
+    full_max_LULESH = max(full_values_lulesh)
+    print("Max. accuracy Full:",full_max_LULESH,"% at B=",full_B_max_LULESH,"%.")
+    
+    cpf_B_max_LULESH = 0
+    maxv = 0
+    for i in range(len(generic_values_lulesh)):
+        if generic_values_lulesh[i] >= maxv:
+            maxv = generic_values_lulesh[i]
+            cpf_B_max_LULESH = x_values_lulesh[i]
+    cpf_max_LULESH = max(generic_values_lulesh)
+    print("Max. accuracy CPF:",cpf_max_LULESH,"% at B=",cpf_B_max_LULESH,"%.")
+    
+    gpr_B_max_LULESH = 0
+    maxv = 0
+    for i in range(len(gpr_values_lulesh)):
+        if gpr_values_lulesh[i] >= maxv:
+            maxv = gpr_values_lulesh[i]
+            gpr_B_max_LULESH = x_values_lulesh[i]
+    gpr_max_LULESH = max(gpr_values_lulesh)
+    print("Max. accuracy GPR:",gpr_max_LULESH,"% at B=",gpr_B_max_LULESH,"%.")
+    
+    maxv_LULESH = 0
+    Bv_LULESH = 0
+    cpfv_LULESH = 0
+    gprv_LULESH = 0
+    for i in range(len(gpr_values_lulesh)):
+        diff = gpr_values_lulesh[i] - generic_values_lulesh[i]
+        if diff >= maxv_LULESH:
+            maxv_LULESH = diff
+            Bv_LULESH = x_values_lulesh[i]
+            cpfv_LULESH = generic_values_lulesh[i]
+            gprv_LULESH = gpr_values_lulesh[i]
+    print("max. difference GPR/CPF:",maxv_LULESH,"at B=",Bv_LULESH,"%.")
+
+    print("############")
+    print("")
     
     ###########
     # MiniFE #
@@ -326,11 +500,69 @@ def main():
         #hybrid_costs_minife,
     ]
 
-    print("minife")
-    a = max(generic_costs_minife)
-    b = max(gpr_costs_minife)
-    print(a,b)
-    print(a/b)
+    print("")
+    print("### MiniFE ###")
+    B_NU_MINIFE_GENERIC = np.nanmax(generic_costs_minife)
+    B_NU_MINIFE_GPR = np.nanmax(gpr_costs_minife)
+    #print(B_NU_MINIFE_GENERIC,B_NU_MINIFE_GPR)
+    print("unused budget factor CPF/GPR:",B_NU_MINIFE_GENERIC/B_NU_MINIFE_GPR)
+    
+    B_CPF_MINIFE = 0
+    maxv = 0
+    for i in range(len(generic_costs_minife)):
+        if generic_costs_minife[i] >= maxv:
+            maxv = generic_costs_minife[i]
+            B_CPF_MINIFE = x_values_minife[i]
+            
+    B_GPR_MINIFE = 0
+    maxv = 0
+    for i in range(len(gpr_costs_minife)):
+        if gpr_costs_minife[i] >= maxv:
+            maxv = gpr_costs_minife[i]
+            B_GPR_MINIFE = x_values_minife[i]
+
+    full_B_max_MINIFE = 0
+    maxv = 0
+    for i in range(len(full_values_minife)):
+        if full_values_minife[i] >= maxv:
+            maxv = full_values_minife[i]
+            full_B_max_MINIFE = x_values_minife[i]
+    full_max_MINIFE = max(full_values_minife)
+    print("Max. accuracy Full:",full_max_MINIFE,"% at B=",full_B_max_MINIFE,"%.")
+    
+    cpf_B_max_MINIFE = 0
+    maxv = 0
+    for i in range(len(generic_values_minife)):
+        if generic_values_minife[i] >= maxv:
+            maxv = generic_values_minife[i]
+            cpf_B_max_MINIFE = x_values_minife[i]
+    cpf_max_MINIFE = max(generic_values_minife)
+    print("Max. accuracy CPF:",cpf_max_MINIFE,"% at B=",cpf_B_max_MINIFE,"%.")
+    
+    gpr_B_max_MINIFE = 0
+    maxv = 0
+    for i in range(len(gpr_values_minife)):
+        if gpr_values_minife[i] >= maxv:
+            maxv = gpr_values_minife[i]
+            gpr_B_max_MINIFE = x_values_minife[i]
+    gpr_max_MINIFE = max(gpr_values_minife)
+    print("Max. accuracy GPR:",gpr_max_MINIFE,"% at B=",gpr_B_max_MINIFE,"%.")
+    
+    maxv_MINIFE = 0
+    Bv_MINIFE = 0
+    cpfv_MINIFE = 0
+    gprv_MINIFE = 0
+    for i in range(len(gpr_values_minife)):
+        diff = gpr_values_minife[i] - generic_values_minife[i]
+        if diff >= maxv_MINIFE:
+            maxv_MINIFE = diff
+            Bv_MINIFE = x_values_minife[i]
+            cpfv_MINIFE = generic_values_minife[i]
+            gprv_MINIFE = gpr_values_minife[i]
+    print("max. difference GPR/CPF:",maxv_MINIFE,"at B=",Bv_MINIFE,"%.")
+
+    print("############")
+    print("")
     
     ###########
     # Quicksilver #
@@ -399,11 +631,69 @@ def main():
         #hybrid_costs_quicksilver,
     ]
 
-    print("quicksilver")
-    a = max(generic_costs_quicksilver)
-    b = max(gpr_costs_quicksilver)
-    print(a,b)
-    print(a/b)
+    print("")
+    print("### Quicksilver ###")
+    B_NU_QUICKSILVER_GENERIC = np.nanmax(generic_costs_quicksilver)
+    B_NU_QUICKSILVER_GPR = np.nanmax(gpr_costs_quicksilver)
+    #print(B_NU_QUICKSILVER_GENERIC,B_NU_QUICKSILVER_GPR)
+    print("unused budget factor CPF/GPR:",B_NU_QUICKSILVER_GENERIC/B_NU_QUICKSILVER_GPR)
+    
+    B_CPF_QUICKSILVER = 0
+    maxv = 0
+    for i in range(len(generic_costs_quicksilver)):
+        if generic_costs_quicksilver[i] >= maxv:
+            maxv = generic_costs_quicksilver[i]
+            B_CPF_QUICKSILVER = x_values_quicksilver[i]
+            
+    B_GPR_QUICKSILVER = 0
+    maxv = 0
+    for i in range(len(gpr_costs_quicksilver)):
+        if gpr_costs_quicksilver[i] >= maxv:
+            maxv = gpr_costs_quicksilver[i]
+            B_GPR_QUICKSILVER = x_values_quicksilver[i]
+
+    full_B_max_QUICKSILVER = 0
+    maxv = 0
+    for i in range(len(full_values_quicksilver)):
+        if full_values_quicksilver[i] >= maxv:
+            maxv = full_values_quicksilver[i]
+            full_B_max_QUICKSILVER = x_values_quicksilver[i]
+    full_max_QUICKSILVER = max(full_values_quicksilver)
+    print("Max. accuracy Full:",full_max_QUICKSILVER,"% at B=",full_B_max_QUICKSILVER,"%.")
+    
+    cpf_B_max_QUICKSILVER = 0
+    maxv = 0
+    for i in range(len(generic_values_quicksilver)):
+        if generic_values_quicksilver[i] >= maxv:
+            maxv = generic_values_quicksilver[i]
+            cpf_B_max_QUICKSILVER = x_values_quicksilver[i]
+    cpf_max_QUICKSILVER = max(generic_values_quicksilver)
+    print("Max. accuracy CPF:",cpf_max_QUICKSILVER,"% at B=",cpf_B_max_QUICKSILVER,"%.")
+    
+    gpr_B_max_QUICKSILVER = 0
+    maxv = 0
+    for i in range(len(gpr_values_quicksilver)):
+        if gpr_values_quicksilver[i] >= maxv:
+            maxv = gpr_values_quicksilver[i]
+            gpr_B_max_QUICKSILVER = x_values_quicksilver[i]
+    gpr_max_QUICKSILVER = max(gpr_values_quicksilver)
+    print("Max. accuracy GPR:",gpr_max_QUICKSILVER,"% at B=",gpr_B_max_QUICKSILVER,"%.")
+    
+    maxv_QUICKSILVER = 0
+    Bv_QUICKSILVER = 0
+    cpfv_QUICKSILVER = 0
+    gprv_QUICKSILVER = 0
+    for i in range(len(gpr_values_quicksilver)):
+        diff = gpr_values_quicksilver[i] - generic_values_quicksilver[i]
+        if diff >= maxv_QUICKSILVER:
+            maxv_QUICKSILVER = diff
+            Bv_QUICKSILVER = x_values_quicksilver[i]
+            cpfv_QUICKSILVER = generic_values_quicksilver[i]
+            gprv_QUICKSILVER = gpr_values_quicksilver[i]
+    print("max. difference GPR/CPF:",maxv_QUICKSILVER,"at B=",Bv_QUICKSILVER,"%.")
+
+    print("############")
+    print("")
 
     ###########
     # relearn #
@@ -472,11 +762,69 @@ def main():
         #hybrid_costs_relearn,
     ]
 
-    print("relearn")
-    a = max(generic_costs_relearn)
-    b = max(gpr_costs_relearn)
-    print(a,b)
-    print(a/b)
+    print("")
+    print("### RELEARN ###")
+    B_NU_RELEARN_GENERIC = np.nanmax(generic_costs_relearn)
+    B_NU_RELEARN_GPR = np.nanmax(gpr_costs_relearn)
+    #print(B_NU_RELEARN_GENERIC,B_NU_RELEARN_GPR)
+    print("unused budget factor CPF/GPR:",B_NU_RELEARN_GENERIC/B_NU_RELEARN_GPR)
+    
+    B_CPF_RELEARN = 0
+    maxv = 0
+    for i in range(len(generic_costs_relearn)):
+        if generic_costs_relearn[i] >= maxv:
+            maxv = generic_costs_relearn[i]
+            B_CPF_RELEARN = x_values_relearn[i]
+            
+    B_GPR_RELEARN = 0
+    maxv = 0
+    for i in range(len(gpr_costs_relearn)):
+        if gpr_costs_relearn[i] >= maxv:
+            maxv = gpr_costs_relearn[i]
+            B_GPR_RELEARN = x_values_relearn[i]
+
+    full_B_max_RELEARN = 0
+    maxv = 0
+    for i in range(len(full_values_relearn)):
+        if full_values_relearn[i] >= maxv:
+            maxv = full_values_relearn[i]
+            full_B_max_RELEARN = x_values_relearn[i]
+    full_max_RELEARN = max(full_values_relearn)
+    print("Max. accuracy Full:",full_max_RELEARN,"% at B=",full_B_max_RELEARN,"%.")
+    
+    cpf_B_max_RELEARN = 0
+    maxv = 0
+    for i in range(len(generic_values_relearn)):
+        if generic_values_relearn[i] >= maxv:
+            maxv = generic_values_relearn[i]
+            cpf_B_max_RELEARN = x_values_relearn[i]
+    cpf_max_RELEARN = max(generic_values_relearn)
+    print("Max. accuracy CPF:",cpf_max_RELEARN,"% at B=",cpf_B_max_RELEARN,"%.")
+    
+    gpr_B_max_RELEARN = 0
+    maxv = 0
+    for i in range(len(gpr_values_relearn)):
+        if gpr_values_relearn[i] >= maxv:
+            maxv = gpr_values_relearn[i]
+            gpr_B_max_RELEARN = x_values_relearn[i]
+    gpr_max_RELEARN = max(gpr_values_relearn)
+    print("Max. accuracy GPR:",gpr_max_RELEARN,"% at B=",gpr_B_max_RELEARN,"%.")
+    
+    maxv_RELEARN = 0
+    Bv_RELEARN = 0
+    cpfv_RELEARN = 0
+    gprv_RELEARN = 0
+    for i in range(len(gpr_values_relearn)):
+        diff = gpr_values_relearn[i] - generic_values_relearn[i]
+        if diff >= maxv_RELEARN:
+            maxv_RELEARN = diff
+            Bv_RELEARN = x_values_relearn[i]
+            cpfv_RELEARN = generic_values_relearn[i]
+            gprv_RELEARN = gpr_values_relearn[i]
+    print("max. difference GPR/CPF:",maxv_RELEARN,"at B=",Bv_RELEARN,"%.")
+
+    print("############")
+    print("")
     
     labels_acc = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy']
     labels_points = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Minimum points required $\\bar{p}_{min}$']
@@ -518,6 +866,19 @@ def main():
         else:
             ax1.plot(x_values_fastest, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax1.plot([Bv_FASTEST,Bv_FASTEST], [cpfv_FASTEST,gprv_FASTEST], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_FASTEST - (maxv_FASTEST/2)
+    strtemp = "+"+str('{0:.2f}'.format(maxv_FASTEST))+"\% for \nB="+str('{0:.0f}'.format(Bv_FASTEST))+"\%"
+    ax1.annotate(strtemp, xy=(Bv_FASTEST, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    strtemp = str('{0:.2f}'.format(cpf_max_FASTEST))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_FASTEST))+"\%"
+    ax1.annotate(strtemp, xy=(cpf_B_max_FASTEST, cpf_max_FASTEST), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_FASTEST))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_FASTEST))+"\%"
+    ax1.annotate(strtemp, xy=(gpr_B_max_FASTEST, gpr_max_FASTEST), xycoords='data', xytext=(-20, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_FASTEST))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_FASTEST))+"\%"
+    ax1.annotate(strtemp, xy=(full_B_max_FASTEST, full_max_FASTEST), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
+
     ax1.grid(alpha=0.3, which='major')
     ax1.grid(alpha=0.3, which='minor')
     ax1.set_yticks(np.arange(0, np.max(y_values_list_acc_fastest)+5, 10))
@@ -534,6 +895,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_fastest, labels_cost):
         ax2.plot(x_values_fastest, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+    
+    # annotations
+    strtemp = str('{0:.2f}'.format(B_NU_FASTEST_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_FASTEST))+"\%"
+    ax2.annotate(strtemp, xy=(B_CPF_FASTEST, B_NU_FASTEST_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(B_NU_FASTEST_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_FASTEST))+"\%"
+    ax2.annotate(strtemp, xy=(B_GPR_FASTEST, B_NU_FASTEST_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax2.grid(alpha=0.3, which='major')
     ax2.grid(alpha=0.3, which='minor')
     ax2.set_xticks([20,30,40,50,60,70,80,90,100])
@@ -589,6 +957,19 @@ def main():
         else:
             ax4.plot(x_values_kripke, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax4.plot([Bv_KRIPKE,Bv_KRIPKE], [cpfv_KRIPKE,gprv_KRIPKE], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_KRIPKE - (maxv_KRIPKE/2)
+    strtemp = "+"+str('{0:.2f}'.format(maxv_KRIPKE))+"\% for \nB="+str('{0:.0f}'.format(Bv_KRIPKE))+"\%"
+    ax4.annotate(strtemp, xy=(Bv_KRIPKE, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    strtemp = str('{0:.2f}'.format(cpf_max_KRIPKE))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_KRIPKE))+"\%"
+    ax4.annotate(strtemp, xy=(cpf_B_max_KRIPKE, cpf_max_KRIPKE), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_KRIPKE))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_KRIPKE))+"\%"
+    ax4.annotate(strtemp, xy=(gpr_B_max_KRIPKE, gpr_max_KRIPKE), xycoords='data', xytext=(-20, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_KRIPKE))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_KRIPKE))+"\%"
+    ax4.annotate(strtemp, xy=(full_B_max_KRIPKE, full_max_KRIPKE), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
+
     ax4.grid(alpha=0.3, which='major')
     ax4.grid(alpha=0.3, which='minor')
     ax4.set_ylim(0, np.max(y_values_list_acc_kripke)+5)
@@ -604,6 +985,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_kripke, labels_cost):
         ax5.plot(x_values_kripke, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+        
+    # annotations
+    strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_KRIPKE))+"\%"
+    ax5.annotate(strtemp, xy=(B_CPF_KRIPKE, B_NU_KRIPKE_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_KRIPKE))+"\%"
+    ax5.annotate(strtemp, xy=(B_GPR_KRIPKE, B_NU_KRIPKE_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax5.grid(alpha=0.3, which='major')
     ax5.grid(alpha=0.3, which='minor')
     ax5.set_xticks([2,10,20,30,40,50,60,70,80,90,100])
@@ -652,6 +1040,19 @@ def main():
         else:
             ax7.plot(x_values_lulesh, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax7.plot([Bv_LULESH,Bv_LULESH], [cpfv_LULESH,gprv_LULESH], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_LULESH - (maxv_LULESH/2)
+    strtemp = "+"+str('{0:.2f}'.format(maxv_LULESH))+"\% for \nB="+str('{0:.0f}'.format(Bv_LULESH))+"\%"
+    ax7.annotate(strtemp, xy=(Bv_LULESH, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    strtemp = str('{0:.2f}'.format(cpf_max_LULESH))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_LULESH))+"\%"
+    ax7.annotate(strtemp, xy=(cpf_B_max_LULESH, cpf_max_LULESH), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_LULESH))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_LULESH))+"\%"
+    ax7.annotate(strtemp, xy=(gpr_B_max_LULESH, gpr_max_LULESH), xycoords='data', xytext=(-20, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_LULESH))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_LULESH))+"\%"
+    ax7.annotate(strtemp, xy=(full_B_max_LULESH, full_max_LULESH), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
+
     ax7.grid(alpha=0.3, which='major')
     ax7.grid(alpha=0.3, which='minor')
     ax7.set_yticks(np.arange(0, np.max(y_values_list_acc_lulesh)+5, 10))
@@ -668,6 +1069,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_lulesh, labels_cost):
         ax8.plot(x_values_lulesh, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+        
+    # annotations
+    strtemp = str('{0:.2f}'.format(B_NU_LULESH_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_LULESH))+"\%"
+    ax8.annotate(strtemp, xy=(B_CPF_LULESH, B_NU_LULESH_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(B_NU_LULESH_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_LULESH))+"\%"
+    ax8.annotate(strtemp, xy=(B_GPR_LULESH, B_NU_LULESH_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax8.grid(alpha=0.3, which='major')
     ax8.grid(alpha=0.3, which='minor')
     ax8.set_xticks([20,30,40,50,60,70,80,90,100])
@@ -723,6 +1131,19 @@ def main():
         else:
             ax10.plot(x_values_minife, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    
+    ax10.plot([Bv_MINIFE,Bv_MINIFE], [cpfv_MINIFE,gprv_MINIFE], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_MINIFE - (maxv_MINIFE/2)
+    strtemp = "+"+str('{0:.2f}'.format(maxv_MINIFE))+"\% for \nB="+str('{0:.0f}'.format(Bv_MINIFE))+"\%"
+    ax10.annotate(strtemp, xy=(Bv_MINIFE, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    strtemp = str('{0:.2f}'.format(cpf_max_MINIFE))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_MINIFE))+"\%"
+    ax10.annotate(strtemp, xy=(cpf_B_max_MINIFE, cpf_max_MINIFE), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_MINIFE))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_MINIFE))+"\%"
+    ax10.annotate(strtemp, xy=(gpr_B_max_MINIFE, gpr_max_MINIFE), xycoords='data', xytext=(-20, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_MINIFE))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_MINIFE))+"\%"
+    ax10.annotate(strtemp, xy=(full_B_max_MINIFE, full_max_MINIFE), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
+
     ax10.grid(alpha=0.3, which='major')
     ax10.grid(alpha=0.3, which='minor')
     ax10.set_yticks(np.arange(0, np.max(y_values_list_acc_minife)+5, 5))
@@ -737,6 +1158,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_minife, labels_cost):
         ax11.plot(x_values_minife, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+        
+    # annotations
+    strtemp = str('{0:.2f}'.format(B_NU_MINIFE_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_MINIFE))+"\%"
+    ax11.annotate(strtemp, xy=(B_CPF_MINIFE, B_NU_MINIFE_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(B_NU_MINIFE_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_MINIFE))+"\%"
+    ax11.annotate(strtemp, xy=(B_GPR_MINIFE, B_NU_MINIFE_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax11.grid(alpha=0.3, which='major')
     ax11.grid(alpha=0.3, which='minor')
     ax11.set_xticks([20,30,40,50,60,70,80,90,100])
@@ -790,6 +1218,19 @@ def main():
         else:
             ax13.plot(x_values_quicksilver, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax13.plot([Bv_QUICKSILVER,Bv_QUICKSILVER], [cpfv_QUICKSILVER,gprv_QUICKSILVER], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_QUICKSILVER - (maxv_QUICKSILVER/2)
+    strtemp = "+"+str('{0:.2f}'.format(maxv_QUICKSILVER))+"\% for \nB="+str('{0:.0f}'.format(Bv_QUICKSILVER))+"\%"
+    ax13.annotate(strtemp, xy=(Bv_QUICKSILVER, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    strtemp = str('{0:.2f}'.format(cpf_max_QUICKSILVER))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_QUICKSILVER))+"\%"
+    ax13.annotate(strtemp, xy=(cpf_B_max_QUICKSILVER, cpf_max_QUICKSILVER), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_QUICKSILVER))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_QUICKSILVER))+"\%"
+    ax13.annotate(strtemp, xy=(gpr_B_max_QUICKSILVER, gpr_max_QUICKSILVER), xycoords='data', xytext=(-20, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_QUICKSILVER))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_QUICKSILVER))+"\%"
+    ax13.annotate(strtemp, xy=(full_B_max_QUICKSILVER, full_max_QUICKSILVER), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
+    
     ax13.set_yticks(np.arange(0, 110, 20))
     ax13.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     #ax13.set_xticks([0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
@@ -810,6 +1251,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_quicksilver, labels_cost):
         ax14.plot(x_values_quicksilver, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+        
+    # annotations
+    strtemp = str('{0:.2f}'.format(B_NU_QUICKSILVER_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_QUICKSILVER))+"\%"
+    ax14.annotate(strtemp, xy=(B_CPF_QUICKSILVER, B_NU_QUICKSILVER_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(B_NU_QUICKSILVER_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_QUICKSILVER))+"\%"
+    ax14.annotate(strtemp, xy=(B_GPR_QUICKSILVER, B_NU_QUICKSILVER_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax14.grid(alpha=0.3, which='major')
     ax14.grid(alpha=0.3, which='minor')
     ax14.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
@@ -857,6 +1305,19 @@ def main():
         else:
             ax16.plot(x_values_relearn, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    
+    ax16.plot([Bv_RELEARN,Bv_RELEARN], [cpfv_RELEARN,gprv_RELEARN], color = "black", linewidth=1, marker="_")
+    ytemp = gprv_RELEARN - (maxv_RELEARN/2)
+    strtemp = "+"+str('{0:.2f}'.format(maxv_RELEARN))+"\% for \nB="+str('{0:.0f}'.format(Bv_RELEARN))+"\%"
+    ax16.annotate(strtemp, xy=(Bv_RELEARN, ytemp), xycoords='data', xytext=(-60, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    strtemp = str('{0:.2f}'.format(cpf_max_RELEARN))+"\% for \nB="+str('{0:.2f}'.format(cpf_B_max_RELEARN))+"\%"
+    ax16.annotate(strtemp, xy=(cpf_B_max_RELEARN, cpf_max_RELEARN), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_RELEARN))+"\% for \nB="+str('{0:.2f}'.format(gpr_B_max_RELEARN))+"\%"
+    ax16.annotate(strtemp, xy=(gpr_B_max_RELEARN, gpr_max_RELEARN), xycoords='data', xytext=(-20, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_RELEARN))+"\% for \nB="+str('{0:.2f}'.format(full_B_max_RELEARN))+"\%"
+    ax16.annotate(strtemp, xy=(full_B_max_RELEARN, full_max_RELEARN), xycoords='data', xytext=(-50, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
+
     ax16.grid(alpha=0.3, which='major')
     ax16.grid(alpha=0.3, which='minor')
     ax16.set_yticks(np.arange(0, 120, 20))
@@ -872,6 +1333,13 @@ def main():
     for y_values, label in zip(y_values_list_costs_relearn, labels_cost):
         ax17.plot(x_values_relearn, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, zorder=zorders[style_counter], color=colors[style_counter])
         style_counter += 1
+    
+    # annotations
+    strtemp = str('{0:.2f}'.format(B_NU_RELEARN_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_RELEARN))+"\%"
+    ax17.annotate(strtemp, xy=(B_CPF_RELEARN, B_NU_RELEARN_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(B_NU_RELEARN_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_RELEARN))+"\%"
+    ax17.annotate(strtemp, xy=(B_GPR_RELEARN, B_NU_RELEARN_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    
     ax17.grid(alpha=0.3, which='major')
     ax17.grid(alpha=0.3, which='minor')
     ax17.set_xticks([20,30,40,50,60,70,80,90,100])
