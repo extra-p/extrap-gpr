@@ -1,0 +1,60 @@
+### FASTEST ###
+unused budget factor CPF/GPR: 5.896442853273993
+Max. accuracy Full: 44.44444444444444 % at B= 100 %.
+Max. accuracy CPF: 50.0 % at B= 85 %.
+Max. accuracy GPR: 50.0 % at B= 65 %.
+max. difference GPR/CPF: 38.888888888888886 at B= 56 %.       
+max. difference points GPR/CPF: 14.055555555555557 at B= 45 %.
+max. difference points GPR/CPF: 33.666666666666664 at B= 19 %.
+############
+
+
+### Kripke ###
+unused budget factor CPF/GPR: 6.637786926325459
+Max. accuracy Full: 85.71428571428571 % at B= 100.0 %.
+Max. accuracy CPF: 85.71428571428571 % at B= 100.0 %.
+Max. accuracy GPR: 85.71428571428571 % at B= 100.0 %.
+max. difference GPR/CPF: 14.285714285714278 at B= 86.0 %.
+max. difference points GPR/CPF: 32.928571428571445 at B= 19.0 %.
+############
+
+
+### LULESH ###
+unused budget factor CPF/GPR: 6.2604004103495035
+Max. accuracy Full: 51.162790697674424 % at B= 100.0 %.
+Max. accuracy CPF: 51.162790697674424 % at B= 100.0 %.
+Max. accuracy GPR: 58.139534883720934 % at B= 99.0 %.
+max. difference GPR/CPF: 25.58139534883721 at B= 15.0 %.
+max. difference points GPR/CPF: 15.680032076984766 at B= 13.0 %.
+############
+
+
+### MiniFE ###
+unused budget factor CPF/GPR: 4.747506290808054
+Max. accuracy Full: 15.846994535519126 % at B= 100 %.
+Max. accuracy CPF: 16.39344262295082 % at B= 93 %.
+Max. accuracy GPR: 18.0327868852459 % at B= 40 %.
+max. difference GPR/CPF: 12.568306010928962 at B= 20 %.
+max. difference points GPR/CPF: 19.075000000000003 at B= 16 %.
+############
+
+
+### Quicksilver ###
+unused budget factor CPF/GPR: 5.705636609649308
+Max. accuracy Full: 100.0 % at B= 100 %.
+Max. accuracy CPF: 100.0 % at B= 100 %.
+Max. accuracy GPR: 100.0 % at B= 100 %.
+max. difference GPR/CPF: 41.66666666666667 at B= 0.6 %.
+max. difference points GPR/CPF: 25.083333333333314 at B= 19 %.
+############
+
+
+### RELEARN ###
+unused budget factor CPF/GPR: 1.2674182656701554
+Max. accuracy Full: 78.57142857142857 % at B= 100 %.
+Max. accuracy CPF: 85.71428571428571 % at B= 86 %.
+Max. accuracy GPR: 85.71428571428571 % at B= 70 %.
+max. difference GPR/CPF: 64.28571428571429 at B= 17 %.
+max. difference points GPR/CPF: 3.238095238095241 at B= 22 %.
+max. difference points GPR/CPF: 19.5 at B= 13 %.
+############

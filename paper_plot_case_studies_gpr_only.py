@@ -167,6 +167,32 @@ def main():
             cpfv_FASTEST = generic_values_fastest[i]
             gprv_FASTEST = gpr_values_fastest[i]
     print("max. difference GPR/CPF:",maxv_FASTEST,"at B=",Bv_FASTEST,"%.")
+    
+    max_points_FASTEST = 0
+    B_points_FASTEST = 0
+    cpf_points_FASTEST = 0
+    gpr_points_FASTEST = 0
+    for i in range(len(points_gpr_fastest)):
+        diff = points_gpr_fastest[i] - points_generic_fastest[i]
+        if diff >= max_points_FASTEST:
+            max_points_FASTEST = diff
+            B_points_FASTEST = x_values_fastest[i]
+            cpf_points_FASTEST = points_generic_fastest[i]
+            gpr_points_FASTEST = points_gpr_fastest[i]
+    print("max. difference points GPR/CPF:",max_points_FASTEST,"at B=",B_points_FASTEST,"%.")
+    
+    max_points_FASTEST_2 = 0
+    B_points_FASTEST_2 = 0
+    cpf_points_FASTEST_2 = 0
+    gpr_points_FASTEST_2 = 0
+    for i in range(len(points_gpr_fastest)):
+        diff = points_generic_fastest[i] - points_gpr_fastest[i]
+        if diff >= max_points_FASTEST_2:
+            max_points_FASTEST_2 = diff
+            B_points_FASTEST_2 = x_values_fastest[i]
+            cpf_points_FASTEST_2 = points_generic_fastest[i]
+            gpr_points_FASTEST_2 = points_gpr_fastest[i]
+    print("max. difference points GPR/CPF:",max_points_FASTEST_2,"at B=",B_points_FASTEST_2,"%.")
 
     print("############")   
     print("")
@@ -298,6 +324,19 @@ def main():
             cpfv_KRIPKE = generic_values_kripke[i]
             gprv_KRIPKE = gpr_values_kripke[i]
     print("max. difference GPR/CPF:",maxv_KRIPKE,"at B=",Bv_KRIPKE,"%.")
+    
+    max_points_KRIPKE = 0
+    B_points_KRIPKE = 0
+    cpf_points_KRIPKE = 0
+    gpr_points_KRIPKE = 0
+    for i in range(len(points_generic_kripke)):
+        diff = points_generic_kripke[i] - points_gpr_kripke[i]
+        if diff >= max_points_KRIPKE:
+            max_points_KRIPKE = diff
+            B_points_KRIPKE = x_values_kripke[i]
+            cpf_points_KRIPKE = points_generic_kripke[i]
+            gpr_points_KRIPKE = points_gpr_kripke[i]
+    print("max. difference points GPR/CPF:",max_points_KRIPKE,"at B=",B_points_KRIPKE,"%.")
 
     print("############")
     print("")
@@ -429,6 +468,19 @@ def main():
             cpfv_LULESH = generic_values_lulesh[i]
             gprv_LULESH = gpr_values_lulesh[i]
     print("max. difference GPR/CPF:",maxv_LULESH,"at B=",Bv_LULESH,"%.")
+    
+    max_points_LULESH = 0
+    B_points_LULESH = 0
+    cpf_points_LULESH = 0
+    gpr_points_LULESH = 0
+    for i in range(len(points_generic_lulesh)):
+        diff = points_generic_lulesh[i] - points_gpr_lulesh[i]
+        if diff >= max_points_LULESH:
+            max_points_LULESH = diff
+            B_points_LULESH = x_values_lulesh[i]
+            cpf_points_LULESH = points_generic_lulesh[i]
+            gpr_points_LULESH = points_gpr_lulesh[i]
+    print("max. difference points GPR/CPF:",max_points_LULESH,"at B=",B_points_LULESH,"%.")
 
     print("############")
     print("")
@@ -561,6 +613,19 @@ def main():
             gprv_MINIFE = gpr_values_minife[i]
     print("max. difference GPR/CPF:",maxv_MINIFE,"at B=",Bv_MINIFE,"%.")
 
+    max_points_MINIFE = 0
+    B_points_MINIFE = 0
+    cpf_points_MINIFE = 0
+    gpr_points_MINIFE = 0
+    for i in range(len(points_generic_minife)):
+        diff = points_generic_minife[i] - points_gpr_minife[i]
+        if diff >= max_points_MINIFE:
+            max_points_MINIFE = diff
+            B_points_MINIFE = x_values_minife[i]
+            cpf_points_MINIFE = points_generic_minife[i]
+            gpr_points_MINIFE = points_gpr_minife[i]
+    print("max. difference points GPR/CPF:",max_points_MINIFE,"at B=",B_points_MINIFE,"%.")
+    
     print("############")
     print("")
     
@@ -692,6 +757,19 @@ def main():
             gprv_QUICKSILVER = gpr_values_quicksilver[i]
     print("max. difference GPR/CPF:",maxv_QUICKSILVER,"at B=",Bv_QUICKSILVER,"%.")
 
+    max_points_QUICKSILVER = 0
+    B_points_QUICKSILVER = 0
+    cpf_points_QUICKSILVER = 0
+    gpr_points_QUICKSILVER = 0
+    for i in range(len(points_generic_quicksilver)):
+        diff = points_generic_quicksilver[i] - points_gpr_quicksilver[i]
+        if diff >= max_points_QUICKSILVER:
+            max_points_QUICKSILVER = diff
+            B_points_QUICKSILVER = x_values_quicksilver[i]
+            cpf_points_QUICKSILVER = points_generic_quicksilver[i]
+            gpr_points_QUICKSILVER = points_gpr_quicksilver[i]
+    print("max. difference points GPR/CPF:",max_points_QUICKSILVER,"at B=",B_points_QUICKSILVER,"%.")
+    
     print("############")
     print("")
 
@@ -823,6 +901,32 @@ def main():
             gprv_RELEARN = gpr_values_relearn[i]
     print("max. difference GPR/CPF:",maxv_RELEARN,"at B=",Bv_RELEARN,"%.")
 
+    max_points_RELEARN = 0
+    B_points_RELEARN = 0
+    cpf_points_RELEARN = 0
+    gpr_points_RELEARN = 0
+    for i in range(len(points_gpr_relearn)):
+        diff = points_gpr_relearn[i] - points_generic_relearn[i]
+        if diff >= max_points_RELEARN:
+            max_points_RELEARN = diff
+            B_points_RELEARN = x_values_relearn[i]
+            cpf_points_RELEARN = points_generic_relearn[i]
+            gpr_points_RELEARN = points_gpr_relearn[i]
+    print("max. difference points GPR/CPF:",max_points_RELEARN,"at B=",B_points_RELEARN,"%.")
+    
+    max_points_RELEARN_2 = 0
+    B_points_RELEARN_2 = 0
+    cpf_points_RELEARN_2 = 0
+    gpr_points_RELEARN_2 = 0
+    for i in range(len(points_gpr_relearn)):
+        diff = points_generic_relearn[i] - points_gpr_relearn[i]
+        if diff >= max_points_RELEARN_2:
+            max_points_RELEARN_2 = diff
+            B_points_RELEARN_2 = x_values_relearn[i]
+            cpf_points_RELEARN_2 = points_generic_relearn[i]
+            gpr_points_RELEARN_2 = points_gpr_relearn[i]
+    print("max. difference points GPR/CPF:",max_points_RELEARN_2,"at B=",B_points_RELEARN_2,"%.")
+    
     print("############")
     print("")
     
@@ -922,9 +1026,20 @@ def main():
         else:
             ax3.plot(x_values_fastest, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    
+    ax3.plot([B_points_FASTEST,B_points_FASTEST], [cpf_points_FASTEST,gpr_points_FASTEST], color = "black", linewidth=1, marker="_")
+    ytemp = gpr_points_FASTEST - (max_points_FASTEST/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_FASTEST))+"\% for \nB="+str('{0:.0f}'.format(B_points_FASTEST))+"\%"
+    ax3.annotate(strtemp, xy=(B_points_FASTEST, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    ax3.plot([B_points_FASTEST_2,B_points_FASTEST_2], [cpf_points_FASTEST_2,gpr_points_FASTEST_2], color = "black", linewidth=1, marker="_")
+    ytemp = cpf_points_FASTEST_2 - (max_points_FASTEST_2/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_FASTEST_2))+"\% for \nB="+str('{0:.0f}'.format(B_points_FASTEST_2))+"\%"
+    ax3.annotate(strtemp, xy=(B_points_FASTEST_2, ytemp), xycoords='data', xytext=(10, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
-    ax3.set_xlim(x_values_fastest[0],103)
+    ax3.set_xlim(x_values_fastest[0]-2,103)
     ax3.set_ylim(50,135)
     ax3.set_yticks(np.arange(50, 140, 15))
     ax3.set_xticks([20,30,40,50,60,70,80,90,100])
@@ -987,9 +1102,9 @@ def main():
         style_counter += 1
         
     # annotations
-    strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GENERIC))+"\% for \nB="+str('{0:.0f}'.format(B_CPF_KRIPKE))+"\%"
+    strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GENERIC))+" for \nB="+str('{0:.0f}'.format(B_CPF_KRIPKE))+"\%"
     ax5.annotate(strtemp, xy=(B_CPF_KRIPKE, B_NU_KRIPKE_GENERIC), xycoords='data', xytext=(-50, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
-    strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GPR))+"\% for \nB="+str('{0:.0f}'.format(B_GPR_KRIPKE))+"\%"
+    strtemp = str('{0:.2f}'.format(B_NU_KRIPKE_GPR))+" for \nB="+str('{0:.0f}'.format(B_GPR_KRIPKE))+"\%"
     ax5.annotate(strtemp, xy=(B_GPR_KRIPKE, B_NU_KRIPKE_GPR), xycoords='data', xytext=(-60, 10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
     
     ax5.grid(alpha=0.3, which='major')
@@ -1010,6 +1125,12 @@ def main():
         else:
             ax6.plot(x_values_kripke, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax6.plot([B_points_KRIPKE,B_points_KRIPKE], [cpf_points_KRIPKE,gpr_points_KRIPKE], color = "black", linewidth=1, marker="_")
+    ytemp = cpf_points_KRIPKE - (max_points_KRIPKE/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_KRIPKE))+" for \nB="+str('{0:.0f}'.format(B_points_KRIPKE))+"\%"
+    ax6.annotate(strtemp, xy=(B_points_KRIPKE, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax6.set_xlim(x_values_kripke[0],103)
@@ -1096,9 +1217,15 @@ def main():
         else:
             ax9.plot(x_values_lulesh, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax9.plot([B_points_LULESH,B_points_LULESH], [cpf_points_LULESH,gpr_points_LULESH], color = "black", linewidth=1, marker="_")
+    ytemp = cpf_points_LULESH - (max_points_LULESH/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_LULESH))+" for \nB="+str('{0:.0f}'.format(B_points_LULESH))+"\%"
+    ax9.annotate(strtemp, xy=(B_points_LULESH, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
-    ax9.set_xlim(x_values_lulesh[0],103)
+    ax9.set_xlim(x_values_lulesh[0]-2,103)
     ax9.set_ylim(40,130)
     ax9.set_yticks(np.arange(40, 25*5+20, 20))
     ax9.set_xticks([20,30,40,50,60,70,80,90,100])
@@ -1183,9 +1310,15 @@ def main():
         else:
             ax12.plot(x_values_minife, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax12.plot([B_points_MINIFE,B_points_MINIFE], [cpf_points_MINIFE,gpr_points_MINIFE], color = "black", linewidth=1, marker="_")
+    ytemp = cpf_points_MINIFE - (max_points_MINIFE/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_MINIFE))+" for \nB="+str('{0:.0f}'.format(B_points_MINIFE))+"\%"
+    ax12.annotate(strtemp, xy=(B_points_MINIFE, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
-    ax12.set_xlim(x_values_minife[0],103)
+    ax12.set_xlim(x_values_minife[0]-2,103)
     ax12.set_ylim(35,130)
     ax12.set_yticks(np.arange(35, 25*5+20, 20))
     ax12.set_xticks([20,30,40,50,60,70,80,90,100])
@@ -1276,6 +1409,12 @@ def main():
         else:
             ax15.plot(x_values_quicksilver, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+    
+    ax15.plot([B_points_QUICKSILVER,B_points_QUICKSILVER], [cpf_points_QUICKSILVER,gpr_points_QUICKSILVER], color = "black", linewidth=1, marker="_")
+    ytemp = cpf_points_QUICKSILVER - (max_points_QUICKSILVER/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_QUICKSILVER))+" for \nB="+str('{0:.0f}'.format(B_points_QUICKSILVER))+"\%"
+    ax15.annotate(strtemp, xy=(B_points_QUICKSILVER, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
     ax15.grid(alpha=0.3, which='major')
     ax15.grid(alpha=0.3, which='minor')
     ax15.set_xlim(x_values_quicksilver[0],103)
@@ -1359,9 +1498,20 @@ def main():
         else:
             ax18.plot(x_values_relearn, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
+        
+    ax18.plot([B_points_RELEARN,B_points_RELEARN], [cpf_points_RELEARN,gpr_points_RELEARN], color = "black", linewidth=1, marker="_")
+    ytemp = gpr_points_RELEARN - (max_points_RELEARN/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_RELEARN))+"\% for \nB="+str('{0:.0f}'.format(B_points_RELEARN))+"\%"
+    ax18.annotate(strtemp, xy=(B_points_RELEARN, ytemp), xycoords='data', xytext=(10, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
+    ax18.plot([B_points_RELEARN_2,B_points_RELEARN_2], [cpf_points_RELEARN_2,gpr_points_RELEARN_2], color = "black", linewidth=1, marker="_")
+    ytemp = cpf_points_RELEARN_2 - (max_points_RELEARN_2/2)
+    strtemp = "+"+str('{0:.2f}'.format(max_points_RELEARN_2))+"\% for \nB="+str('{0:.0f}'.format(B_points_RELEARN_2))+"\%"
+    ax18.annotate(strtemp, xy=(B_points_RELEARN_2, ytemp), xycoords='data', xytext=(10, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
+    
     ax18.grid(alpha=0.3, which='major')
     ax18.grid(alpha=0.3, which='minor')
-    ax18.set_xlim(x_values_relearn[0],103)
+    ax18.set_xlim(x_values_relearn[0]-2,103)
     ax18.set_ylim(15,50)
     ax18.set_yticks(np.arange(15, ((25-1)*2)+5, 5))
     ax18.set_xticks([20,30,40,50,60,70,80,90,100])
