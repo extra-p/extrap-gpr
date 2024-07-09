@@ -1010,7 +1010,7 @@ def main():
     ax2.grid(alpha=0.3, which='minor')
     ax2.set_xticks([20,30,40,50,60,70,80,90,100])
     ax2.set_yticks(np.arange(0, np.max(y_values_list_costs_fastest)+5, 5))
-    ax2.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
+    ax2.set_ylabel('Mean wasted\n budget $\\bar{B}_{w}$ [\%]')
     ax2.set_xlim(x_values_fastest[0],100)
     #ax2.tick_params(axis='x', labelsize=7)
     #ax2.tick_params(axis='y', labelsize=7)
@@ -1050,7 +1050,7 @@ def main():
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
     ax32 = ax3.twinx() 
-    ax32.set_ylabel("\\textbf{FASTEST}\n $\\bar{B}_{min}="+str(x_values_fastest[0])+"\%$\n"+str(nr_func_modeled_fastest)+" kernels\n $\\bar{n}=8.17\%$", fontsize=8)
+    ax32.set_ylabel("\\textbf{FASTEST}\n $\\bar{B}_{min}="+str(x_values_fastest[0])+"\%$\n $\\bar{n}=8.17\%$ \n"+str(nr_func_modeled_fastest)+" kernels\n rep.=5", fontsize=8)
     ax32.tick_params(right = False)
     ax32.set_yticks([])
     #ax3.tick_params(axis='x', labelsize=7)
@@ -1111,7 +1111,7 @@ def main():
     ax5.grid(alpha=0.3, which='minor')
     ax5.set_xticks([2,10,20,30,40,50,60,70,80,90,100])
     ax5.set_yticks(np.arange(0, np.nanmax(y_values_list_costs_kripke)+2.5, 1.5))
-    ax5.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
+    ax5.set_ylabel('Mean wasted\n budget $\\bar{B}_{w}$ [\%]')
     ax5.set_xlim(x_values_kripke[0],100)
     
     ls=["-",'dotted','--',':','dashdot']
@@ -1141,7 +1141,7 @@ def main():
     ax6.grid(alpha=0.3, which='major')
     ax6.grid(alpha=0.3, which='minor')
     ax62 = ax6.twinx() 
-    ax62.set_ylabel("\\textbf{Kripke}\n $\\bar{B}_{min}="+str(int(x_values_kripke[0]))+"\%$\n"+str(nr_func_modeled_kripke)+" kernels\n $\\bar{n}=2.17\%$", fontsize=8)
+    ax62.set_ylabel("\\textbf{Kripke}\n $\\bar{B}_{min}="+str(int(x_values_kripke[0]))+"\%$\n $\\bar{n}=2.17\%$ \n"+str(nr_func_modeled_kripke)+" kernels\n rep.=5", fontsize=8)
     ax62.tick_params(right = False)
     ax62.set_yticks([])
     
@@ -1201,7 +1201,7 @@ def main():
     ax8.grid(alpha=0.3, which='minor')
     ax8.set_xticks([20,30,40,50,60,70,80,90,100])
     ax8.set_yticks(np.arange(0, np.max(y_values_list_costs_lulesh)+5, 5))
-    ax8.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
+    ax8.set_ylabel('Mean wasted\n budget $\\bar{B}_{w}$ [\%]')
     ax8.set_xlim(x_values_lulesh[0],100)
     #ax8.tick_params(axis='x', labelsize=7)
     #ax8.tick_params(axis='y', labelsize=7)
@@ -1236,7 +1236,7 @@ def main():
     ax9.grid(alpha=0.3, which='major')
     ax9.grid(alpha=0.3, which='minor')
     ax92 = ax9.twinx() 
-    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(int(x_values_lulesh[0]))+"\%$\n 7 kernels\n $\\bar{n}=4.72\%$", fontsize=8)
+    ax92.set_ylabel("\\textbf{LULESH}\n $\\bar{B}_{min}="+str(int(x_values_lulesh[0]))+"\%$\n $\\bar{n}=4.72\%$ \n 7 kernels\n rep.=5", fontsize=8)
     ax92.tick_params(right = False)
     ax92.set_yticks([])
     #ax9.tick_params(axis='x', labelsize=7)
@@ -1296,7 +1296,7 @@ def main():
     ax11.grid(alpha=0.3, which='minor')
     ax11.set_xticks([20,30,40,50,60,70,80,90,100])
     ax11.set_yticks(np.arange(0, np.max(y_values_list_costs_minife)+5, 2.5))
-    ax11.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
+    ax11.set_ylabel('Mean wasted\n budget $\\bar{B}_{w}$ [\%]')
     ax11.set_xlim(x_values_minife[0],100)
     
     ls=["-",'dotted','--',':','dashdot']
@@ -1329,7 +1329,7 @@ def main():
     ax12.grid(alpha=0.3, which='major')
     ax12.grid(alpha=0.3, which='minor')
     ax122 = ax12.twinx() 
-    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n 23 kernels\n $\\bar{n}=10.22\%$", fontsize=8)
+    ax122.set_ylabel("\\textbf{MiniFE}\n $\\bar{B}_{min}="+str(x_values_minife[0])+"\%$\n $\\bar{n}=10.22\%$ \n 23 kernels\n rep.=5", fontsize=8)
     ax122.tick_params(right = False)
     ax122.set_yticks([])
     
@@ -1395,7 +1395,7 @@ def main():
     ax14.grid(alpha=0.3, which='minor')
     ax14.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax14.set_yticks(np.arange(0, np.max(y_values_list_costs_quicksilver)+5, 5))
-    ax14.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
+    ax14.set_ylabel('Mean wasted\n budget $\\bar{B}_{w}$ [\%]')
     #ax14.tick_params(axis='x', labelsize=7)
     
     ls=["-",'dotted','--',':','dashdot']
@@ -1424,7 +1424,7 @@ def main():
     ax15.set_ylabel('Mean no. points\n used for modelnig $\\bar{k}$')
     #ax15.tick_params(axis='x', labelsize=7)
     ax152 = ax15.twinx() 
-    ax152.set_ylabel("\\textbf{Quicksilver}\n $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n"+str(nr_func_modeled_quicksilver)+" kernels\n $\\bar{n}=5.66\%$", fontsize=8)
+    ax152.set_ylabel("\\textbf{Quicksilver}\n $\\bar{B}_{min}="+str(x_values_quicksilver[0])+"\%$\n $\\bar{n}=5.66\%$ \n"+str(nr_func_modeled_quicksilver)+" kernels\n rep.=5", fontsize=8)
     ax152.tick_params(right = False)
     ax152.set_yticks([])
     
@@ -1483,7 +1483,7 @@ def main():
     ax17.grid(alpha=0.3, which='minor')
     ax17.set_xticks([20,30,40,50,60,70,80,90,100])
     ax17.set_yticks(np.arange(0, np.max(y_values_list_costs_relearn)+5, 5))
-    ax17.set_ylabel('Mean unused\n budget $\\bar{B}_{nu}$ [\%]')
+    ax17.set_ylabel('Mean wasted\n budget $\\bar{B}_{w}$ [\%]')
     ax17.set_xlim(x_values_relearn[0],100)
     #ax17.tick_params(axis='x', labelsize=7)
     
@@ -1523,7 +1523,7 @@ def main():
     ax18.grid(alpha=0.3, which='minor')
     #ax18.tick_params(axis='x', labelsize=7)
     ax182 = ax18.twinx() 
-    ax182.set_ylabel("\\textbf{RELeARN}\n $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n"+str(nr_func_modeled_relearn)+" kernels\n $\\bar{n}=4.5\%$", fontsize=8)
+    ax182.set_ylabel("\\textbf{RELeARN}\n $\\bar{B}_{min}="+str(x_values_relearn[0])+"\%$\n $\\bar{n}=4.5\%$ \n"+str(nr_func_modeled_relearn)+" kernels\n rep.=2", fontsize=8)
     ax182.tick_params(right = False)
     ax182.set_yticks([])
     

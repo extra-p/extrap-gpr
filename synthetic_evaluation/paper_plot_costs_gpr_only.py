@@ -243,7 +243,7 @@ def main():
     ax1.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     ax1.set_yticks([0, 5, 10, 15, 20, 25, 30])
     ax1.set_xlim(0,100)
-    ax1.set_ylabel('Mean unused modeling\n budget $\\bar{B}_{nu}$ [\%]')
+    ax1.set_ylabel('Mean wasted modeling\n budget $\\bar{B}_{w}$ [\%]')
     ax1.set_xlabel('$m=2$')
     
     ls=['dotted','--',':','dashdot']
