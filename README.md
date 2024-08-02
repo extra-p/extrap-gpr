@@ -355,6 +355,20 @@ Please cite Extra-P in your publications as follows if it helps your research:
 }
 ```
 
+Please cite the CPF method and results in your publication as follows:
+
+```
+@inproceedings{ritter_ea:2020:ipdps,
+  title={Learning Cost-Effective Sampling Strategies for Empirical Performance Modeling},
+  author={Ritter, Marcus and Calotoiu, Alexandru and Rinke, Sebastian and Reimann, Thorsten and Hoefler, Torsten and Wolf, Felix},
+  booktitle={Proceedings of the 34th International Parallel
+  and Distributed Processing Symposium (IPDPS)},
+  pages={884--895},
+  year={2020},
+  organization={IEEE}
+}
+```
+
 Please cite the performance measurement dataset used for this work in your publications if it helps your research using:
 
 ```

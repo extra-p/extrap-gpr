@@ -987,7 +987,7 @@ def main():
     ax1.grid(alpha=0.3, which='minor')
     ax1.set_yticks(np.arange(0, np.max(y_values_list_acc_fastest)+5, 10))
     ax1.set_xticks([20,30,40,50,60,70,80,90,100])
-    ax1.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
+    ax1.set_ylabel('Models within\n $\pm10\%$ at $P_{+}$ [\%]')
     #ax1.tick_params(axis='x', labelsize=7)
     #ax1.tick_params(axis='y', labelsize=7)
     
@@ -1090,7 +1090,7 @@ def main():
     ax4.set_ylim(0, np.max(y_values_list_acc_kripke)+5)
     ax4.set_yticks(np.arange(0, np.max(y_values_list_acc_kripke)+5, 20))
     ax4.set_xticks([2,10,20,30,40,50,60,70,80,90,100])
-    ax4.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
+    ax4.set_ylabel('Models within\n $\pm10\%$ at $P_{+}$ [\%]')
     
     ls=['dotted','--',':','dashdot']
     lw = [1.5,1.5,4,1.5]
@@ -1178,7 +1178,7 @@ def main():
     ax7.grid(alpha=0.3, which='minor')
     ax7.set_yticks(np.arange(0, np.max(y_values_list_acc_lulesh)+5, 10))
     ax7.set_xticks([20,30,40,50,60,70,80,90,100])
-    ax7.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
+    ax7.set_ylabel('Models within\n $\pm10\%$ at $P_{+}$ [\%]')
     #ax7.tick_params(axis='x', labelsize=7)
     #ax7.tick_params(axis='y', labelsize=7)
     
@@ -1275,7 +1275,7 @@ def main():
     ax10.grid(alpha=0.3, which='minor')
     ax10.set_yticks(np.arange(0, np.max(y_values_list_acc_minife)+5, 5))
     ax10.set_xticks([20,30,40,50,60,70,80,90,100])
-    ax10.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
+    ax10.set_ylabel('Models within\n $\pm10\%$ at $P_{+}$ [\%]')
     
     ls=['dotted','--',':','dashdot']
     lw = [1.5,1.5,4,1.5]
@@ -1367,7 +1367,7 @@ def main():
     ax13.set_yticks(np.arange(0, 110, 20))
     ax13.set_xticks([1,10,20,30,40,50,60,70,80,90,100])
     #ax13.set_xticks([0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax13.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
+    ax13.set_ylabel('Models within\n $\pm10\%$ at $P_{+}$ [\%]')
     #locmin = matplotlib.ticker.LogLocator(base=10.0, subs=(0.1,0.2,0.3,0.4,0.5,0.6, 0.7, 0.8, 0.9 )) 
     #ax13.xaxis.set_minor_locator(locmin)
     #ax13.xaxis.set_minor_formatter(matplotlib.ticker.NullFormatter())
@@ -1461,7 +1461,7 @@ def main():
     ax16.grid(alpha=0.3, which='minor')
     ax16.set_yticks(np.arange(0, 120, 20))
     ax16.set_xticks([20,30,40,50,60,70,80,90,100])
-    ax16.set_ylabel('Models within\n $\pm10\%$ at $P_{eval}$ [\%]')
+    ax16.set_ylabel('Models within\n $\pm10\%$ at $P_{+}$ [\%]')
     #ax16.tick_params(axis='x', labelsize=7)
     
     ls=['dotted','--',':','dashdot']

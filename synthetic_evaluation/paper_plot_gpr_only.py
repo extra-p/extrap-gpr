@@ -1037,7 +1037,7 @@ def main():
     ax1.set_yticks(np.arange(0, 100, 10))
     ax1.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax1.set_xlabel('$n=1\%$')
-    ax1.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [\%]')
+    ax1.set_ylabel('Models within\n $\pm5\%$ at $P_{+}$ [\%]')
     
     # plot the accuracy of bucket 5 and n=2%
     ls=["-",'dotted','--',':','-']
@@ -1106,7 +1106,7 @@ def main():
     ax3.set_yticks(np.arange(0, 100, 10))
     ax3.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax3.set_xlabel('$n=5\%$')
-    #ax3.set_ylabel('Models within $\pm15\%$ at $P_{eval}$ [%]')
+    #ax3.set_ylabel('Models within $\pm15\%$ at $P_{+}$ [%]')
     #ax3.legend(loc="lower right", prop={'size': 8})
     
     # plot the accuracy of bucket 5 and n=10%
@@ -1143,7 +1143,7 @@ def main():
     ax4.set_yticks(np.arange(0, 100, 10))
     ax4.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax4.set_xlabel('$n=10\%$')
-    #ax4.set_ylabel('Models within $\pm20\%$ at $P_{eval}$ [%]')
+    #ax4.set_ylabel('Models within $\pm20\%$ at $P_{+}$ [%]')
     #ax4.legend(loc="lower right", prop={'size': 8})
     ax42 = ax4.twinx() 
     ax42.set_ylabel("$m=2$")
@@ -1184,7 +1184,7 @@ def main():
     ax5.set_yticks(np.arange(0, 100, 10))
     ax5.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax5.set_xlabel('$n=1\%$')
-    ax5.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [\%]')
+    ax5.set_ylabel('Models within\n $\pm5\%$ at $P_{+}$ [\%]')
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]
@@ -1320,7 +1320,7 @@ def main():
     ax9.set_yticks(np.arange(0, 100, 10))
     ax9.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax9.set_xlabel('$n=\pm1\%$')
-    ax9.set_ylabel('Models within\n $\pm5\%$ at $P_{eval}$ [\%]')
+    ax9.set_ylabel('Models within\n $\pm5\%$ at $P_{+}$ [\%]')
     
     ls=["-",'dotted','--',':','-']
     lw = [1,1.5,1.5,4,1.5]

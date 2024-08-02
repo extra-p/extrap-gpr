@@ -226,8 +226,8 @@ def main():
     ax1.set_yticks(np.arange(0, 100, 10))
     ax1.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax1.set_xlabel('$n=1\%$')
-    ax1.set_xlabel('$\pm5\%$ at $P_{eval}$')
-    ax1.set_ylabel('Models within\n $[a,b]\%$ at $P_{eval}$ [\%]')
+    ax1.set_xlabel('$\pm5\%$ at $P_{+}$')
+    ax1.set_ylabel('Models within\n $[a,b]\%$ at $P_{+}$ [\%]')
     
     # plot the accuracy of bucket 5 and n=2%
     ls=["-",'dotted','--',':','-']
@@ -254,7 +254,7 @@ def main():
     ax2.grid(alpha=0.3, which='minor')
     ax2.set_yticks(np.arange(0, 100, 10))
     ax2.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
-    ax2.set_xlabel('$\pm10\%$ at $P_{eval}$')
+    ax2.set_xlabel('$\pm10\%$ at $P_{+}$')
     
     # plot the accuracy of bucket 5 and n=5%
     ls=["-",'dotted','--',':','-']
@@ -282,10 +282,10 @@ def main():
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
     ax3.set_yticks(np.arange(0, 100, 10))
-    ax3.set_xlabel('$\pm15\%$ at $P_{eval}$')
+    ax3.set_xlabel('$\pm15\%$ at $P_{+}$')
     ax3.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax3.set_xlabel('$n=5\%$')
-    #ax3.set_ylabel('Models within $\pm15\%$ at $P_{eval}$ [%]')
+    #ax3.set_ylabel('Models within $\pm15\%$ at $P_{+}$ [%]')
     #ax3.legend(loc="lower right", prop={'size': 8})
     
     # plot the accuracy of bucket 5 and n=10%
@@ -317,8 +317,8 @@ def main():
     ax4.set_yticks(np.arange(0, 110, 10))
     ax4.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax4.set_xlabel('$n=10\%$')
-    ax4.set_xlabel('$\pm20\%$ at $P_{eval}$')
-    #ax4.set_ylabel('Models within $\pm20\%$ at $P_{eval}$ [%]')
+    ax4.set_xlabel('$\pm20\%$ at $P_{+}$')
+    #ax4.set_ylabel('Models within $\pm20\%$ at $P_{+}$ [%]')
     #ax4.legend(loc="lower right", prop={'size': 8})
     ax42 = ax4.twinx() 
     ax42.set_ylabel("$m=3, n=\pm10\%$")
