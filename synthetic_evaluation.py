@@ -25,6 +25,8 @@ def main():
     modelers_list = list(set(k.lower() for k in
                              chain(single_parameter.all_modelers.keys(), multi_parameter.all_modelers.keys())))
     parser = argparse.ArgumentParser(description="Run synthetic benchmark.")
+    parser.add_argument("--newonly", type=int, required=False, default=0, choices=[0, 1],
+                        help="Run analysis only for random and grid search only.")
     parser.add_argument("--plot", type=bool, required=False, default=False,
                         help="Set if the plots should be shown after running the anlysis.")
     parser.add_argument("--mode", type=str, required=False, default="free", choices=["free", "budget"],

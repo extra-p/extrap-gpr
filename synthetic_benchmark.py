@@ -22,7 +22,7 @@ from extrap.util.options_parser import SINGLE_PARAMETER_MODELER_KEY, SINGLE_PARA
 from extrap.util.progress_bar import ProgressBar
 import numpy as np
 from plotting import plot_measurement_point_number, plot_model_accuracy, plot_costs
-from generic_strategy import add_additional_point_generic
+from generic_strategy import add_additional_point_generic, add_additional_point_random, add_additional_point_grid
 from temp import add_measurements_to_gpr
 from temp import add_measurement_to_gpr
 from temp import add_measurement_to_gpr_test
@@ -119,6 +119,10 @@ class SyntheticBenchmark():
         else:
             self.base_values = 2
         self.hybrid_switch = args.hybrid_switch
+        if args.newonly == 0:
+            self.newonly = False
+        else:
+            self.newonly = True
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
@@ -362,6 +366,26 @@ class SyntheticBenchmark():
         percentage_cost_hybrid_container = []
         add_points_hybrid_container = []
 
+        acurracy_bucket_counter_random = {}
+        acurracy_bucket_counter_random["rest"] = 0
+        acurracy_bucket_counter_random["5"] = 0
+        acurracy_bucket_counter_random["10"] = 0
+        acurracy_bucket_counter_random["15"] = 0
+        acurracy_bucket_counter_random["20"] = 0
+
+        percentage_cost_random_container = []
+        add_points_random_container = []
+
+        acurracy_bucket_counter_grid = {}
+        acurracy_bucket_counter_grid["rest"] = 0
+        acurracy_bucket_counter_grid["5"] = 0
+        acurracy_bucket_counter_grid["10"] = 0
+        acurracy_bucket_counter_grid["15"] = 0
+        acurracy_bucket_counter_grid["20"] = 0
+
+        percentage_cost_grid_container = []
+        add_points_grid_container = []
+
         # logic for setting the number of min points required by the modeler
         if self.nr_parameters == 2:
             min_points = 9
@@ -496,6 +520,8 @@ class SyntheticBenchmark():
         if self.grid_search == 2 or self.grid_search == 3:
             measurements_gpr = copy.deepcopy(experiment.measurements)
             measurements_hybrid = copy.deepcopy(experiment.measurements)
+            measurements_random = copy.deepcopy(experiment.measurements)
+            measurements_grid = copy.deepcopy(experiment.measurements)
     
         if len(experiment.parameters) == 2:
                 
@@ -542,6 +568,18 @@ class SyntheticBenchmark():
                                     temp = np.delete(temp, 0)
                                 x.values = temp
                         for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -605,6 +643,18 @@ class SyntheticBenchmark():
                                     temp = np.delete(temp, 0)
                                 x.values = temp
                         for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -679,6 +729,18 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
                         # also delete the cost values from the remaining min dict
                         for i in range(self.base_values):
                             remaining_points_min[cord].pop(0)
@@ -738,6 +800,18 @@ class SyntheticBenchmark():
                                     temp = np.delete(temp, 0)
                                 x.values = temp
                         for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -813,6 +887,18 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
                         # also delete the cost values from the remaining min dict
                         for i in range(self.base_values):
                             remaining_points_min[cord].pop(0)
@@ -882,6 +968,18 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
                         # also delete the cost values from the remaining min dict
                         for i in range(self.base_values):
                             remaining_points_min[cord].pop(0)
@@ -937,6 +1035,18 @@ class SyntheticBenchmark():
                                     temp = np.delete(temp, 0)
                                 x.values = temp
                         for x in measurements_hybrid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -1007,6 +1117,18 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
                         # also delete the cost values from the remaining min dict
                         for i in range(self.base_values):
                             remaining_points_min[cord].pop(0)
@@ -1072,6 +1194,18 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
+                        for x in measurements_random[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
+                        for x in measurements_grid[(Callpath("main"), Metric("runtime"))]:
+                            if x.coordinate == cord:
+                                temp = x.values
+                                for i in range(self.base_values):
+                                    temp = np.delete(temp, 0)
+                                x.values = temp
                         # also delete the cost values from the remaining min dict
                         for i in range(self.base_values):
                             remaining_points_min[cord].pop(0)
@@ -1124,6 +1258,8 @@ class SyntheticBenchmark():
         #print("base_point_cost %:",base_point_cost)
 
         added_points_generic = len(selected_points) * (self.nr_repetitions)
+        added_points_random = len(selected_points) * (self.nr_repetitions)
+        added_points_grid = len(selected_points) * (self.nr_repetitions)
 
         #print("len selected_points:",len(selected_points))
         
@@ -1167,48 +1303,49 @@ class SyntheticBenchmark():
         if self.mode == "budget":
 
             if current_cost_percent <= self.budget:
-                while True:
-                    # find another point for selection
-                    remaining_points_new, selected_coord_list_new, new_point = add_additional_point_generic(remaining_points_generic, selected_points_generic)
+                if self.newonly == False:
+                    while True:
+                        # find another point for selection
+                        remaining_points_new, selected_coord_list_new, new_point = add_additional_point_generic(remaining_points_generic, selected_points_generic)
 
-                    # calculate selected point cost
-                    current_cost = calculate_selected_point_cost2(selected_coord_list_new, experiment, 0, 0)
-                    current_cost_percent = current_cost / (total_cost / 100)
+                        # calculate selected point cost
+                        current_cost = calculate_selected_point_cost2(selected_coord_list_new, experiment, 0, 0)
+                        current_cost_percent = current_cost / (total_cost / 100)
 
-                    # current cost exceeds budget so break the loop
-                    #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                    # to make sure no mistakes occur here
-                    # sometimes the numbers do not perfectly add up to the target budget
-                    # but to 100.00001
-                    # this is the fix for this case
-                    current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                    #print("current_cost_percent:",current_cost_percent)
+                        # current cost exceeds budget so break the loop
+                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                        #print("current_cost_percent:",current_cost_percent)
 
-                    if current_cost_percent > self.budget:
-                        break
+                        if current_cost_percent > self.budget:
+                            break
 
-                    # add the new found point
-                    else:
+                        # add the new found point
+                        else:
 
-                        # update the map with the numbers of already selected points
-                        point_map_generic[new_point] = selection_point_counter
-                        selection_point_counter += 1
-                        #print("point:",point)
-                        #print("point_map_generic:",point_map_generic)
+                            # update the map with the numbers of already selected points
+                            point_map_generic[new_point] = selection_point_counter
+                            selection_point_counter += 1
+                            #print("point:",point)
+                            #print("point_map_generic:",point_map_generic)
 
-                        # increment counter value, because a new measurement point was added
-                        #added_points_generic += 1
-                        added_points_generic += self.nr_repetitions
+                            # increment counter value, because a new measurement point was added
+                            #added_points_generic += 1
+                            added_points_generic += self.nr_repetitions
 
-                        # create new model
-                        experiment_generic_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+                            # create new model
+                            experiment_generic_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
 
-                        selected_points_generic = selected_coord_list_new
-                        remaining_points_generic = remaining_points_new
+                            selected_points_generic = selected_coord_list_new
+                            remaining_points_generic = remaining_points_new
 
-                    # if there are no points remaining that can be selected break the loop
-                    if len(remaining_points_generic) == 0:
-                        break
+                        # if there are no points remaining that can be selected break the loop
+                        if len(remaining_points_generic) == 0:
+                            break
 
             else:
                 pass
@@ -1409,148 +1546,149 @@ class SyntheticBenchmark():
             experiment_gpr_base = create_experiment2(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
         
         if base_point_cost <= self.budget:
-            while True:
-                
-                # identify all possible next points that would 
-                # still fit into the modeling budget in core hours
-                fitting_measurements = []
-                for key, value in remaining_points_gpr.items():
+            if self.newonly == False:
+                while True:
                     
-                    #current_cost = calculate_selected_point_cost2(selected_points_gpr, experiment_gpr_base, 0, 0)
-                    current_cost = self.calculate_selected_point_cost(experiment_gpr_base)
-                    
-                    # always take the first value in the list, until none left
-                    #new_cost = current_cost + np.sum(value)
-                    new_cost = current_cost + value[0]
-                    cost_percent = new_cost / (total_cost / 100)
-                    
-                    #if new_cost > budget_core_hours:
-                    #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
-                    #if cost_percent > 100:
-                    #    print("cost percent <= budget percent:", cost_percent, self.budget)
-                    # to make sure no mistakes occur here
-                    # sometimes the numbers do not perfectly add up to the target budget
-                    # but to 100.00001
-                    # this is the fix for this case
-                    cost_percent = float("{0:.3f}".format(cost_percent))
-                    if cost_percent > 100.0:
-                        cost_percent = 100.0
+                    # identify all possible next points that would 
+                    # still fit into the modeling budget in core hours
+                    fitting_measurements = []
+                    for key, value in remaining_points_gpr.items():
+                        
+                        #current_cost = calculate_selected_point_cost2(selected_points_gpr, experiment_gpr_base, 0, 0)
+                        current_cost = self.calculate_selected_point_cost(experiment_gpr_base)
+                        
+                        # always take the first value in the list, until none left
+                        #new_cost = current_cost + np.sum(value)
+                        new_cost = current_cost + value[0]
+                        cost_percent = new_cost / (total_cost / 100)
+                        
+                        #if new_cost > budget_core_hours:
+                        #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                        #if cost_percent > 100:
+                        #    print("cost percent <= budget percent:", cost_percent, self.budget)
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        cost_percent = float("{0:.3f}".format(cost_percent))
+                        if cost_percent > 100.0:
+                            cost_percent = 100.0
 
-                    if cost_percent <= self.budget:
-                        fitting_measurements.append(key)
+                        if cost_percent <= self.budget:
+                            fitting_measurements.append(key)
 
-                #print("fitting_measurements:",fitting_measurements)
+                    #print("fitting_measurements:",fitting_measurements)
 
-                # find the next best additional measurement point using the gpr
-                best_index = -1
-                best_rated = sys.float_info.max
+                    # find the next best additional measurement point using the gpr
+                    best_index = -1
+                    best_rated = sys.float_info.max
 
-                for i in range(len(fitting_measurements)):
-                
-                    parameter_values = fitting_measurements[i].as_tuple()
-                    x = []
+                    for i in range(len(fitting_measurements)):
                     
-                    for j in range(len(parameter_values)):
-                    
-                        if len(normalization_factors) != 0:
-                            x.append(parameter_values[j] * normalization_factors[experiment_gpr_base.parameters[j]])
-                    
+                        parameter_values = fitting_measurements[i].as_tuple()
+                        x = []
+                        
+                        for j in range(len(parameter_values)):
+                        
+                            if len(normalization_factors) != 0:
+                                x.append(parameter_values[j] * normalization_factors[experiment_gpr_base.parameters[j]])
+                        
+                            else:
+                                x.append(parameter_values[j])
+                                
+                        #NOTE: should recalculate the noise level here... but is already done on all measurements before so not needed here....
+                        # but in real extra-P implementation needs to be done...
+                                
+                        #print("DEBUG3 remaining_points_gpr:",remaining_points_gpr[fitting_measurements[i]][0])
+                        
+                        # term_1 is cost(t)^2
+                        term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
+                        # predict variance of input vector x with the gaussian process
+                        x = [x]
+                        _, y_cov = gaussian_process.predict(x, return_cov=True)
+                        y_cov = abs(y_cov)
+                        # term_2 is gp_cov(t,t)^2
+                        term_2 = math.pow(y_cov, 2)
+                        # rated is h(t)
+                        
+                        if self.grid_search == 3 or self.grid_search == 4:
+                            rep = 1
+                            for j in range(len(measurements_gpr[(Callpath("main"), Metric("runtime"))])):
+                                if measurements_gpr[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
+                                    rep = (self.nr_repetitions - len(measurements_gpr[(Callpath("main"), Metric("runtime"))][j].values)) + 1
+                                    break
+                            rep_func = 2**((1/2)*rep-(1/2))
+                            noise_func = -math.tanh((1/4)*mean_noise-2.5)
+                            cost_multiplier = rep_func + noise_func
+                            rated = (term_1 * cost_multiplier) / term_2
                         else:
-                            x.append(parameter_values[j])
+                            rated = term_1 / term_2
+
+                        if rated <= best_rated:
+                            best_rated = rated
+                            best_index = i    
+
+                    # if there has been a point found that is suitable
+                    if best_index != -1:
+
+                        # add the identified measurement point to the selected point list
+                        parameter_values = fitting_measurements[best_index].as_tuple()
+                        cord = Coordinate(parameter_values)
+                        #selected_points_gpr.append(cord)
+                        
+                        # only add coordinate to selected points list if not already in there (because of reps)
+                        if cord not in selected_points_gpr:
+                            selected_points_gpr.append(cord)
+                        
+                        # add the new point to the gpr and call fit()
+                        gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                                cord, 
+                                measurements_gpr,
+                                callpath, 
+                                metric,
+                                normalization_factors,
+                                experiment_gpr_base.parameters)
+                        
+                        new_value = 0
+                        
+                        # remove the identified measurement point from the remaining point list
+                        try:
+                            # only pop cord when there are no values left in the measurement
                             
-                    #NOTE: should recalculate the noise level here... but is already done on all measurements before so not needed here....
-                    # but in real extra-P implementation needs to be done...
+                            # if that's not the case pop the value from the measurement of the cord
+                            measurement = None
+                            cord_id = None
+                            for i in range(len(measurements_gpr[(Callpath("main"), Metric("runtime"))])):
+                                if measurements_gpr[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
+                                    cord_id = i
+                                    x = measurements_gpr[(Callpath("main"), Metric("runtime"))][i].values
+                                    if len(x) > 0:
+                                        new_value = x[0]
+                                        x = np.delete(x, 0)
+                                        measurements_gpr[(Callpath("main"), Metric("runtime"))][i].values = x
+                                    break
                             
-                    #print("DEBUG3 remaining_points_gpr:",remaining_points_gpr[fitting_measurements[i]][0])
-                    
-                    # term_1 is cost(t)^2
-                    term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
-                    # predict variance of input vector x with the gaussian process
-                    x = [x]
-                    _, y_cov = gaussian_process.predict(x, return_cov=True)
-                    y_cov = abs(y_cov)
-                    # term_2 is gp_cov(t,t)^2
-                    term_2 = math.pow(y_cov, 2)
-                    # rated is h(t)
-                    
-                    if self.grid_search == 3 or self.grid_search == 4:
-                        rep = 1
-                        for j in range(len(measurements_gpr[(Callpath("main"), Metric("runtime"))])):
-                            if measurements_gpr[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
-                                rep = (self.nr_repetitions - len(measurements_gpr[(Callpath("main"), Metric("runtime"))][j].values)) + 1
-                                break
-                        rep_func = 2**((1/2)*rep-(1/2))
-                        noise_func = -math.tanh((1/4)*mean_noise-2.5)
-                        cost_multiplier = rep_func + noise_func
-                        rated = (term_1 * cost_multiplier) / term_2
+                            # pop value from cord in remaining points list that has been selected as best next point
+                            remaining_points_gpr[cord].pop(0)
+                            
+                            # pop cord from remaining points when no value left anymore
+                            if len(measurements_gpr[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
+                                remaining_points_gpr.pop(cord)
+                            
+                        except KeyError:
+                            pass
+
+                        # update the number of additional points used
+                        add_points_gpr += 1
+
+                        # add this point to the gpr experiment
+                        #experiment_gpr_base = create_experiment2(selected_points_gpr, experiment_gpr_base, len(experiment_gpr_base.parameters), parameters, 0, 0)
+                        experiment_gpr_base = self.create_experiment(cord, experiment_gpr_base, new_value)
+
+                    # if there are no suitable measurement points found
+                    # break the while True loop
                     else:
-                        rated = term_1 / term_2
-
-                    if rated <= best_rated:
-                        best_rated = rated
-                        best_index = i    
-
-                # if there has been a point found that is suitable
-                if best_index != -1:
-
-                    # add the identified measurement point to the selected point list
-                    parameter_values = fitting_measurements[best_index].as_tuple()
-                    cord = Coordinate(parameter_values)
-                    #selected_points_gpr.append(cord)
-                    
-                    # only add coordinate to selected points list if not already in there (because of reps)
-                    if cord not in selected_points_gpr:
-                        selected_points_gpr.append(cord)
-                    
-                    # add the new point to the gpr and call fit()
-                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
-                            cord, 
-                            measurements_gpr,
-                            callpath, 
-                            metric,
-                            normalization_factors,
-                            experiment_gpr_base.parameters)
-                    
-                    new_value = 0
-                    
-                    # remove the identified measurement point from the remaining point list
-                    try:
-                        # only pop cord when there are no values left in the measurement
-                        
-                        # if that's not the case pop the value from the measurement of the cord
-                        measurement = None
-                        cord_id = None
-                        for i in range(len(measurements_gpr[(Callpath("main"), Metric("runtime"))])):
-                            if measurements_gpr[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
-                                cord_id = i
-                                x = measurements_gpr[(Callpath("main"), Metric("runtime"))][i].values
-                                if len(x) > 0:
-                                    new_value = x[0]
-                                    x = np.delete(x, 0)
-                                    measurements_gpr[(Callpath("main"), Metric("runtime"))][i].values = x
-                                break
-                        
-                        # pop value from cord in remaining points list that has been selected as best next point
-                        remaining_points_gpr[cord].pop(0)
-                        
-                        # pop cord from remaining points when no value left anymore
-                        if len(measurements_gpr[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
-                            remaining_points_gpr.pop(cord)
-                        
-                    except KeyError:
-                        pass
-
-                    # update the number of additional points used
-                    add_points_gpr += 1
-
-                    # add this point to the gpr experiment
-                    #experiment_gpr_base = create_experiment2(selected_points_gpr, experiment_gpr_base, len(experiment_gpr_base.parameters), parameters, 0, 0)
-                    experiment_gpr_base = self.create_experiment(cord, experiment_gpr_base, new_value)
-
-                # if there are no suitable measurement points found
-                # break the while True loop
-                else:
-                    break
+                        break
                 
         # cost used of the gpr strategy
         current_cost = calculate_selected_point_cost2(selected_points_gpr, experiment_gpr_base, 0, 0)
@@ -1668,193 +1806,194 @@ class SyntheticBenchmark():
             experiment_hybrid_base = create_experiment2(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
 
         if self.mode == "budget":
+            if self.newonly == False:
 
-            while True:
-                # identify all possible next points that would 
-                # still fit into the modeling budget in core hours
-                fitting_measurements = []
-                for key, value in remaining_points_hybrid.items():
+                while True:
+                    # identify all possible next points that would 
+                    # still fit into the modeling budget in core hours
+                    fitting_measurements = []
+                    for key, value in remaining_points_hybrid.items():
 
-                    #current_cost = calculate_selected_point_cost2(selected_points_hybrid, experiment, 0, 0)
-                    current_cost = self.calculate_selected_point_cost(experiment_hybrid_base)
+                        #current_cost = calculate_selected_point_cost2(selected_points_hybrid, experiment, 0, 0)
+                        current_cost = self.calculate_selected_point_cost(experiment_hybrid_base)
+                        
+                        #new_cost = current_cost + np.sum(value)
+                        new_cost = current_cost + value[0]
+                        cost_percent = new_cost / (total_cost / 100)
+                        
+                        #if new_cost > budget_core_hours:
+                        #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                        #if cost_percent > 100:
+                        #    print("cost percent <= budget percent:", cost_percent, self.budget)
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        cost_percent = float("{0:.3f}".format(cost_percent))
+                        if cost_percent > 100.0:
+                            cost_percent = 100.0
+
+                        if cost_percent <= self.budget:
+                            fitting_measurements.append(key)
+
+                    #print("fitting_measurements:",fitting_measurements)
+
+                    # determine the switching point between gpr and hybrid strategy
+                    swtiching_point = 0
+                    if len(experiment.parameters) == 2:
+                        if self.grid_search == 1 or self.grid_search == 4:
+                            swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
+                        elif self.grid_search == 2 or self.grid_search == 3:
+                            swtiching_point = self.base_values * min_points + self.hybrid_switch
+                    elif len(experiment.parameters) == 3:
+                        if self.grid_search == 1 or self.grid_search == 4:
+                            swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
+                        elif self.grid_search == 2 or self.grid_search == 3:
+                            swtiching_point = self.base_values * min_points + self.hybrid_switch
+                    elif len(experiment.parameters) == 4:
+                        if self.grid_search == 1 or self.grid_search == 4:
+                            swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
+                        elif self.grid_search == 2 or self.grid_search == 3:
+                            swtiching_point = self.base_values * min_points + self.hybrid_switch
+                    else:
+                        if self.grid_search == 1 or self.grid_search == 4:
+                            swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
+                        elif self.grid_search == 2 or self.grid_search == 3:
+                            swtiching_point = self.base_values * min_points + self.hybrid_switch
+
+                    best_index = -1
                     
-                    #new_cost = current_cost + np.sum(value)
-                    new_cost = current_cost + value[0]
-                    cost_percent = new_cost / (total_cost / 100)
+                    #print("DEBUG: add_points_hybrid, swtiching_point", add_points_hybrid, swtiching_point)
                     
-                    #if new_cost > budget_core_hours:
-                    #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
-                    #if cost_percent > 100:
-                    #    print("cost percent <= budget percent:", cost_percent, self.budget)
-                    # to make sure no mistakes occur here
-                    # sometimes the numbers do not perfectly add up to the target budget
-                    # but to 100.00001
-                    # this is the fix for this case
-                    cost_percent = float("{0:.3f}".format(cost_percent))
-                    if cost_percent > 100.0:
-                        cost_percent = 100.0
+                    # find the next best additional measurement point using the gpr strategy
+                    if add_points_hybrid > swtiching_point:
+                        #print("Using gpr strategy")
+                        best_rated = sys.float_info.max
 
-                    if cost_percent <= self.budget:
-                        fitting_measurements.append(key)
-
-                #print("fitting_measurements:",fitting_measurements)
-
-                # determine the switching point between gpr and hybrid strategy
-                swtiching_point = 0
-                if len(experiment.parameters) == 2:
-                    if self.grid_search == 1 or self.grid_search == 4:
-                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
-                    elif self.grid_search == 2 or self.grid_search == 3:
-                        swtiching_point = self.base_values * min_points + self.hybrid_switch
-                elif len(experiment.parameters) == 3:
-                    if self.grid_search == 1 or self.grid_search == 4:
-                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
-                    elif self.grid_search == 2 or self.grid_search == 3:
-                        swtiching_point = self.base_values * min_points + self.hybrid_switch
-                elif len(experiment.parameters) == 4:
-                    if self.grid_search == 1 or self.grid_search == 4:
-                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
-                    elif self.grid_search == 2 or self.grid_search == 3:
-                        swtiching_point = self.base_values * min_points + self.hybrid_switch
-                else:
-                    if self.grid_search == 1 or self.grid_search == 4:
-                        swtiching_point = self.nr_repetitions * min_points + self.hybrid_switch
-                    elif self.grid_search == 2 or self.grid_search == 3:
-                        swtiching_point = self.base_values * min_points + self.hybrid_switch
-
-                best_index = -1
-                
-                #print("DEBUG: add_points_hybrid, swtiching_point", add_points_hybrid, swtiching_point)
-                
-                # find the next best additional measurement point using the gpr strategy
-                if add_points_hybrid > swtiching_point:
-                    #print("Using gpr strategy")
-                    best_rated = sys.float_info.max
-
-                    for i in range(len(fitting_measurements)):
-                
-                        parameter_values = fitting_measurements[i].as_tuple()
-                        x = []
-                        
-                        for j in range(len(parameter_values)):
-                        
-                            if len(normalization_factors) != 0:
-                                x.append(parameter_values[j] * normalization_factors[experiment.parameters[j]])
-                        
-                            else:
-                                x.append(parameter_values[j])
-                        
-                        # term_1 is cost(t)^2
-                        #term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
-                        term_1 = math.pow(remaining_points_hybrid[fitting_measurements[i]][0], 2)
-                        # predict variance of input vector x with the gaussian process
-                        x = [x]
-                        _, y_cov = gaussian_process_hybrid.predict(x, return_cov=True)
-                        y_cov = abs(y_cov)
-                        # term_2 is gp_cov(t,t)^2
-                        term_2 = math.pow(y_cov, 2)
-                        # rated is h(t)
-                        
-                        if self.grid_search == 3 or self.grid_search == 4:
-                            rep = 1
-                            for j in range(len(measurements_hybrid[(Callpath("main"), Metric("runtime"))])):
-                                if measurements_hybrid[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
-                                    rep = (self.nr_repetitions - len(measurements_hybrid[(Callpath("main"), Metric("runtime"))][j].values)) + 1
-                                    break
-                            rep_func = 2**((1/2)*rep-(1/2))
-                            noise_func = -math.tanh((1/4)*mean_noise-2.5)
-                            cost_multiplier = rep_func + noise_func
-                            rated = (term_1 * cost_multiplier) / term_2
-                        else:
-                            rated = term_1 / term_2
-
-                        if rated <= best_rated:
-                            best_rated = rated
-                            best_index = i 
-
-                # find the next best additional measurement point using the generic strategy
-                else:
-                    #print("Using generic strategy")
-                    lowest_cost = sys.float_info.max
-                    for i in range(len(fitting_measurements)):
-                        
-                        # get the cost of the measurement point
-                        #cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
-                        cost = remaining_points_hybrid[fitting_measurements[i]][0]
-
-                        if cost < lowest_cost:
-                            lowest_cost = cost
-                            best_index = i
-
-                # if there has been a point found that is suitable
-                if best_index != -1:
-
-                    # add the identified measurement point to the experiment, selected point list
-                    parameter_values = fitting_measurements[best_index].as_tuple()
-                    cord = Coordinate(parameter_values)
-                    #selected_points_hybrid.append(cord)
+                        for i in range(len(fitting_measurements)):
                     
-                    # only add coordinate to selected points list if not already in there (because of reps)
-                    if cord not in selected_points_hybrid:
-                        selected_points_hybrid.append(cord)
-                    
-                    # add the new point to the gpr and call fit()
-                    gaussian_process_hybrid = add_measurement_to_gpr(gaussian_process_hybrid, 
-                            cord, 
-                            measurements_hybrid, 
-                            callpath, 
-                            metric,
-                            normalization_factors,
-                            experiment_hybrid_base.parameters)
-                    
-                    # remove the identified measurement point from the remaining point list
-                    #try:
-                    #    remaining_points_hybrid.pop(cord)
-                    #except KeyError:
-                    #    pass
-                    
-                    new_value = 0
-
-                    # remove the identified measurement point from the remaining point list
-                    try:
-                        # only pop cord when there are no values left in the measurement
-                        
-                        # if that's not the case pop the value from the measurement of the cord
-                        measurement = None
-                        cord_id = None
-                        for i in range(len(measurements_hybrid[(Callpath("main"), Metric("runtime"))])):
-                            if measurements_hybrid[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
-                                cord_id = i
-                                x = measurements_hybrid[(Callpath("main"), Metric("runtime"))][i].values
-                                if len(x) > 0:
-                                    new_value = x[0]
-                                    x = np.delete(x, 0)
-                                    measurements_hybrid[(Callpath("main"), Metric("runtime"))][i].values = x
-                                break
+                            parameter_values = fitting_measurements[i].as_tuple()
+                            x = []
                             
-                        # pop value from cord in remaining points list that has been selected as best next point
-                        remaining_points_hybrid[cord].pop(0)
+                            for j in range(len(parameter_values)):
+                            
+                                if len(normalization_factors) != 0:
+                                    x.append(parameter_values[j] * normalization_factors[experiment.parameters[j]])
+                            
+                                else:
+                                    x.append(parameter_values[j])
+                            
+                            # term_1 is cost(t)^2
+                            #term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
+                            term_1 = math.pow(remaining_points_hybrid[fitting_measurements[i]][0], 2)
+                            # predict variance of input vector x with the gaussian process
+                            x = [x]
+                            _, y_cov = gaussian_process_hybrid.predict(x, return_cov=True)
+                            y_cov = abs(y_cov)
+                            # term_2 is gp_cov(t,t)^2
+                            term_2 = math.pow(y_cov, 2)
+                            # rated is h(t)
+                            
+                            if self.grid_search == 3 or self.grid_search == 4:
+                                rep = 1
+                                for j in range(len(measurements_hybrid[(Callpath("main"), Metric("runtime"))])):
+                                    if measurements_hybrid[(Callpath("main"), Metric("runtime"))][j].coordinate == fitting_measurements[i]:
+                                        rep = (self.nr_repetitions - len(measurements_hybrid[(Callpath("main"), Metric("runtime"))][j].values)) + 1
+                                        break
+                                rep_func = 2**((1/2)*rep-(1/2))
+                                noise_func = -math.tanh((1/4)*mean_noise-2.5)
+                                cost_multiplier = rep_func + noise_func
+                                rated = (term_1 * cost_multiplier) / term_2
+                            else:
+                                rated = term_1 / term_2
+
+                            if rated <= best_rated:
+                                best_rated = rated
+                                best_index = i 
+
+                    # find the next best additional measurement point using the generic strategy
+                    else:
+                        #print("Using generic strategy")
+                        lowest_cost = sys.float_info.max
+                        for i in range(len(fitting_measurements)):
+                            
+                            # get the cost of the measurement point
+                            #cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
+                            cost = remaining_points_hybrid[fitting_measurements[i]][0]
+
+                            if cost < lowest_cost:
+                                lowest_cost = cost
+                                best_index = i
+
+                    # if there has been a point found that is suitable
+                    if best_index != -1:
+
+                        # add the identified measurement point to the experiment, selected point list
+                        parameter_values = fitting_measurements[best_index].as_tuple()
+                        cord = Coordinate(parameter_values)
+                        #selected_points_hybrid.append(cord)
                         
-                        # pop cord from remaining points when no value left anymore
-                        if len(measurements_hybrid[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
-                            remaining_points_hybrid.pop(cord)
+                        # only add coordinate to selected points list if not already in there (because of reps)
+                        if cord not in selected_points_hybrid:
+                            selected_points_hybrid.append(cord)
                         
-                    except KeyError:
-                        pass
+                        # add the new point to the gpr and call fit()
+                        gaussian_process_hybrid = add_measurement_to_gpr(gaussian_process_hybrid, 
+                                cord, 
+                                measurements_hybrid, 
+                                callpath, 
+                                metric,
+                                normalization_factors,
+                                experiment_hybrid_base.parameters)
+                        
+                        # remove the identified measurement point from the remaining point list
+                        #try:
+                        #    remaining_points_hybrid.pop(cord)
+                        #except KeyError:
+                        #    pass
+                        
+                        new_value = 0
+
+                        # remove the identified measurement point from the remaining point list
+                        try:
+                            # only pop cord when there are no values left in the measurement
+                            
+                            # if that's not the case pop the value from the measurement of the cord
+                            measurement = None
+                            cord_id = None
+                            for i in range(len(measurements_hybrid[(Callpath("main"), Metric("runtime"))])):
+                                if measurements_hybrid[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
+                                    cord_id = i
+                                    x = measurements_hybrid[(Callpath("main"), Metric("runtime"))][i].values
+                                    if len(x) > 0:
+                                        new_value = x[0]
+                                        x = np.delete(x, 0)
+                                        measurements_hybrid[(Callpath("main"), Metric("runtime"))][i].values = x
+                                    break
+                                
+                            # pop value from cord in remaining points list that has been selected as best next point
+                            remaining_points_hybrid[cord].pop(0)
+                            
+                            # pop cord from remaining points when no value left anymore
+                            if len(measurements_hybrid[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
+                                remaining_points_hybrid.pop(cord)
+                            
+                        except KeyError:
+                            pass
 
 
-                    # update the number of additional points used
-                    add_points_hybrid += 1
+                        # update the number of additional points used
+                        add_points_hybrid += 1
 
-                    # add this point to the hybrid experiment
-                    #experiment_hybrid_base = create_experiment2(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
-                    experiment_hybrid_base = self.create_experiment(cord, experiment_hybrid_base, new_value)
+                        # add this point to the hybrid experiment
+                        #experiment_hybrid_base = create_experiment2(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
+                        experiment_hybrid_base = self.create_experiment(cord, experiment_hybrid_base, new_value)
 
 
-                # if there are no suitable measurement points found
-                # break the while True loop
-                else:
-                    break
+                    # if there are no suitable measurement points found
+                    # break the while True loop
+                    else:
+                        break
 
         elif self.mode == "free":
             pass
@@ -1908,6 +2047,329 @@ class SyntheticBenchmark():
         # increment accuracy bucket for hybrid strategy
         acurracy_bucket_counter_hybrid = self.increment_accuracy_bucket(acurracy_bucket_counter_hybrid, error_hybrid)
 
+
+
+        ############
+        ## Random ##
+        ############
+
+        remaining_points_random = copy.deepcopy(remaining_points)
+        selected_points_random = copy.deepcopy(selected_points)
+        
+        # create base model for generic
+        #if self.grid_search == 2 or self.grid_search == 3:
+        #    experiment_generic_base = self.create_experiment_base(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
+        #else:
+        #   experiment_generic_base = create_experiment2(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
+        
+        #for x in experiment_generic_base.measurements[(Callpath("main"), Metric("runtime"))]:
+        #    print(x.coordinate, x.values)
+
+        # create first model
+        experiment_random_base = create_experiment2(selected_points_random, experiment, len(experiment.parameters), parameters, 0, 0)
+        
+        _, models = self.get_extrap_model(experiment_random_base)
+        hypothesis = None
+        for model in models.values():
+            hypothesis = model.hypothesis
+
+        # calculate selected point cost
+        current_cost = calculate_selected_point_cost2(selected_points_random, experiment, 0, 0)
+        current_cost_percent = current_cost / (total_cost / 100)
+        
+        if self.mode == "budget":
+
+            if current_cost_percent <= self.budget:
+                while True:
+                    # find another point for selection
+                    remaining_points_new, selected_coord_list_new, new_point = add_additional_point_random(remaining_points_random, selected_points_random)
+
+                    # calculate selected point cost
+                    current_cost = calculate_selected_point_cost2(selected_coord_list_new, experiment, 0, 0)
+                    current_cost_percent = current_cost / (total_cost / 100)
+
+                    # current cost exceeds budget so break the loop
+                    #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                    # to make sure no mistakes occur here
+                    # sometimes the numbers do not perfectly add up to the target budget
+                    # but to 100.00001
+                    # this is the fix for this case
+                    current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                    #print("current_cost_percent:",current_cost_percent)
+
+                    if current_cost_percent > self.budget:
+                        break
+
+                    # add the new found point
+                    else:
+
+                        # update the map with the numbers of already selected points
+                        #point_map_generic[new_point] = selection_point_counter
+                        selection_point_counter += 1
+                        #print("point:",point)
+                        #print("point_map_generic:",point_map_generic)
+
+                        # increment counter value, because a new measurement point was added
+                        #added_points_generic += 1
+                        added_points_random += self.nr_repetitions
+
+                        # create new model
+                        experiment_random_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+
+                        selected_points_random = selected_coord_list_new
+                        remaining_points_random = remaining_points_new
+
+                    # if there are no points remaining that can be selected break the loop
+                    if len(remaining_points_random) == 0:
+                        break
+
+            else:
+                pass
+
+        elif self.mode == "free":
+            pass
+
+        else:
+            return 1
+
+        # calculate selected point cost
+        selected_cost = calculate_selected_point_cost2(selected_points_random, experiment, 0, 0)
+        
+        # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
+        percentage_cost_random = selected_cost / (total_cost / 100)
+        if percentage_cost_random >= 99.9:
+            percentage_cost_random = 100
+        #print("percentage_cost_random:",percentage_cost_random)
+        percentage_cost_random_container.append(percentage_cost_random)
+
+        # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
+        #add_points_random = len(selected_points_random) - min_points
+        #if percentage_cost_random > self.budget:
+        #    added_points_random = math.nan
+        add_points_random_container.append(added_points_random)
+        add_points_random = added_points_random
+        #if percentage_cost_random < 100:
+        #    print("add_points_random:",add_points_random)
+        
+        # create model using point selection of generic strategy
+        model_random, _ = self.get_extrap_model(experiment_random_base)
+        
+        #for x in experiment_random_base.measurements[(Callpath("main"),Metric("runtime"))]:
+        #    print(x, x.values)
+        #print("Model generic:",model_random)
+
+        # create model using full matrix of points
+        model_full, _ = self.get_extrap_model(experiment)
+        #print("model_full:",model_full)
+
+        # set the measurement point values for the evaluation of the prediction
+        if self.nr_parameters == 2:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+        elif self.nr_parameters == 3:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+        elif self.nr_parameters == 4:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            d = self.parameter_values_d_val[0]
+        else:
+            return 1
+
+        # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
+        prediction_full = eval(model_full)
+        #print("prediction_full:",prediction_full)
+        prediction_random = eval(model_random)
+        #print("prediction_generic:",prediction_generic)
+
+        #basline_function = function_dict[i].function
+        actual = eval(basline_function)
+        #print("actual:",actual)
+
+        # get the percentage error for the full matrix of points
+        error_full = abs(self.percentage_error(actual, prediction_full))
+        #print("error_full:",error_full)
+
+        # get the percentage error for the generic strategy
+        if percentage_cost_random <= self.budget:
+            error_random = abs(self.percentage_error(actual, prediction_random))
+        else:
+            error_random = 100
+        #print("error_generic:",error_generic)
+
+        # increment accuracy bucket for full matrix of points
+        acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
+
+        # increment accuracy bucket for generic strategy
+        acurracy_bucket_counter_random = self.increment_accuracy_bucket(acurracy_bucket_counter_random, error_random)
+
+
+
+        ############
+        ## Grid ##
+        ############
+
+        remaining_points_grid = copy.deepcopy(remaining_points)
+        selected_points_grid = copy.deepcopy(selected_points)
+        
+        # create base model for generic
+        #if self.grid_search == 2 or self.grid_search == 3:
+        #    experiment_generic_base = self.create_experiment_base(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
+        #else:
+        #   experiment_generic_base = create_experiment2(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
+        
+        #for x in experiment_generic_base.measurements[(Callpath("main"), Metric("runtime"))]:
+        #    print(x.coordinate, x.values)
+
+        # create first model
+        experiment_grid_base = create_experiment2(selected_points_grid, experiment, len(experiment.parameters), parameters, 0, 0)
+        
+        _, models = self.get_extrap_model(experiment_grid_base)
+        hypothesis = None
+        for model in models.values():
+            hypothesis = model.hypothesis
+
+        # calculate selected point cost
+        current_cost = calculate_selected_point_cost2(selected_points_grid, experiment, 0, 0)
+        current_cost_percent = current_cost / (total_cost / 100)
+        
+        if self.mode == "budget":
+
+            if current_cost_percent <= self.budget:
+                while True:
+                    # find another point for selection
+                    remaining_points_new, selected_coord_list_new, new_point = add_additional_point_grid(remaining_points_grid, selected_points_grid)
+
+                    # calculate selected point cost
+                    current_cost = calculate_selected_point_cost2(selected_coord_list_new, experiment, 0, 0)
+                    current_cost_percent = current_cost / (total_cost / 100)
+
+                    # current cost exceeds budget so break the loop
+                    #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                    # to make sure no mistakes occur here
+                    # sometimes the numbers do not perfectly add up to the target budget
+                    # but to 100.00001
+                    # this is the fix for this case
+                    current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                    #print("current_cost_percent:",current_cost_percent)
+
+                    if current_cost_percent > self.budget:
+                        break
+
+                    # add the new found point
+                    else:
+
+                        # update the map with the numbers of already selected points
+                        #point_map_generic[new_point] = selection_point_counter
+                        selection_point_counter += 1
+                        #print("point:",point)
+                        #print("point_map_generic:",point_map_generic)
+
+                        # increment counter value, because a new measurement point was added
+                        #added_points_generic += 1
+                        added_points_grid += self.nr_repetitions
+
+                        # create new model
+                        experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+
+                        selected_points_grid = selected_coord_list_new
+                        remaining_points_grid = remaining_points_new
+
+                    # if there are no points remaining that can be selected break the loop
+                    if len(remaining_points_grid) == 0:
+                        break
+
+            else:
+                pass
+
+        elif self.mode == "free":
+            pass
+
+        else:
+            return 1
+
+        # calculate selected point cost
+        selected_cost = calculate_selected_point_cost2(selected_points_grid, experiment, 0, 0)
+        
+        # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
+        percentage_cost_grid = selected_cost / (total_cost / 100)
+        if percentage_cost_grid >= 99.9:
+            percentage_cost_grid = 100
+        #print("percentage_cost_grid:",percentage_cost_grid)
+        percentage_cost_grid_container.append(percentage_cost_grid)
+
+        # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
+        #add_points_grid = len(selected_points_grid) - min_points
+        #if percentage_cost_grid > self.budget:
+        #    added_points_grid = math.nan
+        add_points_grid_container.append(added_points_grid)
+        add_points_grid = added_points_grid
+        #if percentage_cost_grid < 100:
+        #    print("add_points_grid:",add_points_grid)
+        
+        # create model using point selection of generic strategy
+        model_grid, _ = self.get_extrap_model(experiment_grid_base)
+        
+        #for x in experiment_grid_base.measurements[(Callpath("main"),Metric("runtime"))]:
+        #    print(x, x.values)
+        #print("Model generic:",model_grid)
+
+        # create model using full matrix of points
+        model_full, _ = self.get_extrap_model(experiment)
+        #print("model_full:",model_full)
+
+        # set the measurement point values for the evaluation of the prediction
+        if self.nr_parameters == 2:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+        elif self.nr_parameters == 3:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+        elif self.nr_parameters == 4:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            d = self.parameter_values_d_val[0]
+        else:
+            return 1
+
+        # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
+        prediction_full = eval(model_full)
+        #print("prediction_full:",prediction_full)
+        prediction_grid = eval(model_grid)
+        #print("prediction_generic:",prediction_generic)
+
+        #basline_function = function_dict[i].function
+        actual = eval(basline_function)
+        #print("actual:",actual)
+
+        # get the percentage error for the full matrix of points
+        error_full = abs(self.percentage_error(actual, prediction_full))
+        #print("error_full:",error_full)
+
+        # get the percentage error for the generic strategy
+        if percentage_cost_grid <= self.budget:
+            error_grid = abs(self.percentage_error(actual, prediction_grid))
+        else:
+            error_grid = 100
+        #print("error_generic:",error_generic)
+
+        # increment accuracy bucket for full matrix of points
+        acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
+
+        # increment accuracy bucket for generic strategy
+        acurracy_bucket_counter_grid = self.increment_accuracy_bucket(acurracy_bucket_counter_grid, error_grid)
+
+
+
+
+        ###############
+        ### results ###
+        ###############
+
         # save the results of this worker to return them to the main process
         result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
 
@@ -1925,6 +2387,14 @@ class SyntheticBenchmark():
         result_container["add_points_hybrid"] = add_points_hybrid
         result_container["percentage_cost_hybrid"] = percentage_cost_hybrid
         result_container["acurracy_bucket_counter_hybrid"] = acurracy_bucket_counter_hybrid
+
+        result_container["add_points_random"] = add_points_random
+        result_container["percentage_cost_random"] = percentage_cost_random
+        result_container["acurracy_bucket_counter_random"] = acurracy_bucket_counter_random
+
+        result_container["add_points_grid"] = add_points_grid
+        result_container["percentage_cost_grid"] = percentage_cost_grid
+        result_container["acurracy_bucket_counter_grid"] = acurracy_bucket_counter_grid
 
         result_container["base_point_cost"] = base_point_cost
 
@@ -1947,6 +2417,16 @@ class SyntheticBenchmark():
             result_container["hybrid_possible"] = True
         else:
             result_container["hybrid_possible"] = False
+        
+        if percentage_cost_random <= self.budget:
+            result_container["random_possible"] = True
+        else:
+            result_container["random_possible"] = False
+
+        if percentage_cost_grid <= self.budget:
+            result_container["grid_possible"] = True
+        else:
+            result_container["grid_possible"] = False
         
         shared_dict[counter] = result_container
 
@@ -2021,11 +2501,35 @@ class SyntheticBenchmark():
         percentage_cost_hybrid_container = []
         add_points_hybrid_container = []
 
+        # random
+        acurracy_bucket_counter_random = {}
+        acurracy_bucket_counter_random["rest"] = 0
+        acurracy_bucket_counter_random["5"] = 0
+        acurracy_bucket_counter_random["10"] = 0
+        acurracy_bucket_counter_random["15"] = 0
+        acurracy_bucket_counter_random["20"] = 0
+
+        percentage_cost_random_container = []
+        add_points_random_container = []
+
+        # grid
+        acurracy_bucket_counter_grid = {}
+        acurracy_bucket_counter_grid["rest"] = 0
+        acurracy_bucket_counter_grid["5"] = 0
+        acurracy_bucket_counter_grid["10"] = 0
+        acurracy_bucket_counter_grid["15"] = 0
+        acurracy_bucket_counter_grid["20"] = 0
+
+        percentage_cost_grid_container = []
+        add_points_grid_container = []
+
         base_point_costs = []
         
         gpr_functions_modeled = []
         generic_functions_modeled = []
         hybrid_functions_modeled = []
+        random_functions_modeled = []
+        grid_functions_modeled = []
         
         len_coordinates = None
        
@@ -2033,7 +2537,7 @@ class SyntheticBenchmark():
         manager = Manager()
         shared_dict = manager.dict()
         cpu_count = mp.cpu_count()
-        cpu_count -= 4
+        cpu_count -= 2
         if self.nr_functions < cpu_count:
             cpu_count = self.nr_functions
 
@@ -2051,15 +2555,26 @@ class SyntheticBenchmark():
             
             add_points_generic_container.append(result_dict[i]["add_points_generic"])
             percentage_cost_generic_container.append(result_dict[i]["percentage_cost_generic"])
+
             add_points_gpr_container.append(result_dict[i]["add_points_gpr"])
             percentage_cost_gpr_container.append(result_dict[i]["percentage_cost_gpr"])
+
             add_points_hybrid_container.append(result_dict[i]["add_points_hybrid"])
             percentage_cost_hybrid_container.append(result_dict[i]["percentage_cost_hybrid"])
+
+            add_points_random_container.append(result_dict[i]["add_points_random"])
+            percentage_cost_random_container.append(result_dict[i]["percentage_cost_random"])
+
+            add_points_grid_container.append(result_dict[i]["add_points_grid"])
+            percentage_cost_grid_container.append(result_dict[i]["percentage_cost_grid"])
+
             base_point_costs.append(result_dict[i]["base_point_cost"])
             
             generic_functions_modeled.append(result_dict[i]["generic_possible"])
             gpr_functions_modeled.append(result_dict[i]["gpr_possible"])
             hybrid_functions_modeled.append(result_dict[i]["hybrid_possible"])
+            random_functions_modeled.append(result_dict[i]["random_possible"])
+            grid_functions_modeled.append(result_dict[i]["grid_possible"])
 
             if i == 0:
                 len_coordinates = result_dict[i]["len_coordinates"]
@@ -2069,6 +2584,8 @@ class SyntheticBenchmark():
             b_generic = result_dict[i]["acurracy_bucket_counter_generic"]
             b_gpr = result_dict[i]["acurracy_bucket_counter_gpr"]
             b_hybrid = result_dict[i]["acurracy_bucket_counter_hybrid"]
+            b_random = result_dict[i]["acurracy_bucket_counter_random"]
+            b_grid = result_dict[i]["acurracy_bucket_counter_grid"]
 
             if b_full["rest"] == 1:
                 acurracy_bucket_counter_full["rest"] += 1
@@ -2113,6 +2630,28 @@ class SyntheticBenchmark():
                 acurracy_bucket_counter_hybrid["15"] += 1
             if b_hybrid["20"] == 1:
                 acurracy_bucket_counter_hybrid["20"] += 1
+
+            if b_random["rest"] == 1:
+                acurracy_bucket_counter_random["rest"] += 1
+            if b_random["5"] == 1:
+                acurracy_bucket_counter_random["5"] += 1
+            if b_random["10"] == 1:
+                acurracy_bucket_counter_random["10"] += 1
+            if b_random["15"] == 1:
+                acurracy_bucket_counter_random["15"] += 1
+            if b_random["20"] == 1:
+                acurracy_bucket_counter_random["20"] += 1
+
+            if b_grid["rest"] == 1:
+                acurracy_bucket_counter_grid["rest"] += 1
+            if b_grid["5"] == 1:
+                acurracy_bucket_counter_grid["5"] += 1
+            if b_grid["10"] == 1:
+                acurracy_bucket_counter_grid["10"] += 1
+            if b_grid["15"] == 1:
+                acurracy_bucket_counter_grid["15"] += 1
+            if b_grid["20"] == 1:
+                acurracy_bucket_counter_grid["20"] += 1
 
         #print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
         #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
@@ -2268,6 +2807,84 @@ class SyntheticBenchmark():
         
         json_out["nr_func_modeled_hybrid"] = nr_func_modeled_hybrid
 
+        ##############
+        ### Random ###
+        ##############
+        
+        percentage_bucket_counter_random = self.calculate_percentage_of_buckets(acurracy_bucket_counter_random)
+        print("percentage_bucket_counter_random:",percentage_bucket_counter_random)
+        json_out["percentage_bucket_counter_random"] = percentage_bucket_counter_random
+
+        percentage_cost_random_container_filtered = []
+        add_points_random_container_filtered = []
+        for i in range(len(percentage_cost_random_container)):
+            if percentage_cost_random_container[i] <= self.budget:
+                percentage_cost_random_container_filtered.append(percentage_cost_random_container[i])
+                add_points_random_container_filtered.append(add_points_random_container[i])
+        #print("percentage_cost_random_container:",percentage_cost_random_container)
+        #mean_budget_random = np.nanmean(percentage_cost_random_container)
+        
+        if len(percentage_cost_random_container_filtered) > 0:
+            mean_budget_random = np.nanmean(percentage_cost_random_container_filtered)
+        else:
+            mean_budget_random = 0
+        print("mean_budget_random:",mean_budget_random)
+        json_out["mean_budget_random"] = mean_budget_random
+
+        if len(add_points_random_container_filtered) > 0:
+            mean_add_points_random = np.nanmean(add_points_random_container_filtered)
+        else:
+            mean_add_points_random = 0
+        print("mean_add_points_random:",mean_add_points_random)
+        json_out["mean_add_points_random"] = mean_add_points_random
+        
+        nr_func_modeled_random = 0
+        for i in range(len(random_functions_modeled)):
+            if random_functions_modeled[i] == True:
+                nr_func_modeled_random += 1
+        print("nr_func_modeled_random:",nr_func_modeled_random)
+        
+        json_out["nr_func_modeled_random"] = nr_func_modeled_random
+
+        ############
+        ### Grid ###
+        ############
+        
+        percentage_bucket_counter_grid = self.calculate_percentage_of_buckets(acurracy_bucket_counter_grid)
+        print("percentage_bucket_counter_grid:",percentage_bucket_counter_grid)
+        json_out["percentage_bucket_counter_grid"] = percentage_bucket_counter_grid
+
+        percentage_cost_grid_container_filtered = []
+        add_points_grid_container_filtered = []
+        for i in range(len(percentage_cost_grid_container)):
+            if percentage_cost_grid_container[i] <= self.budget:
+                percentage_cost_grid_container_filtered.append(percentage_cost_grid_container[i])
+                add_points_grid_container_filtered.append(add_points_grid_container[i])
+        #print("percentage_cost_grid_container:",percentage_cost_grid_container)
+        #mean_budget_grid = np.nanmean(percentage_cost_grid_container)
+        
+        if len(percentage_cost_grid_container_filtered) > 0:
+            mean_budget_grid = np.nanmean(percentage_cost_grid_container_filtered)
+        else:
+            mean_budget_grid = 0
+        print("mean_budget_grid:",mean_budget_grid)
+        json_out["mean_budget_grid"] = mean_budget_grid
+
+        if len(add_points_grid_container_filtered) > 0:
+            mean_add_points_grid = np.nanmean(add_points_grid_container_filtered)
+        else:
+            mean_add_points_grid = 0
+        print("mean_add_points_grid:",mean_add_points_grid)
+        json_out["mean_add_points_grid"] = mean_add_points_grid
+        
+        nr_func_modeled_grid = 0
+        for i in range(len(grid_functions_modeled)):
+            if grid_functions_modeled[i] == True:
+                nr_func_modeled_grid += 1
+        print("nr_func_modeled_grid:",nr_func_modeled_grid)
+        
+        json_out["nr_func_modeled_grid"] = nr_func_modeled_grid
+
         ###################
         ### Base Points ###
         ###################
@@ -2288,7 +2905,7 @@ class SyntheticBenchmark():
         ####################
 
         # plot the results of the model accuracy analysis
-        if self.plot == True:
+        if self.plot == True and self.newonly == False:
             plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, self.budget)
         
         used_costs = {
@@ -2300,7 +2917,7 @@ class SyntheticBenchmark():
         json_out["budget"] = self.budget
 
         # plot the analysis result for the costs and budgets
-        if self.plot == True:
+        if self.plot == True and self.newonly == False:
             plot_costs(used_costs, mean_base_point_cost, self.budget)
 
         add_points = {
@@ -2309,7 +2926,7 @@ class SyntheticBenchmark():
         }
 
         # plot the analysis result for the additional measurement point numbers
-        if self.plot == True:
+        if self.plot == True and self.newonly == False:
             plot_measurement_point_number(add_points, min_points, self.budget)
 
         ##############################
