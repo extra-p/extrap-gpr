@@ -63,6 +63,35 @@ def create_experiment2(selected_coord_list, experiment, nr_parameters, parameter
             experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
     return experiment_generic
 
+def create_experiment3(selected_coord_list, experiment, nr_parameters, parameter_placeholders, metric_id, callpath_id):
+    # create new experiment with only the selected measurements and points as coordinates and measurements
+    experiment_generic = Experiment()
+    for j in range(nr_parameters):
+        experiment_generic.add_parameter(Parameter(parameter_placeholders[j]))
+
+    callpath = experiment.callpaths[callpath_id]
+    experiment_generic.add_callpath(callpath)
+
+    metric = experiment.metrics[metric_id]
+    experiment_generic.add_metric(metric)
+
+    for j in range(len(selected_coord_list)):
+        coordinate = selected_coord_list[j]
+        experiment_generic.add_coordinate(coordinate)
+
+        coordinate_id = -1
+        for k in range(len(experiment.coordinates)):
+            if coordinate == experiment.coordinates[k]:
+                coordinate_id = k
+        measurement_temp = experiment.get_measurement(coordinate_id, callpath_id, metric_id)
+        #print("haha:",measurement_temp.median)
+
+        if measurement_temp != None:
+            #value = selected_measurement_values[selected_coord_list[j]] 
+            #experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, value))
+            experiment_generic.add_measurement(Measurement(coordinate, callpath, metric, measurement_temp.values))
+    return experiment_generic
+
 def calculate_selected_point_cost2(selected_points, experiment, callpath_id, metric_id):
     # calculate selected point cost
     selected_cost = 0
@@ -1299,7 +1328,7 @@ class SyntheticBenchmark():
         # calculate selected point cost
         current_cost = calculate_selected_point_cost2(selected_points_generic, experiment, 0, 0)
         current_cost_percent = current_cost / (total_cost / 100)
-        
+
         if self.mode == "budget":
 
             if current_cost_percent <= self.budget:
@@ -1988,7 +2017,7 @@ class SyntheticBenchmark():
                         # add this point to the hybrid experiment
                         #experiment_hybrid_base = create_experiment2(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
                         experiment_hybrid_base = self.create_experiment(cord, experiment_hybrid_base, new_value)
-
+                        
 
                     # if there are no suitable measurement points found
                     # break the while True loop
@@ -2055,15 +2084,6 @@ class SyntheticBenchmark():
 
         remaining_points_random = copy.deepcopy(remaining_points)
         selected_points_random = copy.deepcopy(selected_points)
-        
-        # create base model for generic
-        #if self.grid_search == 2 or self.grid_search == 3:
-        #    experiment_generic_base = self.create_experiment_base(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
-        #else:
-        #   experiment_generic_base = create_experiment2(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
-        
-        #for x in experiment_generic_base.measurements[(Callpath("main"), Metric("runtime"))]:
-        #    print(x.coordinate, x.values)
 
         # create first model
         experiment_random_base = create_experiment2(selected_points_random, experiment, len(experiment.parameters), parameters, 0, 0)
@@ -2076,48 +2096,47 @@ class SyntheticBenchmark():
         # calculate selected point cost
         current_cost = calculate_selected_point_cost2(selected_points_random, experiment, 0, 0)
         current_cost_percent = current_cost / (total_cost / 100)
+
+        #print("remaining_points_random:", remaining_points_random)
+        #print("selected_points_random:", selected_points_random)
+        #print("DEBUG measurements_random:", measurements_random)
         
         if self.mode == "budget":
 
             if current_cost_percent <= self.budget:
                 while True:
                     # find another point for selection
-                    remaining_points_new, selected_coord_list_new, new_point = add_additional_point_random(remaining_points_random, selected_points_random)
+                    new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value = add_additional_point_random(remaining_points_random, selected_points_random, measurements_random, self.nr_repetitions)
 
-                    # calculate selected point cost
-                    current_cost = calculate_selected_point_cost2(selected_coord_list_new, experiment, 0, 0)
-                    current_cost_percent = current_cost / (total_cost / 100)
+                    #print("DEBUG:", new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value)
+
+                    # calculate new selected point cost
+                    new_cost = current_cost + new_point_cost
+                    new_cost_percent = new_cost / (total_cost / 100)
 
                     # current cost exceeds budget so break the loop
-                    #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
                     # to make sure no mistakes occur here
                     # sometimes the numbers do not perfectly add up to the target budget
                     # but to 100.00001
                     # this is the fix for this case
-                    current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                    #print("current_cost_percent:",current_cost_percent)
+                    new_cost_percent = float("{0:.2f}".format(new_cost_percent))
+                    #print("new_cost_percent:",new_cost_percent)
 
-                    if current_cost_percent > self.budget:
+                    if new_cost_percent > self.budget:
                         break
 
                     # add the new found point
                     else:
-
-                        # update the map with the numbers of already selected points
-                        #point_map_generic[new_point] = selection_point_counter
-                        selection_point_counter += 1
-                        #print("point:",point)
-                        #print("point_map_generic:",point_map_generic)
-
                         # increment counter value, because a new measurement point was added
-                        #added_points_generic += 1
-                        added_points_random += self.nr_repetitions
+                        added_points_random += 1
 
                         # create new model
-                        experiment_random_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
-
+                        experiment_random_base = self.create_experiment(selected_cord_new, experiment_random_base, new_measurement_value)
+                        
                         selected_points_random = selected_coord_list_new
                         remaining_points_random = remaining_points_new
+                        current_cost = new_cost
+                        current_cost_percent = new_cost_percent
 
                     # if there are no points remaining that can be selected break the loop
                     if len(remaining_points_random) == 0:
@@ -2132,11 +2151,8 @@ class SyntheticBenchmark():
         else:
             return 1
 
-        # calculate selected point cost
-        selected_cost = calculate_selected_point_cost2(selected_points_random, experiment, 0, 0)
-        
         # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
-        percentage_cost_random = selected_cost / (total_cost / 100)
+        percentage_cost_random = current_cost_percent
         if percentage_cost_random >= 99.9:
             percentage_cost_random = 100
         #print("percentage_cost_random:",percentage_cost_random)
@@ -2743,20 +2759,20 @@ class SyntheticBenchmark():
             if percentage_cost_gpr_container[i] <= self.budget:
                 percentage_cost_gpr_container_filtered.append(percentage_cost_gpr_container[i])
                 add_points_gpr_container_filtered.append(add_points_gpr_container[i])
-                
-        if len(add_points_gpr_container_filtered) > 0:
-            mean_add_points_gpr = np.nanmean(add_points_gpr_container_filtered)
-        else:
-            mean_add_points_gpr = 0
-        print("mean_add_points_gpr:",mean_add_points_gpr)
-        json_out["mean_add_points_gpr"] = mean_add_points_gpr
-                
+        
         if len(percentage_cost_gpr_container_filtered) > 0:
             mean_budget_gpr = np.nanmean(percentage_cost_gpr_container_filtered)
         else:
             mean_budget_gpr = 0
         print("mean_budget_gpr:",mean_budget_gpr)
         json_out["mean_budget_gpr"] = mean_budget_gpr
+        
+        if len(add_points_gpr_container_filtered) > 0:
+            mean_add_points_gpr = np.nanmean(add_points_gpr_container_filtered)
+        else:
+            mean_add_points_gpr = 0
+        print("mean_add_points_gpr:",mean_add_points_gpr)
+        json_out["mean_add_points_gpr"] = mean_add_points_gpr
         
         nr_func_modeled_gpr = 0
         for i in range(len(gpr_functions_modeled)):
@@ -2807,6 +2823,8 @@ class SyntheticBenchmark():
         
         json_out["nr_func_modeled_hybrid"] = nr_func_modeled_hybrid
 
+        print("")
+
         ##############
         ### Random ###
         ##############
@@ -2845,6 +2863,8 @@ class SyntheticBenchmark():
         print("nr_func_modeled_random:",nr_func_modeled_random)
         
         json_out["nr_func_modeled_random"] = nr_func_modeled_random
+
+        print("")
 
         ############
         ### Grid ###
@@ -2885,6 +2905,8 @@ class SyntheticBenchmark():
         
         json_out["nr_func_modeled_grid"] = nr_func_modeled_grid
 
+        print("")
+
         ###################
         ### Base Points ###
         ###################
@@ -2895,7 +2917,6 @@ class SyntheticBenchmark():
                 base_point_costs_filtered.append(x)
         #mean_base_point_cost = np.nanmean(base_point_costs)
         mean_base_point_cost = np.nanmean(base_point_costs_filtered)
-        print("")
         print("mean_base_point_cost:",mean_base_point_cost)
 
         json_out["point_map_generic"] = point_map_generic
