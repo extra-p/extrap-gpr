@@ -4,6 +4,8 @@ import random
 import extrap
 from extrap.entities.callpath import Callpath
 from extrap.entities.metric import Metric
+from extrap.entities.coordinate import Coordinate
+import numpy as np
 
 def add_additional_point_generic(remaining_points, selected_coord_list):
     remaining_points = copy.deepcopy(remaining_points)
@@ -102,56 +104,26 @@ def add_additional_point_random(remaining_points, selected_coord_list, measureme
     return new_point_cost, selected_cord_new, remaining_points, selected_coord_list, new_measurement_value
 
 
-def add_additional_point_grid(remaining_points, selected_coord_list):
+def add_additional_point_grid(remaining_points, selected_coord_list, new_point):
     remaining_points = copy.deepcopy(remaining_points)
     selected_coord_list = copy.deepcopy(selected_coord_list)
-    while True:
-        point_costs = {}
-        for key, value in remaining_points.items():
-            try:
-                min_value = min(value)
-            except ValueError:
-                min_value = math.inf
-            point_costs[key] = min_value
-        try:
-            temp = min(point_costs, key=point_costs.get)
-        except Exception as e:
-            print(e)
-            #print("point_costs:",point_costs)
-            #print("remaining_points:",remaining_points)
-            return remaining_points, selected_coord_list
-    
-        # check if point was already selected
-        # make sure this point was not selected yet
-        exists = False
-        for k in range(len(selected_coord_list)):
-            if temp == selected_coord_list[k]:
-                exists = True
-                break
-        # if point was selected already, delete it
-        if exists == True:
-            try:
-                #remaining_points[temp].remove(point_costs[temp])
-                del remaining_points[temp]
-            except ValueError as e:
-                print(e)
-                print("temp:",temp)
-                print("selected_coord_list:",selected_coord_list)
-                print("remaining_points:",remaining_points)
-                return 0
-        # if point was not selected yet, break the loop and add this point
-        else:
-            break
 
-    # if point was not selected yet, use it
-    # add the point to the selected list
-    selected_coord_list.append(temp)
+    #print("old:",selected_coord_list)
+    selected_coord_list.append(Coordinate(new_point))
+    #print("new:",selected_coord_list)
 
+    # calc the cost of the new point
+    cost_values = remaining_points[Coordinate(new_point)]
+    #print("DEBUG cost_values:", cost_values)
+    new_point_cost = np.sum(cost_values)
+    #print("DEBUG new_point_cost:", new_point_cost)
+
+    #print("old:", remaining_points)
     # remove this point from the remaining points list
     try:
-        #remaining_points[temp].remove(point_costs[temp])
-        del remaining_points[temp]
+        del remaining_points[Coordinate(new_point)]
     except ValueError as e:
         print(e)
+    #print("new:", remaining_points)
 
-    return remaining_points, selected_coord_list, temp
+    return remaining_points, selected_coord_list, new_point_cost

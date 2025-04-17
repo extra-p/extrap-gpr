@@ -33,6 +33,7 @@ import warnings
 from sklearn.exceptions import ConvergenceWarning
 import sys
 import json
+import itertools
 
 def create_experiment2(selected_coord_list, experiment, nr_parameters, parameter_placeholders, metric_id, callpath_id):
     # create new experiment with only the selected measurements and points as coordinates and measurements
@@ -2229,15 +2230,51 @@ class SyntheticBenchmark():
 
         remaining_points_grid = copy.deepcopy(remaining_points)
         selected_points_grid = copy.deepcopy(selected_points)
-        
-        # create base model for generic
-        #if self.grid_search == 2 or self.grid_search == 3:
-        #    experiment_generic_base = self.create_experiment_base(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
-        #else:
-        #   experiment_generic_base = create_experiment2(selected_points_generic, experiment, len(experiment.parameters), parameters, 0, 0)
-        
-        #for x in experiment_generic_base.measurements[(Callpath("main"), Metric("runtime"))]:
-        #    print(x.coordinate, x.values)
+
+        # setup the grid for the grid search
+        combinations = None
+        if self.nr_parameters == 2:
+            combinations = list(itertools.product(
+                self.parameter_values_a,
+                self.parameter_values_b
+            ))
+
+        elif self.nr_parameters == 3:
+            combinations = list(itertools.product(
+                self.parameter_values_a,
+                self.parameter_values_b,
+                self.parameter_values_c
+            ))
+
+        elif self.nr_parameters == 4:
+            combinations = list(itertools.product(
+                self.parameter_values_a,
+                self.parameter_values_b,
+                self.parameter_values_c,
+                self.parameter_values_d
+            ))
+
+        else:
+            return 1
+
+        # filter the combinations so that the base points do not need to be iterated over again...
+        if self.nr_parameters == 2:
+            remaining_combinations = [
+                (a, b) for (a, b) in combinations if Coordinate(a, b) not in selected_points_grid
+            ]
+        elif self.nr_parameters == 3:
+            remaining_combinations = [
+                (a, b, c) for (a, b, c) in combinations if Coordinate(a, b, c) not in selected_points_grid
+            ]
+        elif self.nr_parameters == 4:
+            remaining_combinations = [
+                (a, b, c, d) for (a, b, c, d) in combinations if Coordinate(a, b, c, d) not in selected_points_grid
+            ]
+        else:
+            return 1
+        #print("DEBUG:", len(combinations))
+        #print("DEBUG:", selected_points_grid, len(selected_points_grid))
+        #print("DEBUG:", remaining_combinations, len(remaining_combinations)) 
 
         # create first model
         experiment_grid_base = create_experiment2(selected_points_grid, experiment, len(experiment.parameters), parameters, 0, 0)
@@ -2254,49 +2291,158 @@ class SyntheticBenchmark():
         if self.mode == "budget":
 
             if current_cost_percent <= self.budget:
-                while True:
-                    # find another point for selection
-                    remaining_points_new, selected_coord_list_new, new_point = add_additional_point_grid(remaining_points_grid, selected_points_grid)
+                
+                # loop through all remaining_combinations of the grid
+                if self.nr_parameters == 2:
+                    for i, (a, b) in enumerate(remaining_combinations):
+                        
+                        # get the new selected point from grid
+                        new_point = (a, b)
+                        #print("DEBUG: ", new_point)
 
-                    # calculate selected point cost
-                    current_cost = calculate_selected_point_cost2(selected_coord_list_new, experiment, 0, 0)
-                    current_cost_percent = current_cost / (total_cost / 100)
+                        # update remaining point list and selected point list
+                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
 
-                    # current cost exceeds budget so break the loop
-                    #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                    # to make sure no mistakes occur here
-                    # sometimes the numbers do not perfectly add up to the target budget
-                    # but to 100.00001
-                    # this is the fix for this case
-                    current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                    #print("current_cost_percent:",current_cost_percent)
+                        # calculate selected point cost
+                        current_cost = current_cost + new_point_cost
+                        current_cost_percent = current_cost / (total_cost / 100)
+                        #print(current_cost_percent)
 
-                    if current_cost_percent > self.budget:
-                        break
+                        # current cost exceeds budget so break the loop
+                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                        #print("current_cost_percent:",current_cost_percent)
 
-                    # add the new found point
-                    else:
+                        if current_cost_percent > self.budget:
+                            break
 
-                        # update the map with the numbers of already selected points
-                        #point_map_generic[new_point] = selection_point_counter
-                        selection_point_counter += 1
-                        #print("point:",point)
-                        #print("point_map_generic:",point_map_generic)
+                        # add the new found point
+                        else:
 
-                        # increment counter value, because a new measurement point was added
-                        #added_points_generic += 1
-                        added_points_grid += self.nr_repetitions
+                            # update the map with the numbers of already selected points
+                            #point_map_generic[new_point] = selection_point_counter
+                            selection_point_counter += 1
+                            #print("point:",point)
+                            #print("point_map_generic:",point_map_generic)
 
-                        # create new model
-                        experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+                            # increment counter value, because a new measurement point was added
+                            #added_points_generic += 1
+                            added_points_grid += self.nr_repetitions
 
-                        selected_points_grid = selected_coord_list_new
-                        remaining_points_grid = remaining_points_new
+                            # create new model
+                            experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
 
-                    # if there are no points remaining that can be selected break the loop
-                    if len(remaining_points_grid) == 0:
-                        break
+                            selected_points_grid = selected_coord_list_new
+                            remaining_points_grid = remaining_points_new
 
+                        # if there are no points remaining that can be selected break the loop
+                        if len(remaining_points_grid) == 0:
+                            break
+
+
+                elif self.nr_parameters == 3:
+                    for (a, b, c) in enumerate(combinations):
+                        new_point = Coordinate(a, b, c)
+                        #print("DEBUG: ", new_point)
+
+                        # update remaining point list and selected point list
+                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
+
+                        # calculate selected point cost
+                        current_cost = current_cost + new_point_cost
+                        current_cost_percent = current_cost / (total_cost / 100)
+                        #print(current_cost_percent)
+
+                        # current cost exceeds budget so break the loop
+                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                        #print("current_cost_percent:",current_cost_percent)
+
+                        if current_cost_percent > self.budget:
+                            break
+
+                        # add the new found point
+                        else:
+
+                            # update the map with the numbers of already selected points
+                            #point_map_generic[new_point] = selection_point_counter
+                            selection_point_counter += 1
+                            #print("point:",point)
+                            #print("point_map_generic:",point_map_generic)
+
+                            # increment counter value, because a new measurement point was added
+                            #added_points_generic += 1
+                            added_points_grid += self.nr_repetitions
+
+                            # create new model
+                            experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+
+                            selected_points_grid = selected_coord_list_new
+                            remaining_points_grid = remaining_points_new
+
+                        # if there are no points remaining that can be selected break the loop
+                        if len(remaining_points_grid) == 0:
+                            break
+
+
+                elif self.nr_parameters == 4:
+                    for (a, b, c, d) in enumerate(combinations):
+                        new_point = Coordinate(a, b, c, d)
+                        #print("DEBUG: ", new_point)
+
+                        # update remaining point list and selected point list
+                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
+
+                        # calculate selected point cost
+                        current_cost = current_cost + new_point_cost
+                        current_cost_percent = current_cost / (total_cost / 100)
+                        #print(current_cost_percent)
+
+                        # current cost exceeds budget so break the loop
+                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                        #print("current_cost_percent:",current_cost_percent)
+
+                        if current_cost_percent > self.budget:
+                            break
+
+                        # add the new found point
+                        else:
+
+                            # update the map with the numbers of already selected points
+                            #point_map_generic[new_point] = selection_point_counter
+                            selection_point_counter += 1
+                            #print("point:",point)
+                            #print("point_map_generic:",point_map_generic)
+
+                            # increment counter value, because a new measurement point was added
+                            #added_points_generic += 1
+                            added_points_grid += self.nr_repetitions
+
+                            # create new model
+                            experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+
+                            selected_points_grid = selected_coord_list_new
+                            remaining_points_grid = remaining_points_new
+
+                        # if there are no points remaining that can be selected break the loop
+                        if len(remaining_points_grid) == 0:
+                            break
+
+                else:
+                    return 1
             else:
                 pass
 
