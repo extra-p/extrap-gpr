@@ -109,10 +109,12 @@ def add_additional_point_grid(remaining_points, selected_coord_list, new_point):
     selected_coord_list = copy.deepcopy(selected_coord_list)
 
     #print("old:",selected_coord_list)
-    selected_coord_list.append(Coordinate(new_point))
+    if Coordinate(new_point) not in selected_coord_list:
+        selected_coord_list.append(Coordinate(new_point))
     #print("new:",selected_coord_list)
 
     # calc the cost of the new point
+    #print("DEBUG remaining_points:", remaining_points)
     cost_values = remaining_points[Coordinate(new_point)]
     #print("DEBUG cost_values:", cost_values)
     new_point_cost = np.sum(cost_values)

@@ -2345,7 +2345,7 @@ class SyntheticBenchmark():
 
 
                 elif self.nr_parameters == 3:
-                    for (a, b, c) in enumerate(combinations):
+                    for i, (a, b, c) in enumerate(remaining_combinations):
                         new_point = Coordinate(a, b, c)
                         #print("DEBUG: ", new_point)
 
@@ -2394,7 +2394,7 @@ class SyntheticBenchmark():
 
 
                 elif self.nr_parameters == 4:
-                    for (a, b, c, d) in enumerate(combinations):
+                    for i, (a, b, c, d) in enumerate(remaining_combinations):
                         new_point = Coordinate(a, b, c, d)
                         #print("DEBUG: ", new_point)
 
