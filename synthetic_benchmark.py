@@ -34,6 +34,9 @@ from sklearn.exceptions import ConvergenceWarning
 import sys
 import json
 import itertools
+from deap import base, creator, tools
+from bayesian_strategy import expected_improvement, propose_location
+
 
 def create_experiment2(selected_coord_list, experiment, nr_parameters, parameter_placeholders, metric_id, callpath_id):
     # create new experiment with only the selected measurements and points as coordinates and measurements
@@ -416,15 +419,15 @@ class SyntheticBenchmark():
         percentage_cost_grid_container = []
         add_points_grid_container = []
 
-        acurracy_bucket_counter_genetic = {}
-        acurracy_bucket_counter_genetic["rest"] = 0
-        acurracy_bucket_counter_genetic["5"] = 0
-        acurracy_bucket_counter_genetic["10"] = 0
-        acurracy_bucket_counter_genetic["15"] = 0
-        acurracy_bucket_counter_genetic["20"] = 0
+        acurracy_bucket_counter_bayesian = {}
+        acurracy_bucket_counter_bayesian["rest"] = 0
+        acurracy_bucket_counter_bayesian["5"] = 0
+        acurracy_bucket_counter_bayesian["10"] = 0
+        acurracy_bucket_counter_bayesian["15"] = 0
+        acurracy_bucket_counter_bayesian["20"] = 0
 
-        percentage_cost_genetic_container = []
-        add_points_genetic_container = []
+        percentage_cost_bayesian_container = []
+        add_points_bayesian_container = []
 
         # logic for setting the number of min points required by the modeler
         if self.nr_parameters == 2:
@@ -562,7 +565,7 @@ class SyntheticBenchmark():
             measurements_hybrid = copy.deepcopy(experiment.measurements)
             measurements_random = copy.deepcopy(experiment.measurements)
             measurements_grid = copy.deepcopy(experiment.measurements)
-            measurements_genetic = copy.deepcopy(experiment.measurements)
+            measurements_bayesian = copy.deepcopy(experiment.measurements)
     
         if len(experiment.parameters) == 2:
                 
@@ -626,7 +629,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -707,7 +710,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -794,7 +797,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -876,7 +879,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -964,7 +967,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -1051,7 +1054,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -1129,7 +1132,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -1212,7 +1215,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -1295,7 +1298,7 @@ class SyntheticBenchmark():
                                 for i in range(self.base_values):
                                     temp = np.delete(temp, 0)
                                 x.values = temp
-                        for x in measurements_genetic[(Callpath("main"), Metric("runtime"))]:
+                        for x in measurements_bayesian[(Callpath("main"), Metric("runtime"))]:
                             if x.coordinate == cord:
                                 temp = x.values
                                 for i in range(self.base_values):
@@ -1355,7 +1358,7 @@ class SyntheticBenchmark():
         added_points_generic = len(selected_points) * (self.nr_repetitions)
         added_points_random = len(selected_points) * (self.nr_repetitions)
         added_points_grid = len(selected_points) * (self.nr_repetitions)
-        added_points_genetic = len(selected_points) * (self.nr_repetitions)
+        added_points_bayesian = len(selected_points) * (self.nr_repetitions)
 
         #print("len selected_points:",len(selected_points))
         
@@ -1701,6 +1704,7 @@ class SyntheticBenchmark():
                         term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
                         # predict variance of input vector x with the gaussian process
                         x = [x]
+                        #print("DEBUG x:", x)
                         _, y_cov = gaussian_process.predict(x, return_cov=True)
                         y_cov = abs(y_cov)
                         # term_2 is gp_cov(t,t)^2
@@ -2143,8 +2147,6 @@ class SyntheticBenchmark():
         # increment accuracy bucket for hybrid strategy
         acurracy_bucket_counter_hybrid = self.increment_accuracy_bucket(acurracy_bucket_counter_hybrid, error_hybrid)
 
-
-
         ############
         ## Random ##
         ############
@@ -2289,12 +2291,9 @@ class SyntheticBenchmark():
         acurracy_bucket_counter_random = self.increment_accuracy_bucket(acurracy_bucket_counter_random, error_random)
 
 
-
         ##########
         ## Grid ##
         ##########
-
-        print("DEBUG GRID")
 
         remaining_points_grid = copy.deepcopy(remaining_points)
         selected_points_grid = copy.deepcopy(selected_points)
@@ -2343,7 +2342,7 @@ class SyntheticBenchmark():
             return 1
         #print("DEBUG:", len(combinations))
         #print("DEBUG:", selected_points_grid, len(selected_points_grid))
-        print("DEBUG:", remaining_combinations, len(remaining_combinations)) 
+        #print("DEBUG:", remaining_combinations, len(remaining_combinations)) 
 
         # create first model
         experiment_grid_base = create_experiment2(selected_points_grid, experiment, len(experiment.parameters), parameters, 0, 0)
@@ -2468,7 +2467,7 @@ class SyntheticBenchmark():
                 elif self.nr_parameters == 4:
                     for i, (a, b, c, d) in enumerate(remaining_combinations):
                         new_point = Coordinate(a, b, c, d)
-                        print("DEBUG new_point:", new_point)
+                        #print("DEBUG new_point:", new_point)
 
                         # update remaining point list and selected point list
                         remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
@@ -2598,263 +2597,304 @@ class SyntheticBenchmark():
         acurracy_bucket_counter_grid = self.increment_accuracy_bucket(acurracy_bucket_counter_grid, error_grid)
 
 
-        #############
-        ## Genetic ##
-        #############
+        #######################
+        ## Bayesian strategy ##
+        #######################
 
-        remaining_points_genetic = copy.deepcopy(remaining_points)
-        selected_points_genetic = copy.deepcopy(selected_points)
+        # GPR parameter-value normalization for each measurement point
+        normalization_factors = {}
 
-        # setup the genetic for the genetic search
-        combinations = None
-        if self.nr_parameters == 2:
-            combinations = list(itertools.product(
-                self.parameter_values_a,
-                self.parameter_values_b
-            ))
+        if self.normalization:
+            
+            for i in range(len(experiment.parameters)):
 
-        elif self.nr_parameters == 3:
-            combinations = list(itertools.product(
-                self.parameter_values_a,
-                self.parameter_values_b,
-                self.parameter_values_c
-            ))
+                param_value_max = -1
 
-        elif self.nr_parameters == 4:
-            combinations = list(itertools.product(
-                self.parameter_values_a,
-                self.parameter_values_b,
-                self.parameter_values_c,
-                self.parameter_values_d
-            ))
+                for coord in experiment.coordinates:
 
-        else:
-            return 1
+                    temp = coord.as_tuple()[i]
 
-        # filter the combinations so that the base points do not need to be iterated over again...
-        if self.nr_parameters == 2:
-            remaining_combinations = [
-                (a, b) for (a, b) in combinations if Coordinate(a, b) not in selected_points_genetic
-            ]
-        elif self.nr_parameters == 3:
-            remaining_combinations = [
-                (a, b, c) for (a, b, c) in combinations if Coordinate(a, b, c) not in selected_points_genetic
-            ]
-        elif self.nr_parameters == 4:
-            remaining_combinations = [
-                (a, b, c, d) for (a, b, c, d) in combinations if Coordinate(a, b, c, d) not in selected_points_genetic
-            ]
-        else:
-            return 1
-        #print("DEBUG:", len(combinations))
-        #print("DEBUG:", selected_points_genetic, len(selected_points_genetic))
-        #print("DEBUG:", remaining_combinations, len(remaining_combinations)) 
-
-        # create first model
-        experiment_genetic_base = create_experiment2(selected_points_genetic, experiment, len(experiment.parameters), parameters, 0, 0)
-        
-        _, models = self.get_extrap_model(experiment_genetic_base)
-        hypothesis = None
-        for model in models.values():
-            hypothesis = model.hypothesis
-
-        # calculate selected point cost
-        current_cost = calculate_selected_point_cost2(selected_points_genetic, experiment, 0, 0)
-        current_cost_percent = current_cost / (total_cost / 100)
-        
-        if self.mode == "budget":
-
-            if current_cost_percent <= self.budget:
+                    if param_value_max < temp:
+                        param_value_max = temp
+                    
+                param_value_max = 100 / param_value_max
+                normalization_factors[experiment.parameters[i]] = param_value_max
                 
-                # loop through all remaining_combinations of the genetic
-                if self.nr_parameters == 2:
-                    for i, (a, b) in enumerate(remaining_combinations):
-                        
-                        # get the new selected point from genetic
-                        new_point = (a, b)
-                        #print("DEBUG: ", new_point)
+            #print("normalization_factors:",normalization_factors)
+        
+        # do an noise analysis on the existing points
+        mm = experiment.measurements
+        #print("DEBUG:",mm)
+        nn = mm[(callpath, metric)]
+        #print("DEBUG:",nn)
+        temp = []
+        for cord in selected_points:
+            for meas in nn:
+                if meas.coordinate == cord:
+                    temp.append(meas)
+                    break
+        #print("temp:",temp)
+        nns = []
+        for meas in temp:
+            #print("DEBUG:",meas.values)
+            mean_mes = np.mean(meas.values)
+            pps = []
+            for val in meas.values:
+                pp = abs((val / (mean_mes / 100)) - 100)
+                pps.append(pp)
+                #print(pp,"%")
+            nn = np.mean(pps)
+            nns.append(nn)
+        mean_noise = np.mean(nns)
+        #print("Detected noise level from measurements:",mean_noise,"%")
 
-                        # update remaining point list and selected point list
-                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_genetic, selected_points_genetic, new_point)
+        # nu should be [0.5, 1.5, 2.5, inf], everything else has 10x overhead
+        # matern kernel + white kernel to simulate actual noise found in the measurements
+        kernel = 1.0 * Matern(length_scale=1.0, length_scale_bounds=(1e-5, 1e5), nu=1.5) + WhiteKernel(noise_level=mean_noise)
 
-                        # calculate selected point cost
-                        current_cost = current_cost + new_point_cost
-                        current_cost_percent = current_cost / (total_cost / 100)
-                        #print(current_cost_percent)
+        # create a gaussian process regressor
+        gaussian_process = GaussianProcessRegressor(
+            kernel=kernel, n_restarts_optimizer=20
+        )
 
-                        # current cost exceeds budget so break the loop
-                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                        # to make sure no mistakes occur here
-                        # sometimes the numbers do not perfectly add up to the target budget
-                        # but to 100.00001
-                        # this is the fix for this case
-                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                        #print("current_cost_percent:",current_cost_percent)
-
-                        if current_cost_percent > self.budget:
-                            break
-
-                        # add the new found point
-                        else:
-
-                            # update the map with the numbers of already selected points
-                            #point_map_generic[new_point] = selection_point_counter
-                            selection_point_counter += 1
-                            #print("point:",point)
-                            #print("point_map_generic:",point_map_generic)
-
-                            # increment counter value, because a new measurement point was added
-                            #added_points_generic += 1
-                            added_points_genetic += self.nr_repetitions
-
-                            # create new model
-                            experiment_genetic_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
-
-                            selected_points_genetic = selected_coord_list_new
-                            remaining_points_genetic = remaining_points_new
-
-                        # if there are no points remaining that can be selected break the loop
-                        if len(remaining_points_genetic) == 0:
-                            break
-
-
-                elif self.nr_parameters == 3:
-                    for i, (a, b, c) in enumerate(remaining_combinations):
-                        new_point = Coordinate(a, b, c)
-                        #print("DEBUG: ", new_point)
-
-                        # update remaining point list and selected point list
-                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_genetic, selected_points_genetic, new_point)
-
-                        # calculate selected point cost
-                        current_cost = current_cost + new_point_cost
-                        current_cost_percent = current_cost / (total_cost / 100)
-                        #print(current_cost_percent)
-
-                        # current cost exceeds budget so break the loop
-                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                        # to make sure no mistakes occur here
-                        # sometimes the numbers do not perfectly add up to the target budget
-                        # but to 100.00001
-                        # this is the fix for this case
-                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                        #print("current_cost_percent:",current_cost_percent)
-
-                        if current_cost_percent > self.budget:
-                            break
-
-                        # add the new found point
-                        else:
-
-                            # update the map with the numbers of already selected points
-                            #point_map_generic[new_point] = selection_point_counter
-                            selection_point_counter += 1
-                            #print("point:",point)
-                            #print("point_map_generic:",point_map_generic)
-
-                            # increment counter value, because a new measurement point was added
-                            #added_points_generic += 1
-                            added_points_genetic += self.nr_repetitions
-
-                            # create new model
-                            experiment_genetic_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
-
-                            selected_points_genetic = selected_coord_list_new
-                            remaining_points_genetic = remaining_points_new
-
-                        # if there are no points remaining that can be selected break the loop
-                        if len(remaining_points_genetic) == 0:
-                            break
-
-
-                elif self.nr_parameters == 4:
-                    for i, (a, b, c, d) in enumerate(remaining_combinations):
-                        new_point = Coordinate(a, b, c, d)
-                        #print("DEBUG: ", new_point)
-
-                        # update remaining point list and selected point list
-                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_genetic, selected_points_genetic, new_point)
-
-                        # calculate selected point cost
-                        current_cost = current_cost + new_point_cost
-                        current_cost_percent = current_cost / (total_cost / 100)
-                        #print(current_cost_percent)
-
-                        # current cost exceeds budget so break the loop
-                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                        # to make sure no mistakes occur here
-                        # sometimes the numbers do not perfectly add up to the target budget
-                        # but to 100.00001
-                        # this is the fix for this case
-                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                        #print("current_cost_percent:",current_cost_percent)
-
-                        if current_cost_percent > self.budget:
-                            break
-
-                        # add the new found point
-                        else:
-
-                            # update the map with the numbers of already selected points
-                            #point_map_generic[new_point] = selection_point_counter
-                            selection_point_counter += 1
-                            #print("point:",point)
-                            #print("point_map_generic:",point_map_generic)
-
-                            # increment counter value, because a new measurement point was added
-                            #added_points_generic += 1
-                            added_points_genetic += self.nr_repetitions
-
-                            # create new model
-                            experiment_genetic_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
-
-                            selected_points_genetic = selected_coord_list_new
-                            remaining_points_genetic = remaining_points_new
-
-                        # if there are no points remaining that can be selected break the loop
-                        if len(remaining_points_genetic) == 0:
-                            break
-
-                else:
-                    return 1
-            else:
-                pass
-
-        elif self.mode == "free":
-            pass
-
+        eval_point = []
+        if self.nr_parameters == 2:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            eval_point.append(a)
+            eval_point.append(b)
+        elif self.nr_parameters == 3:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            eval_point.append(a)
+            eval_point.append(b)
+            eval_point.append(c)
+        elif self.nr_parameters == 4:
+            a = self.parameter_values_a_val[0]
+            b = self.parameter_values_b_val[0]
+            c = self.parameter_values_c_val[0]
+            d = self.parameter_values_d_val[0]
+            eval_point.append(a)
+            eval_point.append(b)
+            eval_point.append(c)
+            eval_point.append(d)
         else:
             return 1
 
-        # calculate selected point cost
-        selected_cost = calculate_selected_point_cost2(selected_points_genetic, experiment, 0, 0)
+        # add additional measurement points until break criteria is met
+        add_points_bayesian = 0
         
-        # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
-        percentage_cost_genetic = selected_cost / (total_cost / 100)
-        if percentage_cost_genetic >= 99.9:
-            percentage_cost_genetic = 100
-        #print("percentage_cost_genetic:",percentage_cost_genetic)
-        percentage_cost_genetic_container.append(percentage_cost_genetic)
+        budget_core_hours = self.budget * (total_cost / 100)
+        
+        if self.grid_search == 1 or self.grid_search == 4:
+            add_points_bayesian = len(selected_points) * self.nr_repetitions
+            remaining_points_bayesian = copy.deepcopy(remaining_points)
+            # entails all measurement points and their values
+            measurements_bayesian = copy.deepcopy(experiment.measurements)
+        elif self.grid_search == 2 or self.grid_search == 3:
+            add_points_bayesian = len(selected_points) * self.base_values
+            remaining_points_bayesian = copy.deepcopy(remaining_points_min)
+        selected_points_bayesian = copy.deepcopy(selected_points)
 
-        # calculate number of additionally used data points (exceeding the base requirement of the sparse modeler)
-        #add_points_genetic = len(selected_points_genetic) - min_points
-        #if percentage_cost_genetic > self.budget:
-        #    added_points_genetic = math.nan
-        add_points_genetic_container.append(added_points_genetic)
-        add_points_genetic = added_points_genetic
-        #if percentage_cost_genetic < 100:
-        #    print("add_points_genetic:",add_points_genetic)
-        
-        # create model using point selection of generic strategy
-        model_genetic, _ = self.get_extrap_model(experiment_genetic_base)
-        
-        #for x in experiment_genetic_base.measurements[(Callpath("main"),Metric("runtime"))]:
-        #    print(x, x.values)
-        #print("Model generic:",model_genetic)
+        # add all of the selected measurement points to the gaussian process
+        # as training data and train it for these points
+        gaussian_process = add_measurements_to_gpr(gaussian_process, 
+                        selected_points_bayesian, 
+                        measurements_bayesian, 
+                        callpath,
+                        metric,
+                        normalization_factors,
+                        experiment.parameters, eval_point)
 
-        # create model using full matrix of points
-        model_full, _ = self.get_extrap_model(experiment)
-        #print("model_full:",model_full)
+        # create base model for gpr
+        if self.grid_search == 2 or self.grid_search == 3:
+            experiment_bayesian_base = self.create_experiment_base(selected_points_bayesian, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
+        else:
+            experiment_bayesian_base = create_experiment2(selected_points_bayesian, experiment, len(experiment.parameters), parameters, 0, 0)
+        
+        # Precompute normalization values only once for performance
+        norm_factors = [normalization_factors.get(param, 1.0) 
+                        for param in experiment_bayesian_base.parameters]
+
+        if base_point_cost <= self.budget:
+            while True:
+                
+                # identify all possible next points that would 
+                # still fit into the modeling budget in core hours
+                fitting_measurements = []
+                for key, value in remaining_points_bayesian.items():
+                    
+                    #current_cost = calculate_selected_point_cost2(selected_points_bayesian, experiment_bayesian_base, 0, 0)
+                    current_cost = self.calculate_selected_point_cost(experiment_bayesian_base)
+                    
+                    # always take the first value in the list, until none left
+                    #new_cost = current_cost + np.sum(value)
+                    new_cost = current_cost + value[0]
+                    cost_percent = new_cost / (total_cost / 100)
+                    
+                    #if new_cost > budget_core_hours:
+                    #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                    #if cost_percent > 100:
+                    #    print("cost percent <= budget percent:", cost_percent, self.budget)
+                    # to make sure no mistakes occur here
+                    # sometimes the numbers do not perfectly add up to the target budget
+                    # but to 100.00001
+                    # this is the fix for this case
+                    cost_percent = float("{0:.3f}".format(cost_percent))
+                    if cost_percent > 100.0:
+                        cost_percent = 100.0
+
+                    if cost_percent <= self.budget:
+                        fitting_measurements.append(key)
+
+                #print("fitting_measurements:",fitting_measurements)
+                #print("selected_points_bayesian:", selected_points_bayesian)
+
+                # Propose next sampling point using BO
+                #X_candidates = np.array([c.as_tuple() for c in fitting_measurements])
+                #print("X_candidates:", X_candidates)
+
+                """X_candidates_list = []
+                for fm in fitting_measurements:
+                    parameter_values = fm.as_tuple()
+                    x = []
+                    for j in range(len(parameter_values)):
+                        if len(normalization_factors) != 0:
+                            x.append(parameter_values[j] * normalization_factors[experiment_bayesian_base.parameters[j]])
+                        else:
+                            x.append(parameter_values[j])
+                    #x = [x]
+                    X_candidates_list.append(x)
+                    #print("DEBUG x:", x)
+                X_candidates = np.array(X_candidates_list)"""
+                X_candidates_list = [
+                    [val * norm_factors[j] if normalization_factors else val
+                    for j, val in enumerate(fm.as_tuple())]
+                    for fm in fitting_measurements
+                ]
+
+                # Convert to NumPy array
+                X_candidates = np.array(X_candidates_list)
+                #print("X_candidates:", X_candidates)
+
+                """y_train = []
+                for i in range(len(selected_points_bayesian)):
+                    for j in range(len(measurements_bayesian[(Callpath("main"), Metric("runtime"))])):
+                        if measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].coordinate == selected_points_bayesian[i]:
+                            y_train.append(measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].mean)
+                y_train = np.array(y_train)"""
+                measurement_key = (Callpath("main"), Metric("runtime"))
+                measurements_by_coord = {
+                    m.coordinate: m.mean
+                    for m in measurements_bayesian[measurement_key]
+                }
+
+                y_train = np.array([
+                    measurements_by_coord[coord]
+                    for coord in selected_points_bayesian
+                    if coord in measurements_by_coord  # Optional: safety check
+                ])
+                #print("y_train:", y_train)
+
+                if len(X_candidates) == 0:
+                    break
+
+                ei = expected_improvement(X_candidates, gaussian_process, y_train)
+                best_idx = np.argmax(ei)
+                X_next = X_candidates[best_idx].reshape(1, -1)
+                best_coordinate = fitting_measurements[best_idx]
+                #print("X_next:",X_next)
+                #print("best_coordinate:", best_coordinate)
+
+                # find the next best additional measurement point using the gpr
+                best_index = -1
+                for i in range(len(fitting_measurements)):
+                    parameter_values = fitting_measurements[i].as_tuple()
+                    cord = Coordinate(parameter_values)
+                    #print(best_coordinate, cord)
+                    if best_coordinate == cord:
+                        best_index = i
+                        break
+                #print("best_index:", best_index)
+
+                # if there has been a point found that is suitable
+                if best_index != -1:
+
+                    # add the identified measurement point to the selected point list
+                    parameter_values = fitting_measurements[best_index].as_tuple()
+                    cord = Coordinate(parameter_values)
+                    #print("DEBUG cord:", cord)
+                    #selected_points_bayesian.append(cord)
+                    
+                    # only add coordinate to selected points list if not already in there (because of reps)
+                    if cord not in selected_points_bayesian:
+                        selected_points_bayesian.append(cord)
+                    
+                    # add the new point to the gpr and call fit()
+                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                            cord, 
+                            measurements_bayesian,
+                            callpath, 
+                            metric,
+                            normalization_factors,
+                            experiment_bayesian_base.parameters)
+                    
+                    new_value = 0
+                    
+                    # remove the identified measurement point from the remaining point list
+                    try:
+                        # only pop cord when there are no values left in the measurement
+                        
+                        # if that's not the case pop the value from the measurement of the cord
+                        measurement = None
+                        cord_id = None
+                        for i in range(len(measurements_bayesian[(Callpath("main"), Metric("runtime"))])):
+                            if measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
+                                cord_id = i
+                                x = measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values
+                                if len(x) > 0:
+                                    new_value = x[0]
+                                    x = np.delete(x, 0)
+                                    measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values = x
+                                break
+                        
+                        # pop value from cord in remaining points list that has been selected as best next point
+                        remaining_points_bayesian[cord].pop(0)
+                        
+                        # pop cord from remaining points when no value left anymore
+                        if len(measurements_bayesian[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
+                            remaining_points_bayesian.pop(cord)
+                        
+                    except KeyError:
+                        pass
+
+                    # update the number of additional points used
+                    add_points_bayesian += 1
+
+                    # add this point to the gpr experiment
+                    #experiment_bayesian_base = create_experiment2(selected_points_bayesian, experiment_bayesian_base, len(experiment_bayesian_base.parameters), parameters, 0, 0)
+                    experiment_bayesian_base = self.create_experiment(cord, experiment_bayesian_base, new_value)
+
+                # if there are no suitable measurement points found
+                # break the while True loop
+                else:
+                    break
+            
+        # cost used of the gpr strategy
+        current_cost = calculate_selected_point_cost2(selected_points_bayesian, experiment_bayesian_base, 0, 0)
+        #current_cost = self.calculate_selected_point_cost(experiment_bayesian_base)
+        percentage_cost_bayesian = current_cost / (total_cost / 100)
+        if percentage_cost_bayesian >= 99.9:
+            percentage_cost_bayesian = 100
+        #print("percentage_cost_bayesian:",percentage_cost_bayesian)
+        
+        # additionally used data points (exceeding the base requirement of the sparse modeler)
+        add_points_bayesian_container.append(add_points_bayesian)
+        
+        # create model using point selection of gpr strategy
+        model_bayesian, _ = self.get_extrap_model(experiment_bayesian_base)
+        #print("Model GPR:",model_bayesian)
 
         # set the measurement point values for the evaluation of the prediction
         if self.nr_parameters == 2:
@@ -2872,34 +2912,18 @@ class SyntheticBenchmark():
         else:
             return 1
 
-        # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
-        prediction_full = eval(model_full)
-        #print("prediction_full:",prediction_full)
-        prediction_genetic = eval(model_genetic)
-        #print("prediction_generic:",prediction_generic)
+        prediction_bayesian = eval(model_bayesian)
+        #print("prediction_bayesian:",prediction_bayesian)
 
-        #basline_function = function_dict[i].function
-        actual = eval(basline_function)
-        #print("actual:",actual)
-
-        # get the percentage error for the full matrix of points
-        error_full = abs(self.percentage_error(actual, prediction_full))
-        #print("error_full:",error_full)
-
-        # get the percentage error for the generic strategy
-        if percentage_cost_genetic <= self.budget:
-            error_genetic = abs(self.percentage_error(actual, prediction_genetic))
+        # get the percentage error for the gpr strategy
+        if percentage_cost_bayesian <= self.budget:
+            error_bayesian = abs(self.percentage_error(actual, prediction_bayesian))
         else:
-            error_genetic = 100
-        #print("error_generic:",error_generic)
+            error_bayesian = 100
+        #print("error_bayesian:",error_bayesian)
 
-        # increment accuracy bucket for full matrix of points
-        acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
-
-        # increment accuracy bucket for generic strategy
-        acurracy_bucket_counter_genetic = self.increment_accuracy_bucket(acurracy_bucket_counter_genetic, error_genetic)
-
-
+        # increment accuracy bucket for gpr strategy
+        acurracy_bucket_counter_bayesian = self.increment_accuracy_bucket(acurracy_bucket_counter_bayesian, error_bayesian)
 
         ###############
         ### results ###
@@ -2931,9 +2955,9 @@ class SyntheticBenchmark():
         result_container["percentage_cost_grid"] = percentage_cost_grid
         result_container["acurracy_bucket_counter_grid"] = acurracy_bucket_counter_grid
 
-        result_container["add_points_genetic"] = add_points_genetic
-        result_container["percentage_cost_genetic"] = percentage_cost_genetic
-        result_container["acurracy_bucket_counter_genetic"] = acurracy_bucket_counter_genetic
+        result_container["add_points_bayesian"] = add_points_bayesian
+        result_container["percentage_cost_bayesian"] = percentage_cost_bayesian
+        result_container["acurracy_bucket_counter_bayesian"] = acurracy_bucket_counter_bayesian
 
         result_container["base_point_cost"] = base_point_cost
 
@@ -2967,10 +2991,10 @@ class SyntheticBenchmark():
         else:
             result_container["grid_possible"] = False
 
-        if percentage_cost_genetic <= self.budget:
-            result_container["genetic_possible"] = True
+        if percentage_cost_bayesian <= self.budget:
+            result_container["bayesian_possible"] = True
         else:
-            result_container["genetic_possible"] = False
+            result_container["bayesian_possible"] = False
         
         shared_dict[counter] = result_container
 
@@ -3002,7 +3026,7 @@ class SyntheticBenchmark():
             min_points = 17
         else:
             min_points = 5
-        
+
         # full
         acurracy_bucket_counter_full = {}
         acurracy_bucket_counter_full["rest"] = 0
@@ -3067,16 +3091,16 @@ class SyntheticBenchmark():
         percentage_cost_grid_container = []
         add_points_grid_container = []
 
-        # genetic
-        acurracy_bucket_counter_genetic = {}
-        acurracy_bucket_counter_genetic["rest"] = 0
-        acurracy_bucket_counter_genetic["5"] = 0
-        acurracy_bucket_counter_genetic["10"] = 0
-        acurracy_bucket_counter_genetic["15"] = 0
-        acurracy_bucket_counter_genetic["20"] = 0
+        # bayesian
+        acurracy_bucket_counter_bayesian = {}
+        acurracy_bucket_counter_bayesian["rest"] = 0
+        acurracy_bucket_counter_bayesian["5"] = 0
+        acurracy_bucket_counter_bayesian["10"] = 0
+        acurracy_bucket_counter_bayesian["15"] = 0
+        acurracy_bucket_counter_bayesian["20"] = 0
 
-        percentage_cost_genetic_container = []
-        add_points_genetic_container = []
+        percentage_cost_bayesian_container = []
+        add_points_bayesian_container = []
 
         base_point_costs = []
         
@@ -3085,7 +3109,7 @@ class SyntheticBenchmark():
         hybrid_functions_modeled = []
         random_functions_modeled = []
         grid_functions_modeled = []
-        genetic_functions_modeled = []
+        bayesian_functions_modeled = []
         
         len_coordinates = None
        
@@ -3124,8 +3148,8 @@ class SyntheticBenchmark():
             add_points_grid_container.append(result_dict[i]["add_points_grid"])
             percentage_cost_grid_container.append(result_dict[i]["percentage_cost_grid"])
 
-            add_points_genetic_container.append(result_dict[i]["add_points_genetic"])
-            percentage_cost_genetic_container.append(result_dict[i]["percentage_cost_genetic"])
+            add_points_bayesian_container.append(result_dict[i]["add_points_bayesian"])
+            percentage_cost_bayesian_container.append(result_dict[i]["percentage_cost_bayesian"])
 
             base_point_costs.append(result_dict[i]["base_point_cost"])
             
@@ -3134,7 +3158,7 @@ class SyntheticBenchmark():
             hybrid_functions_modeled.append(result_dict[i]["hybrid_possible"])
             random_functions_modeled.append(result_dict[i]["random_possible"])
             grid_functions_modeled.append(result_dict[i]["grid_possible"])
-            genetic_functions_modeled.append(result_dict[i]["genetic_possible"])
+            bayesian_functions_modeled.append(result_dict[i]["bayesian_possible"])
 
             if i == 0:
                 len_coordinates = result_dict[i]["len_coordinates"]
@@ -3146,7 +3170,7 @@ class SyntheticBenchmark():
             b_hybrid = result_dict[i]["acurracy_bucket_counter_hybrid"]
             b_random = result_dict[i]["acurracy_bucket_counter_random"]
             b_grid = result_dict[i]["acurracy_bucket_counter_grid"]
-            b_genetic = result_dict[i]["acurracy_bucket_counter_genetic"]
+            b_bayesian = result_dict[i]["acurracy_bucket_counter_bayesian"]
 
             if b_full["rest"] == 1:
                 acurracy_bucket_counter_full["rest"] += 1
@@ -3214,16 +3238,16 @@ class SyntheticBenchmark():
             if b_grid["20"] == 1:
                 acurracy_bucket_counter_grid["20"] += 1
 
-            if b_genetic["rest"] == 1:
-                acurracy_bucket_counter_genetic["rest"] += 1
-            if b_genetic["5"] == 1:
-                acurracy_bucket_counter_genetic["5"] += 1
-            if b_genetic["10"] == 1:
-                acurracy_bucket_counter_genetic["10"] += 1
-            if b_genetic["15"] == 1:
-                acurracy_bucket_counter_genetic["15"] += 1
-            if b_genetic["20"] == 1:
-                acurracy_bucket_counter_genetic["20"] += 1
+            if b_bayesian["rest"] == 1:
+                acurracy_bucket_counter_bayesian["rest"] += 1
+            if b_bayesian["5"] == 1:
+                acurracy_bucket_counter_bayesian["5"] += 1
+            if b_bayesian["10"] == 1:
+                acurracy_bucket_counter_bayesian["10"] += 1
+            if b_bayesian["15"] == 1:
+                acurracy_bucket_counter_bayesian["15"] += 1
+            if b_bayesian["20"] == 1:
+                acurracy_bucket_counter_bayesian["20"] += 1
 
         #print("acurracy_bucket_counter_full:",acurracy_bucket_counter_full)
         #print("acurracy_bucket_counter_generic:",acurracy_bucket_counter_generic)
@@ -3464,43 +3488,43 @@ class SyntheticBenchmark():
         print("")
 
         ###############
-        ### Genetic ###
+        ### bayesian ###
         ###############
         
-        percentage_bucket_counter_genetic = self.calculate_percentage_of_buckets(acurracy_bucket_counter_genetic)
-        print("percentage_bucket_counter_genetic:",percentage_bucket_counter_genetic)
-        json_out["percentage_bucket_counter_genetic"] = percentage_bucket_counter_genetic
+        percentage_bucket_counter_bayesian = self.calculate_percentage_of_buckets(acurracy_bucket_counter_bayesian)
+        print("percentage_bucket_counter_bayesian:",percentage_bucket_counter_bayesian)
+        json_out["percentage_bucket_counter_bayesian"] = percentage_bucket_counter_bayesian
 
-        percentage_cost_genetic_container_filtered = []
-        add_points_genetic_container_filtered = []
-        for i in range(len(percentage_cost_genetic_container)):
-            if percentage_cost_genetic_container[i] <= self.budget:
-                percentage_cost_genetic_container_filtered.append(percentage_cost_genetic_container[i])
-                add_points_genetic_container_filtered.append(add_points_genetic_container[i])
-        #print("percentage_cost_genetic_container:",percentage_cost_genetic_container)
-        #mean_budget_genetic = np.nanmean(percentage_cost_genetic_container)
+        percentage_cost_bayesian_container_filtered = []
+        add_points_bayesian_container_filtered = []
+        for i in range(len(percentage_cost_bayesian_container)):
+            if percentage_cost_bayesian_container[i] <= self.budget:
+                percentage_cost_bayesian_container_filtered.append(percentage_cost_bayesian_container[i])
+                add_points_bayesian_container_filtered.append(add_points_bayesian_container[i])
+        #print("percentage_cost_bayesian_container:",percentage_cost_bayesian_container)
+        #mean_budget_bayesian = np.nanmean(percentage_cost_bayesian_container)
         
-        if len(percentage_cost_genetic_container_filtered) > 0:
-            mean_budget_genetic = np.nanmean(percentage_cost_genetic_container_filtered)
+        if len(percentage_cost_bayesian_container_filtered) > 0:
+            mean_budget_bayesian = np.nanmean(percentage_cost_bayesian_container_filtered)
         else:
-            mean_budget_genetic = 0
-        print("mean_budget_genetic:",mean_budget_genetic)
-        json_out["mean_budget_genetic"] = mean_budget_genetic
+            mean_budget_bayesian = 0
+        print("mean_budget_bayesian:",mean_budget_bayesian)
+        json_out["mean_budget_bayesian"] = mean_budget_bayesian
 
-        if len(add_points_genetic_container_filtered) > 0:
-            mean_add_points_genetic = np.nanmean(add_points_genetic_container_filtered)
+        if len(add_points_bayesian_container_filtered) > 0:
+            mean_add_points_bayesian = np.nanmean(add_points_bayesian_container_filtered)
         else:
-            mean_add_points_genetic = 0
-        print("mean_add_points_genetic:",mean_add_points_genetic)
-        json_out["mean_add_points_genetic"] = mean_add_points_genetic
+            mean_add_points_bayesian = 0
+        print("mean_add_points_bayesian:",mean_add_points_bayesian)
+        json_out["mean_add_points_bayesian"] = mean_add_points_bayesian
         
-        nr_func_modeled_genetic = 0
-        for i in range(len(genetic_functions_modeled)):
-            if genetic_functions_modeled[i] == True:
-                nr_func_modeled_genetic += 1
-        print("nr_func_modeled_genetic:",nr_func_modeled_genetic)
+        nr_func_modeled_bayesian = 0
+        for i in range(len(bayesian_functions_modeled)):
+            if bayesian_functions_modeled[i] == True:
+                nr_func_modeled_bayesian += 1
+        print("nr_func_modeled_bayesian:",nr_func_modeled_bayesian)
         
-        json_out["nr_func_modeled_genetic"] = nr_func_modeled_genetic
+        json_out["nr_func_modeled_bayesian"] = nr_func_modeled_bayesian
 
         print("")
 

@@ -56,7 +56,6 @@ def add_measurements_to_gpr(gaussian_process,
 
     return gaussian_process
 
-
 def add_measurement_to_gpr(gaussian_process, 
                             coordinate, 
                             measurements, 

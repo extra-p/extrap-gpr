@@ -54,6 +54,7 @@ RUN pip install sympy
 RUN pip install scikit-learn
 RUN pip install natsort
 RUN pip install pandas
+RUN pip install deap
 
 # install latex dependency for plot creation
 RUN apt-get install -y texlive texlive-latex-extra texlive-fonts-recommended dvipng
