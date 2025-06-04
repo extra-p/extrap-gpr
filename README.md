@@ -231,6 +231,15 @@ Use `--nr-functions <nr_functions>` the number of synthetically generated functi
 
 Leave all other parameters as is. There values have been carefully selected doing a grid search for the best configurations for all supported number of model parameters and noise levels.
 
+##### Lichtenberg Notes:
+
+Need to set `export OPENBLAS_NUM_THREADS=32`, since there is a limit for OPENBLAS threads of 5000.
+
+```
+ps -u $USERexport
+pkill -u $USER -f python3
+```
+
 ## Quick Introduction of the Measurement Point Selection Strategies
 
 ### CPF (Cheapest Points First) Strategy

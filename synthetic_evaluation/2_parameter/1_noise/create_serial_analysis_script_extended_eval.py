@@ -9,7 +9,7 @@ def main():
 
         counter_string = "{:0.1f}".format(counter)
 
-        text += """python3 ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 10 --nr-repetitions 4 --noise 1 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 3 --base-values 2 --hybrid-switch 20 --newonly 1\n"""
+        text += """python3 ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 1000 --nr-repetitions 4 --noise 1 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 3 --base-values 2 --hybrid-switch 20 --newonly 1\n"""
 
         if counter < 0.9:
             counter += 0.1
