@@ -11,7 +11,7 @@ def main():
 
         text = """#!/bin/bash
 
-#SBATCH -A project02089
+#SBATCH -A l0003015
 #SBATCH -t 00:59:00
 #SBATCH --mem-per-cpu=1800
 #SBATCH -n 1
@@ -21,11 +21,11 @@ def main():
 #SBATCH -J sn1b"""+str(counter_string)+"""
 
 ml --force purge
-ml restore lulesh
+ml gcc python
 
 SECONDS=0;
 
-python ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 10000 --nr-repetitions 4 --noise 1 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 3 --base-values 2 --hybrid-switch 20
+python ../../../synthetic_evaluation.py --nr-parameters 2 --nr-functions 10000 --nr-repetitions 4 --noise 1 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 3 --base-values 2 --hybrid-switch 20 --newonly 1
 
 echo $SECONDS"""
 
