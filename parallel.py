@@ -257,6 +257,7 @@ def analyze_callpath(inputs):
     normalization = inputs[21]
     min_points = inputs[22]
     hybrid_switch = inputs[23]
+    newonly == inputs[24]
     result_container = {}
     
     # prepare dicts for saving the accuracy analysis data
@@ -695,45 +696,46 @@ def analyze_callpath(inputs):
         current_cost_percent = current_cost / (total_cost / 100)
     
     if current_cost_percent <= budget:
-        while True:
-            # find another point for selection
-            remaining_points_new, selected_coord_list_new, new_point = add_additional_point_generic(remaining_points_generic, selected_points_generic)
+        if newonly == False:
+            while True:
+                # find another point for selection
+                remaining_points_new, selected_coord_list_new, new_point = add_additional_point_generic(remaining_points_generic, selected_points_generic)
 
-            # calculate selected point cost
-            current_cost = calculate_selected_point_cost(selected_coord_list_new, callpath, metric, experiment_coordinates, experiment_measurements)
-            if total_cost == 0.0:
-                current_cost_percent = 0.0
-            else:
-                current_cost_percent = current_cost / (total_cost / 100)
+                # calculate selected point cost
+                current_cost = calculate_selected_point_cost(selected_coord_list_new, callpath, metric, experiment_coordinates, experiment_measurements)
+                if total_cost == 0.0:
+                    current_cost_percent = 0.0
+                else:
+                    current_cost_percent = current_cost / (total_cost / 100)
 
-            # current cost exceeds budget so break the loop
-            #print("current_cost_percent > budget", current_cost_percent, budget)
-            # to make sure no mistakes occur here
-            # sometimes the numbers do not perfectly add up to the target budget
-            # but to 100.00001
-            # this is the fix for this case
-            current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-            #print("current_cost_percent:",current_cost_percent)
+                # current cost exceeds budget so break the loop
+                #print("current_cost_percent > budget", current_cost_percent, budget)
+                # to make sure no mistakes occur here
+                # sometimes the numbers do not perfectly add up to the target budget
+                # but to 100.00001
+                # this is the fix for this case
+                current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                #print("current_cost_percent:",current_cost_percent)
 
-            if current_cost_percent > budget:
-                break
+                if current_cost_percent > budget:
+                    break
 
-            # add the new found point
-            else:
+                # add the new found point
+                else:
 
-                # increment counter value, because a new measurement point was added
-                #added_points_generic += 1
-                added_points_generic += nr_repetitions
+                    # increment counter value, because a new measurement point was added
+                    #added_points_generic += 1
+                    added_points_generic += nr_repetitions
 
-                # create new model
-                experiment_generic_base = create_experiment(selected_coord_list_new, nr_parameters, parameters, callpath, metric, experiment_coordinates, experiment_measurements)
+                    # create new model
+                    experiment_generic_base = create_experiment(selected_coord_list_new, nr_parameters, parameters, callpath, metric, experiment_coordinates, experiment_measurements)
 
-                selected_points_generic = selected_coord_list_new
-                remaining_points_generic = remaining_points_new
+                    selected_points_generic = selected_coord_list_new
+                    remaining_points_generic = remaining_points_new
 
-            # if there are no points remaining that can be selected break the loop
-            if len(remaining_points_generic) == 0:
-                break
+                # if there are no points remaining that can be selected break the loop
+                if len(remaining_points_generic) == 0:
+                    break
 
     else:
         pass
@@ -923,152 +925,153 @@ def analyze_callpath(inputs):
         experiment_gpr_base = create_experiment(selected_points_gpr, nr_parameters, parameters, callpath, metric, experiment_coordinates, experiment_measurements)
     
     if base_point_cost <= budget:
-        while True:
-            
-            # identify all possible next points that would 
-            # still fit into the modeling budget in core hours
-            fitting_measurements = []
-            for key, value in remaining_points_gpr.items():
+        if newonly == False:
+            while True:
                 
-                #current_cost = calculate_selected_point_cost(selected_points_gpr, experiment_gpr_base, metric_id, callpath_id)
-                current_cost = calculate_selected_point_cost2(experiment_gpr_base, callpath, metric)
-                
-                # always take the first value in the list, until none left
-                #new_cost = current_cost + np.sum(value)
-                new_cost = current_cost + value[0]
-                if total_cost == 0.0:
-                    cost_percent = 0.0
-                else:
-                    cost_percent = new_cost / (total_cost / 100)
-                
-                #if new_cost > budget_core_hours:
-                #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
-                #if cost_percent > 100:
-                #    print("cost percent <= budget percent:", cost_percent, budget)
-                # to make sure no mistakes occur here
-                # sometimes the numbers do not perfectly add up to the target budget
-                # but to 100.00001
-                # this is the fix for this case
-                cost_percent = float("{0:.3f}".format(cost_percent))
-                if cost_percent > 100.0:
-                    cost_percent = 100.0
-
-                if cost_percent <= budget:
-                    fitting_measurements.append(key)
-
-            #print("fitting_measurements:",fitting_measurements)
-
-            # find the next best additional measurement point using the gpr
-            best_index = -1
-            best_rated = sys.float_info.max
-
-            for i in range(len(fitting_measurements)):
-            
-                parameter_values = fitting_measurements[i].as_tuple()
-                x = []
-                
-                for j in range(len(parameter_values)):
-                
-                    if len(normalization_factors) != 0:
-                        x.append(parameter_values[j] * normalization_factors[experiment_gpr_base.parameters[j]])
-                
+                # identify all possible next points that would 
+                # still fit into the modeling budget in core hours
+                fitting_measurements = []
+                for key, value in remaining_points_gpr.items():
+                    
+                    #current_cost = calculate_selected_point_cost(selected_points_gpr, experiment_gpr_base, metric_id, callpath_id)
+                    current_cost = calculate_selected_point_cost2(experiment_gpr_base, callpath, metric)
+                    
+                    # always take the first value in the list, until none left
+                    #new_cost = current_cost + np.sum(value)
+                    new_cost = current_cost + value[0]
+                    if total_cost == 0.0:
+                        cost_percent = 0.0
                     else:
-                        x.append(parameter_values[j])
-                        
-                #NOTE: should recalculate the noise level here... but is already done on all measurements before so not needed here....
-                # but in real extra-P implementation needs to be done...
-                        
-                #print("DEBUG3 remaining_points_gpr:",remaining_points_gpr[fitting_measurements[i]][0])
+                        cost_percent = new_cost / (total_cost / 100)
+                    
+                    #if new_cost > budget_core_hours:
+                    #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                    #if cost_percent > 100:
+                    #    print("cost percent <= budget percent:", cost_percent, budget)
+                    # to make sure no mistakes occur here
+                    # sometimes the numbers do not perfectly add up to the target budget
+                    # but to 100.00001
+                    # this is the fix for this case
+                    cost_percent = float("{0:.3f}".format(cost_percent))
+                    if cost_percent > 100.0:
+                        cost_percent = 100.0
+
+                    if cost_percent <= budget:
+                        fitting_measurements.append(key)
+
+                #print("fitting_measurements:",fitting_measurements)
+
+                # find the next best additional measurement point using the gpr
+                best_index = -1
+                best_rated = sys.float_info.max
+
+                for i in range(len(fitting_measurements)):
                 
-                # term_1 is cost(t)^2
-                term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
-                # predict variance of input vector x with the gaussian process
-                x = [x]
-                _, y_cov = gaussian_process.predict(x, return_cov=True)
-                y_cov = abs(y_cov)
-                # term_2 is gp_cov(t,t)^2
-                term_2 = math.pow(y_cov, 2)
-                # rated is h(t)
-                
-                if grid_search == 3 or grid_search == 4:
-                    rep = 1
-                    for j in range(len(measurements_gpr[(callpath, metric)])):
-                        if measurements_gpr[(callpath, metric)][j].coordinate == fitting_measurements[i]:
-                            rep = (nr_repetitions - len(measurements_gpr[(callpath, metric)][j].values)) + 1
-                            break
-                    rep_func = 2**((1/2)*rep-(1/2))
-                    noise_func = -math.tanh((1/4)*mean_noise-2.5)
-                    cost_multiplier = rep_func + noise_func
-                    rated = (term_1 * cost_multiplier) / term_2
+                    parameter_values = fitting_measurements[i].as_tuple()
+                    x = []
+                    
+                    for j in range(len(parameter_values)):
+                    
+                        if len(normalization_factors) != 0:
+                            x.append(parameter_values[j] * normalization_factors[experiment_gpr_base.parameters[j]])
+                    
+                        else:
+                            x.append(parameter_values[j])
+                            
+                    #NOTE: should recalculate the noise level here... but is already done on all measurements before so not needed here....
+                    # but in real extra-P implementation needs to be done...
+                            
+                    #print("DEBUG3 remaining_points_gpr:",remaining_points_gpr[fitting_measurements[i]][0])
+                    
+                    # term_1 is cost(t)^2
+                    term_1 = math.pow(remaining_points_gpr[fitting_measurements[i]][0], 2)
+                    # predict variance of input vector x with the gaussian process
+                    x = [x]
+                    _, y_cov = gaussian_process.predict(x, return_cov=True)
+                    y_cov = abs(y_cov)
+                    # term_2 is gp_cov(t,t)^2
+                    term_2 = math.pow(y_cov, 2)
+                    # rated is h(t)
+                    
+                    if grid_search == 3 or grid_search == 4:
+                        rep = 1
+                        for j in range(len(measurements_gpr[(callpath, metric)])):
+                            if measurements_gpr[(callpath, metric)][j].coordinate == fitting_measurements[i]:
+                                rep = (nr_repetitions - len(measurements_gpr[(callpath, metric)][j].values)) + 1
+                                break
+                        rep_func = 2**((1/2)*rep-(1/2))
+                        noise_func = -math.tanh((1/4)*mean_noise-2.5)
+                        cost_multiplier = rep_func + noise_func
+                        rated = (term_1 * cost_multiplier) / term_2
+                    else:
+                        rated = term_1 / term_2
+
+                    if rated <= best_rated:
+                        best_rated = rated
+                        best_index = i    
+
+                # if there has been a point found that is suitable
+                if best_index != -1:
+
+                    # add the identified measurement point to the selected point list
+                    parameter_values = fitting_measurements[best_index].as_tuple()
+                    cord = Coordinate(parameter_values)
+                    #selected_points_gpr.append(cord)
+                    
+                    # only add coordinate to selected points list if not already in there (because of reps)
+                    if cord not in selected_points_gpr:
+                        selected_points_gpr.append(cord)
+                    
+                    # add the new point to the gpr and call fit()
+                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                            cord, 
+                            measurements_gpr,
+                            callpath, 
+                            metric,
+                            normalization_factors,
+                            experiment_gpr_base.parameters)
+                    
+                    new_value = 0
+                    
+                    # remove the identified measurement point from the remaining point list
+                    try:
+                        # only pop cord when there are no values left in the measurement
+                        
+                        # if that's not the case pop the value from the measurement of the cord
+                        measurement = None
+                        cord_id = None
+                        for i in range(len(measurements_gpr[(callpath, metric)])):
+                            if measurements_gpr[(callpath, metric)][i].coordinate == cord:
+                                cord_id = i
+                                x = measurements_gpr[(callpath, metric)][i].values
+                                #print("DEBUG 5:",len(x))
+                                if len(x) > 0:
+                                    new_value = np.mean(x[0])
+                                    x = np.delete(x, 0, 0)
+                                    measurements_gpr[(callpath, metric)][i].values = x
+                                break
+                        
+                        # pop value from cord in remaining points list that has been selected as best next point
+                        remaining_points_gpr[cord].pop(0)
+                        
+                        # pop cord from remaining points when no value left anymore
+                        if len(measurements_gpr[(callpath, metric)][cord_id].values) == 0:
+                            remaining_points_gpr.pop(cord)
+                        
+                    except KeyError:
+                        pass
+
+                    # update the number of additional points used
+                    add_points_gpr += 1
+
+                    # add this point to the gpr experiment
+                    #experiment_gpr_base = create_experiment(selected_points_gpr, experiment_gpr_base, len(experiment_gpr_base.parameters), parameters, metric_id, callpath_id)
+                    experiment_gpr_base = create_experiment2(cord, experiment_gpr_base, new_value, callpath, metric)
+
+                # if there are no suitable measurement points found
+                # break the while True loop
                 else:
-                    rated = term_1 / term_2
-
-                if rated <= best_rated:
-                    best_rated = rated
-                    best_index = i    
-
-            # if there has been a point found that is suitable
-            if best_index != -1:
-
-                # add the identified measurement point to the selected point list
-                parameter_values = fitting_measurements[best_index].as_tuple()
-                cord = Coordinate(parameter_values)
-                #selected_points_gpr.append(cord)
-                
-                # only add coordinate to selected points list if not already in there (because of reps)
-                if cord not in selected_points_gpr:
-                    selected_points_gpr.append(cord)
-                
-                # add the new point to the gpr and call fit()
-                gaussian_process = add_measurement_to_gpr(gaussian_process, 
-                        cord, 
-                        measurements_gpr,
-                        callpath, 
-                        metric,
-                        normalization_factors,
-                        experiment_gpr_base.parameters)
-                
-                new_value = 0
-                
-                # remove the identified measurement point from the remaining point list
-                try:
-                    # only pop cord when there are no values left in the measurement
-                    
-                    # if that's not the case pop the value from the measurement of the cord
-                    measurement = None
-                    cord_id = None
-                    for i in range(len(measurements_gpr[(callpath, metric)])):
-                        if measurements_gpr[(callpath, metric)][i].coordinate == cord:
-                            cord_id = i
-                            x = measurements_gpr[(callpath, metric)][i].values
-                            #print("DEBUG 5:",len(x))
-                            if len(x) > 0:
-                                new_value = np.mean(x[0])
-                                x = np.delete(x, 0, 0)
-                                measurements_gpr[(callpath, metric)][i].values = x
-                            break
-                    
-                    # pop value from cord in remaining points list that has been selected as best next point
-                    remaining_points_gpr[cord].pop(0)
-                    
-                    # pop cord from remaining points when no value left anymore
-                    if len(measurements_gpr[(callpath, metric)][cord_id].values) == 0:
-                        remaining_points_gpr.pop(cord)
-                    
-                except KeyError:
-                    pass
-
-                # update the number of additional points used
-                add_points_gpr += 1
-
-                # add this point to the gpr experiment
-                #experiment_gpr_base = create_experiment(selected_points_gpr, experiment_gpr_base, len(experiment_gpr_base.parameters), parameters, metric_id, callpath_id)
-                experiment_gpr_base = create_experiment2(cord, experiment_gpr_base, new_value, callpath, metric)
-
-            # if there are no suitable measurement points found
-            # break the while True loop
-            else:
-                break
+                    break
 
     # cost used of the gpr strategy
     #current_cost = calculate_selected_point_cost(selected_points_gpr, callpath, metric, experiment_coordinates, measurements_gpr)
@@ -1226,195 +1229,195 @@ def analyze_callpath(inputs):
     else:
         experiment_hybrid_base = create_experiment(selected_points_hybrid, nr_parameters, parameters, callpath, metric, experiment_coordinates, experiment_measurements)
 
-        
-    while True:
-        
-        # identify all possible next points that would 
-        # still fit into the modeling budget in core hours
-        fitting_measurements = []
-        for key, value in remaining_points_hybrid.items():
-
-            current_cost = calculate_selected_point_cost2(experiment_hybrid_base, callpath, metric)
+    if newonly == False:
+        while True:
             
-            #new_cost = current_cost + np.sum(value)
-            new_cost = current_cost + value[0]
-            if total_cost == 0.0:
-                cost_percent = 0.0
-            else:
-                cost_percent = new_cost / (total_cost / 100)
-            
-            #if new_cost > budget_core_hours:
-            #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
-            #if cost_percent > 100:
-            #    print("cost percent <= budget percent:", cost_percent, budget)
-            # to make sure no mistakes occur here
-            # sometimes the numbers do not perfectly add up to the target budget
-            # but to 100.00001
-            # this is the fix for this case
-            cost_percent = float("{0:.3f}".format(cost_percent))
-            if cost_percent > 100.0:
-                cost_percent = 100.0
+            # identify all possible next points that would 
+            # still fit into the modeling budget in core hours
+            fitting_measurements = []
+            for key, value in remaining_points_hybrid.items():
 
-            if cost_percent <= budget:
-                fitting_measurements.append(key)
-
-        #print("fitting_measurements:",fitting_measurements)
-
-        # determine the switching point between gpr and hybrid strategy
-        swtiching_point = 0
-        if nr_parameters == 2:
-            if grid_search == 1 or grid_search == 4:
-                swtiching_point = nr_repetitions * min_points + hybrid_switch
-            elif grid_search == 2 or grid_search == 3:
-                swtiching_point = base_values * min_points + hybrid_switch
-        elif nr_parameters == 3:
-            if grid_search == 1 or grid_search == 4:
-                swtiching_point = nr_repetitions * min_points + hybrid_switch
-            elif grid_search == 2 or grid_search == 3:
-                swtiching_point = base_values * min_points + hybrid_switch
-        elif nr_parameters == 4:
-            if grid_search == 1 or grid_search == 4:
-                swtiching_point = nr_repetitions * min_points + hybrid_switch
-            elif grid_search == 2 or grid_search == 3:
-                swtiching_point = base_values * min_points + hybrid_switch
-        else:
-            if grid_search == 1 or grid_search == 4:
-                swtiching_point = nr_repetitions * min_points + hybrid_switch
-            elif grid_search == 2 or grid_search == 3:
-                swtiching_point = base_values * min_points + hybrid_switch
-
-        best_index = -1
-        
-        #print("DEBUG: add_points_hybrid, swtiching_point", add_points_hybrid, swtiching_point)
-        
-        # find the next best additional measurement point using the gpr strategy
-        if add_points_hybrid > swtiching_point:
-            #print("Using gpr strategy")
-            best_rated = sys.float_info.max
-
-            for i in range(len(fitting_measurements)):
-        
-                parameter_values = fitting_measurements[i].as_tuple()
-                x = []
+                current_cost = calculate_selected_point_cost2(experiment_hybrid_base, callpath, metric)
                 
-                for j in range(len(parameter_values)):
-                
-                    if len(normalization_factors) != 0:
-                        x.append(parameter_values[j] * normalization_factors[experiment_hybrid_base.parameters[j]])
-                
-                    else:
-                        x.append(parameter_values[j])
-                
-                # term_1 is cost(t)^2
-                #term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
-                term_1 = math.pow(remaining_points_hybrid[fitting_measurements[i]][0], 2)
-                # predict variance of input vector x with the gaussian process
-                x = [x]
-                _, y_cov = gaussian_process_hybrid.predict(x, return_cov=True)
-                y_cov = abs(y_cov)
-                # term_2 is gp_cov(t,t)^2
-                term_2 = math.pow(y_cov, 2)
-                # rated is h(t)
-                
-                if grid_search == 3 or grid_search == 4:
-                    rep = 1
-                    for j in range(len(measurements_hybrid[(callpath, metric)])):
-                        if measurements_hybrid[(callpath, metric)][j].coordinate == fitting_measurements[i]:
-                            rep = (nr_repetitions - len(measurements_hybrid[(callpath, metric)][j].values)) + 1
-                            break
-                    rep_func = 2**((1/2)*rep-(1/2))
-                    noise_func = -math.tanh((1/4)*mean_noise-2.5)
-                    cost_multiplier = rep_func + noise_func
-                    rated = (term_1 * cost_multiplier) / term_2
+                #new_cost = current_cost + np.sum(value)
+                new_cost = current_cost + value[0]
+                if total_cost == 0.0:
+                    cost_percent = 0.0
                 else:
-                    rated = term_1 / term_2
-
-                if rated <= best_rated:
-                    best_rated = rated
-                    best_index = i 
-
-        # find the next best additional measurement point using the generic strategy
-        else:
-            #print("Using generic strategy")
-            lowest_cost = sys.float_info.max
-            for i in range(len(fitting_measurements)):
+                    cost_percent = new_cost / (total_cost / 100)
                 
-                # get the cost of the measurement point
-                #cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
-                cost = remaining_points_hybrid[fitting_measurements[i]][0]
+                #if new_cost > budget_core_hours:
+                #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                #if cost_percent > 100:
+                #    print("cost percent <= budget percent:", cost_percent, budget)
+                # to make sure no mistakes occur here
+                # sometimes the numbers do not perfectly add up to the target budget
+                # but to 100.00001
+                # this is the fix for this case
+                cost_percent = float("{0:.3f}".format(cost_percent))
+                if cost_percent > 100.0:
+                    cost_percent = 100.0
 
-                if cost < lowest_cost:
-                    lowest_cost = cost
-                    best_index = i
+                if cost_percent <= budget:
+                    fitting_measurements.append(key)
 
-        # if there has been a point found that is suitable
-        if best_index != -1:
+            #print("fitting_measurements:",fitting_measurements)
 
-            # add the identified measurement point to the experiment, selected point list
-            parameter_values = fitting_measurements[best_index].as_tuple()
-            cord = Coordinate(parameter_values)
-            #selected_points_hybrid.append(cord)
-            
-            # only add coordinate to selected points list if not already in there (because of reps)
-            if cord not in selected_points_hybrid:
-                selected_points_hybrid.append(cord)
-            
-            # add the new point to the gpr and call fit()
-            gaussian_process_hybrid = add_measurement_to_gpr(gaussian_process_hybrid, 
-                    cord, 
-                    measurements_hybrid, 
-                    callpath, 
-                    metric,
-                    normalization_factors,
-                    experiment_hybrid_base.parameters)
-            
-            # remove the identified measurement point from the remaining point list
-            #try:
-            #    remaining_points_hybrid.pop(cord)
-            #except KeyError:
-            #    pass
-            
-            new_value = 0
+            # determine the switching point between gpr and hybrid strategy
+            swtiching_point = 0
+            if nr_parameters == 2:
+                if grid_search == 1 or grid_search == 4:
+                    swtiching_point = nr_repetitions * min_points + hybrid_switch
+                elif grid_search == 2 or grid_search == 3:
+                    swtiching_point = base_values * min_points + hybrid_switch
+            elif nr_parameters == 3:
+                if grid_search == 1 or grid_search == 4:
+                    swtiching_point = nr_repetitions * min_points + hybrid_switch
+                elif grid_search == 2 or grid_search == 3:
+                    swtiching_point = base_values * min_points + hybrid_switch
+            elif nr_parameters == 4:
+                if grid_search == 1 or grid_search == 4:
+                    swtiching_point = nr_repetitions * min_points + hybrid_switch
+                elif grid_search == 2 or grid_search == 3:
+                    swtiching_point = base_values * min_points + hybrid_switch
+            else:
+                if grid_search == 1 or grid_search == 4:
+                    swtiching_point = nr_repetitions * min_points + hybrid_switch
+                elif grid_search == 2 or grid_search == 3:
+                    swtiching_point = base_values * min_points + hybrid_switch
 
-            # remove the identified measurement point from the remaining point list
-            try:
-                # only pop cord when there are no values left in the measurement
-                
-                # if that's not the case pop the value from the measurement of the cord
-                measurement = None
-                cord_id = None
-                for i in range(len(measurements_hybrid[(callpath, metric)])):
-                    if measurements_hybrid[(callpath, metric)][i].coordinate == cord:
-                        cord_id = i
-                        x = measurements_hybrid[(callpath, metric)][i].values
-                        if len(x) > 0:
-                            new_value = np.mean(x[0])
-                            x = np.delete(x, 0, 0)
-                            measurements_hybrid[(callpath, metric)][i].values = x
-                        break
+            best_index = -1
+            
+            #print("DEBUG: add_points_hybrid, swtiching_point", add_points_hybrid, swtiching_point)
+            
+            # find the next best additional measurement point using the gpr strategy
+            if add_points_hybrid > swtiching_point:
+                #print("Using gpr strategy")
+                best_rated = sys.float_info.max
+
+                for i in range(len(fitting_measurements)):
+            
+                    parameter_values = fitting_measurements[i].as_tuple()
+                    x = []
                     
-                # pop value from cord in remaining points list that has been selected as best next point
-                remaining_points_hybrid[cord].pop(0)
+                    for j in range(len(parameter_values)):
+                    
+                        if len(normalization_factors) != 0:
+                            x.append(parameter_values[j] * normalization_factors[experiment_hybrid_base.parameters[j]])
+                    
+                        else:
+                            x.append(parameter_values[j])
+                    
+                    # term_1 is cost(t)^2
+                    #term_1 = math.pow(np.sum(remaining_points_hybrid[fitting_measurements[i]]), 2)
+                    term_1 = math.pow(remaining_points_hybrid[fitting_measurements[i]][0], 2)
+                    # predict variance of input vector x with the gaussian process
+                    x = [x]
+                    _, y_cov = gaussian_process_hybrid.predict(x, return_cov=True)
+                    y_cov = abs(y_cov)
+                    # term_2 is gp_cov(t,t)^2
+                    term_2 = math.pow(y_cov, 2)
+                    # rated is h(t)
+                    
+                    if grid_search == 3 or grid_search == 4:
+                        rep = 1
+                        for j in range(len(measurements_hybrid[(callpath, metric)])):
+                            if measurements_hybrid[(callpath, metric)][j].coordinate == fitting_measurements[i]:
+                                rep = (nr_repetitions - len(measurements_hybrid[(callpath, metric)][j].values)) + 1
+                                break
+                        rep_func = 2**((1/2)*rep-(1/2))
+                        noise_func = -math.tanh((1/4)*mean_noise-2.5)
+                        cost_multiplier = rep_func + noise_func
+                        rated = (term_1 * cost_multiplier) / term_2
+                    else:
+                        rated = term_1 / term_2
+
+                    if rated <= best_rated:
+                        best_rated = rated
+                        best_index = i 
+
+            # find the next best additional measurement point using the generic strategy
+            else:
+                #print("Using generic strategy")
+                lowest_cost = sys.float_info.max
+                for i in range(len(fitting_measurements)):
+                    
+                    # get the cost of the measurement point
+                    #cost = np.sum(remaining_points_hybrid[fitting_measurements[i]])
+                    cost = remaining_points_hybrid[fitting_measurements[i]][0]
+
+                    if cost < lowest_cost:
+                        lowest_cost = cost
+                        best_index = i
+
+            # if there has been a point found that is suitable
+            if best_index != -1:
+
+                # add the identified measurement point to the experiment, selected point list
+                parameter_values = fitting_measurements[best_index].as_tuple()
+                cord = Coordinate(parameter_values)
+                #selected_points_hybrid.append(cord)
                 
-                # pop cord from remaining points when no value left anymore
-                if len(measurements_hybrid[(callpath, metric)][cord_id].values) == 0:
-                    remaining_points_hybrid.pop(cord)
+                # only add coordinate to selected points list if not already in there (because of reps)
+                if cord not in selected_points_hybrid:
+                    selected_points_hybrid.append(cord)
                 
-            except KeyError:
-                pass
+                # add the new point to the gpr and call fit()
+                gaussian_process_hybrid = add_measurement_to_gpr(gaussian_process_hybrid, 
+                        cord, 
+                        measurements_hybrid, 
+                        callpath, 
+                        metric,
+                        normalization_factors,
+                        experiment_hybrid_base.parameters)
+                
+                # remove the identified measurement point from the remaining point list
+                #try:
+                #    remaining_points_hybrid.pop(cord)
+                #except KeyError:
+                #    pass
+                
+                new_value = 0
+
+                # remove the identified measurement point from the remaining point list
+                try:
+                    # only pop cord when there are no values left in the measurement
+                    
+                    # if that's not the case pop the value from the measurement of the cord
+                    measurement = None
+                    cord_id = None
+                    for i in range(len(measurements_hybrid[(callpath, metric)])):
+                        if measurements_hybrid[(callpath, metric)][i].coordinate == cord:
+                            cord_id = i
+                            x = measurements_hybrid[(callpath, metric)][i].values
+                            if len(x) > 0:
+                                new_value = np.mean(x[0])
+                                x = np.delete(x, 0, 0)
+                                measurements_hybrid[(callpath, metric)][i].values = x
+                            break
+                        
+                    # pop value from cord in remaining points list that has been selected as best next point
+                    remaining_points_hybrid[cord].pop(0)
+                    
+                    # pop cord from remaining points when no value left anymore
+                    if len(measurements_hybrid[(callpath, metric)][cord_id].values) == 0:
+                        remaining_points_hybrid.pop(cord)
+                    
+                except KeyError:
+                    pass
 
 
-            # update the number of additional points used
-            add_points_hybrid += 1
+                # update the number of additional points used
+                add_points_hybrid += 1
 
-            # add this point to the hybrid experiment
-            experiment_hybrid_base = create_experiment2(cord, experiment_hybrid_base, new_value, callpath, metric)
+                # add this point to the hybrid experiment
+                experiment_hybrid_base = create_experiment2(cord, experiment_hybrid_base, new_value, callpath, metric)
 
 
-        # if there are no suitable measurement points found
-        # break the while True loop
-        else:
-            break
+            # if there are no suitable measurement points found
+            # break the while True loop
+            else:
+                break
 
     # cost used of the gpr strategy
     current_cost = calculate_selected_point_cost2(experiment_hybrid_base, callpath, metric)
