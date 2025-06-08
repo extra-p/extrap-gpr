@@ -18,14 +18,14 @@ def main():
 #SBATCH --exclusive
 #SBATCH -o out_b"""+str(counter_string)+""".out
 #SBATCH -e er_b"""+str(counter_string)+""".er
-#SBATCH -J sn1b"""+str(counter_string)+"""
+#SBATCH -J sn2b"""+str(counter_string)+"""
 
 ml --force purge
 ml gcc python
 
 SECONDS=0;
 
-python ../../../synthetic_evaluation.py --nr-parameters 4 --nr-functions 1000 --nr-repetitions 4 --noise 1 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 3 --base-values 2 --hybrid-switch 20 --newonly 1
+python ../../../synthetic_evaluation.py --nr-parameters 4 --nr-functions 1000 --nr-repetitions 4 --noise 2 --mode budget --budget """+str(counter)+""" --normalization True --plot True --grid-search 3 --base-values 2 --hybrid-switch 20 --newonly 1
 
 echo $SECONDS"""
 
