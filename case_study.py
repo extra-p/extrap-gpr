@@ -1077,6 +1077,8 @@ def main():
             if hybrid_functions_modeled[i] == True:
                 nr_func_modeled_hybrid += 1
         print("nr_func_modeled_hybrid:",nr_func_modeled_hybrid)
+
+        print("")
         
         json_out["nr_func_modeled_hybrid"] = nr_func_modeled_hybrid
 
@@ -1116,6 +1118,8 @@ def main():
             if grid_functions_modeled[i] == True:
                 nr_func_modeled_grid += 1
         print("nr_func_modeled_grid:",nr_func_modeled_grid)
+
+        print("")
         
         json_out["nr_func_modeled_grid"] = nr_func_modeled_grid
 
@@ -1157,6 +1161,8 @@ def main():
         print("nr_func_modeled_random:",nr_func_modeled_random)
         
         json_out["nr_func_modeled_random"] = nr_func_modeled_random
+
+        print("")
 
         ##############
         ### Bayesian ###

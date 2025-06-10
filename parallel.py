@@ -28,6 +28,7 @@ from extrap.modelers import single_parameter
 import random
 import itertools
 from collections import defaultdict
+from bayesian_strategy import expected_improvement, propose_location
 
 
 def add_additional_point_grid(remaining_points, selected_coord_list, new_point):
@@ -35,13 +36,14 @@ def add_additional_point_grid(remaining_points, selected_coord_list, new_point):
     selected_coord_list = copy.deepcopy(selected_coord_list)
 
     #print("old:",selected_coord_list)
-    if Coordinate(new_point) not in selected_coord_list:
-        selected_coord_list.append(Coordinate(new_point))
+    if new_point not in selected_coord_list:
+        selected_coord_list.append(new_point)
     #print("new:",selected_coord_list)
 
     # calc the cost of the new point
     #print("DEBUG remaining_points:", remaining_points)
-    cost_values = remaining_points[Coordinate(new_point)]
+    #print("DEBUG new_point:", new_point)
+    cost_values = remaining_points[new_point]
     #print("DEBUG cost_values:", cost_values)
     new_point_cost = np.sum(cost_values)
     #print("DEBUG new_point_cost:", new_point_cost)
@@ -49,7 +51,7 @@ def add_additional_point_grid(remaining_points, selected_coord_list, new_point):
     #print("old:", remaining_points)
     # remove this point from the remaining points list
     try:
-        del remaining_points[Coordinate(new_point)]
+        del remaining_points[new_point]
     except ValueError as e:
         print(e)
     #print("new:", remaining_points)
@@ -428,6 +430,7 @@ def analyze_callpath(inputs):
     if grid_search == 2 or grid_search == 3:
         measurements_gpr = copy.deepcopy(experiment_measurements)
         measurements_hybrid = copy.deepcopy(experiment_measurements)
+        measurements_bayesian = copy.deepcopy(experiment_measurements)
 
     if nr_parameters == 2:
             
@@ -474,6 +477,12 @@ def analyze_callpath(inputs):
                                 temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
+                        if x.coordinate == cord:
+                            temp = x.values
+                            for i in range(base_values):
+                                temp = np.delete(temp, 0, 0)
+                            x.values = temp
+                    for x in measurements_bayesian[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
@@ -537,6 +546,12 @@ def analyze_callpath(inputs):
                                 temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
+                        if x.coordinate == cord:
+                            temp = x.values
+                            for i in range(base_values):
+                                temp = np.delete(temp, 0, 0)
+                            x.values = temp
+                    for x in measurements_bayesian[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
@@ -611,6 +626,12 @@ def analyze_callpath(inputs):
                             for i in range(base_values):
                                 temp = np.delete(temp, 0, 0)
                             x.values = temp
+                    for x in measurements_bayesian[(callpath, metric)]:
+                        if x.coordinate == cord:
+                            temp = x.values
+                            for i in range(base_values):
+                                temp = np.delete(temp, 0, 0)
+                            x.values = temp
                     # also delete the cost values from the remaining min dict
                     for i in range(base_values):
                         remaining_points_min[cord].pop(0)
@@ -670,6 +691,12 @@ def analyze_callpath(inputs):
                                 temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
+                        if x.coordinate == cord:
+                            temp = x.values
+                            for i in range(base_values):
+                                temp = np.delete(temp, 0, 0)
+                            x.values = temp
+                    for x in measurements_bayesian[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
@@ -740,6 +767,12 @@ def analyze_callpath(inputs):
                                 temp = np.delete(temp, 0, 0)
                             x.values = temp
                     for x in measurements_hybrid[(callpath, metric)]:
+                        if x.coordinate == cord:
+                            temp = x.values
+                            for i in range(base_values):
+                                temp = np.delete(temp, 0, 0)
+                            x.values = temp
+                    for x in measurements_bayesian[(callpath, metric)]:
                         if x.coordinate == cord:
                             temp = x.values
                             for i in range(base_values):
@@ -1698,6 +1731,9 @@ def analyze_callpath(inputs):
     add_points_random = added_points_random
     #if percentage_cost_random < 100:
     #    print("add_points_random:",add_points_random)
+
+    result_container["percentage_cost_random"] = percentage_cost_random
+    result_container["add_points_random"] = add_points_random
     
     # create model using point selection of random strategy
     model_random, _ = get_extrap_model2(experiment_random_base, args, callpath, metric)     
@@ -1773,6 +1809,8 @@ def analyze_callpath(inputs):
     combinations = None
     #print("experiment_coordinates:", experiment_coordinates)
 
+    #print("DEBUG eval_point:", eval_point)
+
     parameter_values = []
     for i in range(len(parameters)):
         parameter_values.append([])
@@ -1783,7 +1821,7 @@ def analyze_callpath(inputs):
             value = values[j]
             if value not in parameter_values[j]:
                 parameter_values[j].append(value)
-    
+
     #print("DEBUG parameter_values:", parameter_values)
 
     parameter_values_a = parameter_values[0][::-1]
@@ -1826,6 +1864,15 @@ def analyze_callpath(inputs):
         ]
     else:
         return 1
+
+    #print("eval_point:", eval_point)
+    tpl = tuple(map(float, eval_point))
+    if tpl in remaining_combinations:
+        try:
+            remaining_combinations.remove(tpl)
+        except ValueError as e:
+            print(e)
+
     #print("DEBUG:", len(combinations))
     #print("DEBUG:", selected_points_grid, len(selected_points_grid))
     #print("DEBUG:", remaining_combinations, len(remaining_combinations)) 
@@ -2022,6 +2069,9 @@ def analyze_callpath(inputs):
     add_points_grid = added_points_grid
     #if percentage_cost_grid < 100:
     #    print("add_points_grid:",add_points_grid)
+
+    result_container["percentage_cost_grid"] = percentage_cost_grid
+    result_container["add_points_grid"] = add_points_grid
     
     # create model using point selection of grid strategy
     model_grid, _ = get_extrap_model2(experiment_grid_base, args, callpath, metric)     
@@ -2090,13 +2140,13 @@ def analyze_callpath(inputs):
     # GPR parameter-value normalization for each measurement point
     normalization_factors = {}
 
-    if self.normalization:
+    if normalization:
         
-        for i in range(len(experiment.parameters)):
+        for i in range(nr_parameters):
 
             param_value_max = -1
 
-            for coord in experiment.coordinates:
+            for coord in experiment_coordinates:
 
                 temp = coord.as_tuple()[i]
 
@@ -2104,12 +2154,12 @@ def analyze_callpath(inputs):
                     param_value_max = temp
                 
             param_value_max = 100 / param_value_max
-            normalization_factors[experiment.parameters[i]] = param_value_max
+            normalization_factors[Parameter(parameters[i])] = param_value_max
             
         #print("normalization_factors:",normalization_factors)
     
     # do an noise analysis on the existing points
-    mm = experiment.measurements
+    mm = experiment_measurements
     #print("DEBUG:",mm)
     nn = mm[(callpath, metric)]
     #print("DEBUG:",nn)
@@ -2126,7 +2176,10 @@ def analyze_callpath(inputs):
         mean_mes = np.mean(meas.values)
         pps = []
         for val in meas.values:
-            pp = abs((val / (mean_mes / 100)) - 100)
+            if mean_mes == 0.0:
+                pp = 0
+            else:
+                pp = abs((val / (mean_mes / 100)) - 100)
             pps.append(pp)
             #print(pp,"%")
         nn = np.mean(pps)
@@ -2143,67 +2196,45 @@ def analyze_callpath(inputs):
         kernel=kernel, n_restarts_optimizer=20
     )
 
-    eval_point = []
-    if self.nr_parameters == 2:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-        eval_point.append(a)
-        eval_point.append(b)
-    elif self.nr_parameters == 3:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-        c = self.parameter_values_c_val[0]
-        eval_point.append(a)
-        eval_point.append(b)
-        eval_point.append(c)
-    elif self.nr_parameters == 4:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-        c = self.parameter_values_c_val[0]
-        d = self.parameter_values_d_val[0]
-        eval_point.append(a)
-        eval_point.append(b)
-        eval_point.append(c)
-        eval_point.append(d)
-    else:
-        return 1
-
     # add additional measurement points until break criteria is met
     add_points_bayesian = 0
     
-    budget_core_hours = self.budget * (total_cost / 100)
+    budget_core_hours = budget * (total_cost / 100)
     
-    if self.grid_search == 1 or self.grid_search == 4:
-        add_points_bayesian = len(selected_points) * self.nr_repetitions
+    if grid_search == 1 or grid_search == 4:
+        add_points_bayesian = len(selected_points) * nr_repetitions
         remaining_points_bayesian = copy.deepcopy(remaining_points)
         # entails all measurement points and their values
-        measurements_bayesian = copy.deepcopy(experiment.measurements)
-    elif self.grid_search == 2 or self.grid_search == 3:
-        add_points_bayesian = len(selected_points) * self.base_values
+        measurements_bayesian = copy.deepcopy(experiment_measurements)
+    elif grid_search == 2 or grid_search == 3:
+        add_points_bayesian = len(selected_points) * base_values
         remaining_points_bayesian = copy.deepcopy(remaining_points_min)
     selected_points_bayesian = copy.deepcopy(selected_points)
 
     # add all of the selected measurement points to the gaussian process
     # as training data and train it for these points
+    temp_params = []
+    for x in parameters:
+        temp_params.append(Parameter(x))
     gaussian_process = add_measurements_to_gpr(gaussian_process, 
                     selected_points_bayesian, 
                     measurements_bayesian, 
                     callpath,
                     metric,
                     normalization_factors,
-                    experiment.parameters, eval_point)
+                    temp_params, eval_point)
 
-    # create base model for gpr
-    if self.grid_search == 2 or self.grid_search == 3:
-        experiment_bayesian_base = self.create_experiment_base(selected_points_bayesian, experiment, len(experiment.parameters), parameters, 0, 0, self.base_values)
+    # create base model for bayesian
+    if grid_search == 2 or grid_search == 3:
+        experiment_bayesian_base = create_experiment_base(selected_points_bayesian, nr_parameters, parameters, metric, callpath, base_values, experiment_coordinates, experiment_measurements)
     else:
-        experiment_bayesian_base = create_experiment2(selected_points_bayesian, experiment, len(experiment.parameters), parameters, 0, 0)
+        experiment_bayesian_base = create_experiment(selected_points_bayesian, nr_parameters, parameters, callpath, metric, experiment_coordinates, experiment_measurements)
     
     # Precompute normalization values only once for performance
     norm_factors = [normalization_factors.get(param, 1.0) 
                     for param in experiment_bayesian_base.parameters]
 
-    if base_point_cost <= self.budget:
+    if base_point_cost <= budget:
         while True:
             
             # identify all possible next points that would 
@@ -2211,13 +2242,15 @@ def analyze_callpath(inputs):
             fitting_measurements = []
             for key, value in remaining_points_bayesian.items():
                 
-                #current_cost = calculate_selected_point_cost2(selected_points_bayesian, experiment_bayesian_base, 0, 0)
-                current_cost = self.calculate_selected_point_cost(experiment_bayesian_base)
-                
+                current_cost = calculate_selected_point_cost2(experiment_bayesian_base, callpath, metric)
+                    
                 # always take the first value in the list, until none left
                 #new_cost = current_cost + np.sum(value)
                 new_cost = current_cost + value[0]
-                cost_percent = new_cost / (total_cost / 100)
+                if total_cost == 0.0:
+                    cost_percent = 0.0
+                else:
+                    cost_percent = new_cost / (total_cost / 100)
                 
                 #if new_cost > budget_core_hours:
                 #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
@@ -2231,7 +2264,7 @@ def analyze_callpath(inputs):
                 if cost_percent > 100.0:
                     cost_percent = 100.0
 
-                if cost_percent <= self.budget:
+                if cost_percent <= budget:
                     fitting_measurements.append(key)
 
             #print("fitting_measurements:",fitting_measurements)
@@ -2270,7 +2303,7 @@ def analyze_callpath(inputs):
                     if measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].coordinate == selected_points_bayesian[i]:
                         y_train.append(measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].mean)
             y_train = np.array(y_train)"""
-            measurement_key = (Callpath("main"), Metric("runtime"))
+            measurement_key = (callpath, metric)
             measurements_by_coord = {
                 m.coordinate: m.mean
                 for m in measurements_bayesian[measurement_key]
@@ -2335,21 +2368,21 @@ def analyze_callpath(inputs):
                     # if that's not the case pop the value from the measurement of the cord
                     measurement = None
                     cord_id = None
-                    for i in range(len(measurements_bayesian[(Callpath("main"), Metric("runtime"))])):
-                        if measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
+                    for i in range(len(measurements_bayesian[(callpath, metric)])):
+                        if measurements_bayesian[(callpath, metric)][i].coordinate == cord:
                             cord_id = i
-                            x = measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values
+                            x = measurements_bayesian[(callpath, metric)][i].values
                             if len(x) > 0:
                                 new_value = x[0]
                                 x = np.delete(x, 0)
-                                measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values = x
+                                measurements_bayesian[(callpath, metric)][i].values = x
                             break
                     
                     # pop value from cord in remaining points list that has been selected as best next point
                     remaining_points_bayesian[cord].pop(0)
                     
                     # pop cord from remaining points when no value left anymore
-                    if len(measurements_bayesian[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
+                    if len(measurements_bayesian[(callpath, metric)][cord_id].values) == 0:
                         remaining_points_bayesian.pop(cord)
                     
                 except KeyError:
@@ -2360,7 +2393,8 @@ def analyze_callpath(inputs):
 
                 # add this point to the gpr experiment
                 #experiment_bayesian_base = create_experiment2(selected_points_bayesian, experiment_bayesian_base, len(experiment_bayesian_base.parameters), parameters, 0, 0)
-                experiment_bayesian_base = self.create_experiment(cord, experiment_bayesian_base, new_value)
+                #experiment_bayesian_base = self.create_experiment(cord, experiment_bayesian_base, new_value)
+                experiment_bayesian_base = create_experiment2(cord, experiment_bayesian_base, new_value, callpath, metric)
 
             # if there are no suitable measurement points found
             # break the while True loop
@@ -2368,59 +2402,93 @@ def analyze_callpath(inputs):
                 break
         
     # cost used of the gpr strategy
-    current_cost = calculate_selected_point_cost2(selected_points_bayesian, experiment_bayesian_base, 0, 0)
-    #current_cost = self.calculate_selected_point_cost(experiment_bayesian_base)
-    percentage_cost_bayesian = current_cost / (total_cost / 100)
+    current_cost = calculate_selected_point_cost2(experiment_bayesian_base, callpath, metric)
+    if total_cost == 0.0:
+        percentage_cost_bayesian = 0.0
+    else:
+        percentage_cost_bayesian = current_cost / (total_cost / 100)
     if percentage_cost_bayesian >= 99.9:
         percentage_cost_bayesian = 100
     #print("percentage_cost_bayesian:",percentage_cost_bayesian)
+    #percentage_cost_bayesian_container.append(percentage_cost_bayesian)
+    result_container["percentage_cost_bayesian"] = percentage_cost_bayesian
     
     # additionally used data points (exceeding the base requirement of the sparse modeler)
-    add_points_bayesian_container.append(add_points_bayesian)
+    #add_points_bayesian_container.append(add_points_bayesian)
+    result_container["add_points_bayesian"] = add_points_bayesian
     
-    # create model using point selection of gpr strategy
-    model_bayesian, _ = self.get_extrap_model(experiment_bayesian_base)
-    #print("Model GPR:",model_bayesian)
+    # create model using point selection of bayesian strategy
+    model_bayesian, _ = get_extrap_model2(experiment_bayesian_base, args, callpath, metric)
+    #print("Model bayesian:",model_bayesian)
+    
+    # create model using full matrix of points
+    # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
+    if parameters[0] == "p" and parameters[1] == "size":
+        p = int(eval_point[0])
+        size = int(eval_point[1])
+    elif parameters[0] == "p" and parameters[1] == "n":
+        p = int(eval_point[0])
+        n = int(eval_point[1])
+    elif parameters[0] == "p" and parameters[1] == "s":
+        p = int(eval_point[0])
+        s = int(eval_point[1])
+    elif parameters[0] == "p" and parameters[1] == "d" and parameters[2] == "g":
+        p = int(eval_point[0])
+        d = int(eval_point[1])
+        g = int(eval_point[2])
+    elif parameters[0] == "p" and parameters[1] == "m" and parameters[2] == "n":
+        p = int(eval_point[0])
+        m = int(eval_point[1])
+        n = int(eval_point[2])
 
-    # set the measurement point values for the evaluation of the prediction
-    if self.nr_parameters == 2:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-    elif self.nr_parameters == 3:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-        c = self.parameter_values_c_val[0]
-    elif self.nr_parameters == 4:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-        c = self.parameter_values_c_val[0]
-        d = self.parameter_values_d_val[0]
-    else:
-        return 1
-
+    prediction_full = eval(all_points_functions_strings[callpath_string])
+    #print("prediction_full:",prediction_full)
     prediction_bayesian = eval(model_bayesian)
     #print("prediction_bayesian:",prediction_bayesian)
 
-    # get the percentage error for the gpr strategy
-    if percentage_cost_bayesian <= self.budget:
-        error_bayesian = abs(self.percentage_error(actual, prediction_bayesian))
+    # get the actual measured value
+    eval_measurement = None
+    if nr_parameters == 2:
+        for o in range(len(coordinate_evaluation)):
+            parameter_values = coordinate_evaluation[o].as_tuple()
+            #print("parameter_values:",parameter_values)
+            if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
+                eval_measurement = measurement_evaluation[callpath, metric][o]
+                break
+    elif nr_parameters == 3:
+        for o in range(len(coordinate_evaluation)):
+            parameter_values = coordinate_evaluation[o].as_tuple()
+            #print("parameter_values:",parameter_values)
+            if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]) and parameter_values[2] == float(eval_point[2]):
+                eval_measurement = measurement_evaluation[callpath, metric][o]
+                break
+    else:
+        return 1
+
+    #print("eval_measurement:",eval_measurement)
+    actual = eval_measurement.mean
+    #print("actual:",actual)
+    
+    # get the percentage error for the bayesian strategy
+    if percentage_cost_bayesian <= budget:
+        error_bayesian = abs(percentage_error(actual, prediction_bayesian))
     else:
         error_bayesian = 100
     #print("error_bayesian:",error_bayesian)
 
-    # increment accuracy bucket for gpr strategy
-    acurracy_bucket_counter_bayesian = self.increment_accuracy_bucket(acurracy_bucket_counter_bayesian, error_bayesian)
+    # increment accuracy bucket for bayesian strategy
+    acurracy_bucket_counter_bayesian = increment_accuracy_bucket(acurracy_bucket_counter_bayesian, error_bayesian)
 
-
-
-
-
+    ####################################
 
     # save the results of this worker to return them to the main process
     result_container["acurracy_bucket_counter_full"] = acurracy_bucket_counter_full
     result_container["acurracy_bucket_counter_generic"] = acurracy_bucket_counter_generic
     result_container["acurracy_bucket_counter_gpr"] = acurracy_bucket_counter_gpr
     result_container["acurracy_bucket_counter_hybrid"] = acurracy_bucket_counter_hybrid
+    result_container["acurracy_bucket_counter_random"] = acurracy_bucket_counter_random
+    result_container["acurracy_bucket_counter_grid"] = acurracy_bucket_counter_grid
+    result_container["acurracy_bucket_counter_bayesian"] = acurracy_bucket_counter_bayesian
 
     result_container["base_point_cost"] = base_point_cost
 
@@ -2439,7 +2507,21 @@ def analyze_callpath(inputs):
         result_container["hybrid_possible"] = True
     else:
         result_container["hybrid_possible"] = False
-        
+
+    if percentage_cost_random <= budget:
+        result_container["random_possible"] = True
+    else:
+        result_container["random_possible"] = False
+
+    if percentage_cost_grid <= budget:
+        result_container["grid_possible"] = True
+    else:
+        result_container["grid_possible"] = False
+
+    if percentage_cost_bayesian <= budget:
+        result_container["bayesian_possible"] = True
+    else:
+        result_container["bayesian_possible"] = False
         
     shared_dict[callpath_id] = result_container
     
