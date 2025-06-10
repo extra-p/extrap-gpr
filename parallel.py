@@ -19,12 +19,58 @@ from sklearn.exceptions import ConvergenceWarning
 from temp import add_measurements_to_gpr
 from temp import add_measurement_to_gpr
 import sys
-from generic_strategy import add_additional_point_generic
+from generic_strategy import add_additional_point_generic, add_additional_point_grid
 from extrap.util.options_parser import ModelerOptionsAction, ModelerHelpAction
 from extrap.util.options_parser import SINGLE_PARAMETER_MODELER_KEY, SINGLE_PARAMETER_OPTIONS_KEY
 from extrap.util.options_parser import ModelerOptionsAction, ModelerHelpAction
 from extrap.modelers import multi_parameter
 from extrap.modelers import single_parameter
+import random
+
+
+def add_additional_point_random(remaining_points, selected_coord_list, measurements_random, nr_reps, callpath, metric):
+    remaining_points = copy.deepcopy(remaining_points)
+    selected_coord_list = copy.deepcopy(selected_coord_list)
+
+    # choose a random point from the remaining point list
+    random_key = random.choice(list(remaining_points.keys()))
+    random_value = remaining_points[random_key]
+
+    # get the cost of the new measurement value
+    new_point_cost = random_value[0]
+
+    index_measurement_value = nr_reps - len(random_value)
+
+    #print("DEBUG measurements_random:", measurements_random)
+
+    # get the actual measurement value
+    for i in range(len(measurements_random[(callpath, metric)])):
+        if measurements_random[(callpath, metric)][i].coordinate == random_key:
+            new_measurement_value = measurements_random[(callpath, metric)][i].values[index_measurement_value]
+            break
+
+    # pop new value from remaining points list
+    remaining_points[random_key].pop(0)
+
+    # check if point was already selected
+    # make sure this point was not selected yet
+    exists = False
+    for k in range(len(selected_coord_list)):
+        if random_key == selected_coord_list[k]:
+            exists = True
+            break
+    # if point was selected already, delete it
+    if exists == False:
+        # add not yet selected cord to selected cord list
+        selected_coord_list.append(random_key)
+    else:
+        # if there is no value left for this cord then delete it completely from the list
+        if len(remaining_points[random_key]) == 0:
+            del remaining_points[random_key]
+
+    selected_cord_new = random_key
+
+    return new_point_cost, selected_cord_new, remaining_points, selected_coord_list, new_measurement_value
 
 
 def create_experiment2(cord, experiment, new_value, callpath, metric):
@@ -257,7 +303,7 @@ def analyze_callpath(inputs):
     normalization = inputs[21]
     min_points = inputs[22]
     hybrid_switch = inputs[23]
-    newonly == inputs[24]
+    newonly = inputs[24]
     result_container = {}
     
     # prepare dicts for saving the accuracy analysis data
@@ -1540,77 +1586,76 @@ def analyze_callpath(inputs):
     ## Random ##
     ############
 
+    added_points_random = len(selected_points) * (nr_repetitions)
+
     remaining_points_random = copy.deepcopy(remaining_points)
     selected_points_random = copy.deepcopy(selected_points)
 
     # create first model
-    experiment_random_base = create_experiment2(selected_points_random, experiment, len(experiment.parameters), parameters, 0, 0)
+    experiment_random_base = create_experiment(selected_points_random, nr_parameters, parameters, callpath, metric, experiment_coordinates, experiment_measurements)
     
-    _, models = self.get_extrap_model(experiment_random_base)
-    hypothesis = None
-    for model in models.values():
-        hypothesis = model.hypothesis
+    _, model = get_extrap_model2(experiment_random_base, args, callpath, metric)
+    hypothesis = model.hypothesis
 
     # calculate selected point cost
-    current_cost = calculate_selected_point_cost2(selected_points_random, experiment, 0, 0)
-    current_cost_percent = current_cost / (total_cost / 100)
+    current_cost = calculate_selected_point_cost(selected_points_random, callpath, metric, experiment_coordinates, experiment_measurements)
+    if total_cost == 0.0:
+        current_cost_percent = 0.0
+    else:
+        current_cost_percent = current_cost / (total_cost / 100)
 
     #print("remaining_points_random:", remaining_points_random)
     #print("selected_points_random:", selected_points_random)
     #print("DEBUG measurements_random:", measurements_random)
-    
-    if self.mode == "budget":
 
-        if current_cost_percent <= self.budget:
-            while True:
-                # find another point for selection
-                new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value = add_additional_point_random(remaining_points_random, selected_points_random, measurements_random, self.nr_repetitions)
+    if current_cost_percent <= budget:
+        while True:
+            # find another point for selection
+            new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value = add_additional_point_random(remaining_points_random, selected_points_random, experiment_measurements, nr_repetitions, callpath, metric)
 
-                #print("DEBUG:", new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value)
+            #print("DEBUG:", new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value)
 
-                # calculate new selected point cost
-                new_cost = current_cost + new_point_cost
-                new_cost_percent = new_cost / (total_cost / 100)
+            # calculate new selected point cost
+            new_cost = current_cost + new_point_cost
+            new_cost_percent = new_cost / (total_cost / 100)
 
-                # current cost exceeds budget so break the loop
-                # to make sure no mistakes occur here
-                # sometimes the numbers do not perfectly add up to the target budget
-                # but to 100.00001
-                # this is the fix for this case
-                new_cost_percent = float("{0:.2f}".format(new_cost_percent))
-                #print("new_cost_percent:",new_cost_percent)
+            # current cost exceeds budget so break the loop
+            # to make sure no mistakes occur here
+            # sometimes the numbers do not perfectly add up to the target budget
+            # but to 100.00001
+            # this is the fix for this case
+            new_cost_percent = float("{0:.2f}".format(new_cost_percent))
+            #print("new_cost_percent:",new_cost_percent)
 
-                if new_cost_percent > self.budget:
-                    break
+            if new_cost_percent > budget:
+                break
 
-                # add the new found point
-                else:
-                    # increment counter value, because a new measurement point was added
-                    added_points_random += 1
+            # add the new found point
+            else:
+                # increment counter value, because a new measurement point was added
+                added_points_random += 1
 
-                    # create new model
-                    experiment_random_base = self.create_experiment(selected_cord_new, experiment_random_base, new_measurement_value)
-                    
-                    selected_points_random = selected_coord_list_new
-                    remaining_points_random = remaining_points_new
-                    current_cost = new_cost
-                    current_cost_percent = new_cost_percent
+                # create new model
+                experiment_random_base = create_experiment2(selected_cord_new, experiment_random_base, new_measurement_value, callpath, metric)
+                
+                selected_points_random = selected_coord_list_new
+                remaining_points_random = remaining_points_new
+                current_cost = new_cost
+                current_cost_percent = new_cost_percent
 
-                # if there are no points remaining that can be selected break the loop
-                if len(remaining_points_random) == 0:
-                    break
-
-        else:
-            pass
-
-    elif self.mode == "free":
-        pass
+            # if there are no points remaining that can be selected break the loop
+            if len(remaining_points_random) == 0:
+                break
 
     else:
-        return 1
+        pass
 
     # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
-    percentage_cost_random = current_cost_percent
+    current_cost = calculate_selected_point_cost2(experiment_hybrid_base, callpath, metric)
+    if total_cost == 0.0:
+        percentage_cost_random = 0.0
+    else:
+        percentage_cost_random = current_cost / (total_cost / 100)
     if percentage_cost_random >= 99.9:
         percentage_cost_random = 100
     #print("percentage_cost_random:",percentage_cost_random)
@@ -1625,56 +1670,65 @@ def analyze_callpath(inputs):
     #if percentage_cost_random < 100:
     #    print("add_points_random:",add_points_random)
     
-    # create model using point selection of generic strategy
-    model_random, _ = self.get_extrap_model(experiment_random_base)
-    
-    #for x in experiment_random_base.measurements[(Callpath("main"),Metric("runtime"))]:
-    #    print(x, x.values)
-    #print("Model generic:",model_random)
+    # create model using point selection of random strategy
+    model_random, _ = get_extrap_model2(experiment_random_base, args, callpath, metric)     
 
-    # create model using full matrix of points
-    model_full, _ = self.get_extrap_model(experiment)
-    #print("model_full:",model_full)
+    # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
+    if parameters[0] == "p" and parameters[1] == "size":
+        p = int(eval_point[0])
+        size = int(eval_point[1])
+    elif parameters[0] == "p" and parameters[1] == "n":
+        p = int(eval_point[0])
+        n = int(eval_point[1])
+    elif parameters[0] == "p" and parameters[1] == "s":
+        p = int(eval_point[0])
+        s = int(eval_point[1])
+    elif parameters[0] == "p" and parameters[1] == "d" and parameters[2] == "g":
+        p = int(eval_point[0])
+        d = int(eval_point[1])
+        g = int(eval_point[2])
+    elif parameters[0] == "p" and parameters[1] == "m" and parameters[2] == "n":
+        p = int(eval_point[0])
+        m = int(eval_point[1])
+        n = int(eval_point[2])
 
-    # set the measurement point values for the evaluation of the prediction
-    if self.nr_parameters == 2:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-    elif self.nr_parameters == 3:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-        c = self.parameter_values_c_val[0]
-    elif self.nr_parameters == 4:
-        a = self.parameter_values_a_val[0]
-        b = self.parameter_values_b_val[0]
-        c = self.parameter_values_c_val[0]
-        d = self.parameter_values_d_val[0]
+    prediction_full = eval(all_points_functions_strings[callpath_string])
+    #print("prediction_full:",prediction_full)
+    prediction_random = eval(model_random)
+    #print("prediction_random:",prediction_random)
+
+    # get the actual measured value
+    eval_measurement = None
+    if nr_parameters == 2:
+        for o in range(len(coordinate_evaluation)):
+            parameter_values = coordinate_evaluation[o].as_tuple()
+            #print("parameter_values:",parameter_values)
+            if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]):
+                eval_measurement = measurement_evaluation[callpath, metric][o]
+                break
+    elif nr_parameters == 3:
+        for o in range(len(coordinate_evaluation)):
+            parameter_values = coordinate_evaluation[o].as_tuple()
+            #print("parameter_values:",parameter_values)
+            if parameter_values[0] == float(eval_point[0]) and parameter_values[1] == float(eval_point[1]) and parameter_values[2] == float(eval_point[2]):
+                eval_measurement = measurement_evaluation[callpath, metric][o]
+                break
     else:
         return 1
 
-    # evaluate model accuracy against the first point in each direction of the parameter set for each parameter
-    prediction_full = eval(model_full)
-    #print("prediction_full:",prediction_full)
-    prediction_random = eval(model_random)
-    #print("prediction_generic:",prediction_generic)
-
-    #basline_function = function_dict[i].function
-    actual = eval(basline_function)
+    #print("eval_measurement:",eval_measurement)
+    actual = eval_measurement.mean
     #print("actual:",actual)
-
-    # get the percentage error for the full matrix of points
-    error_full = abs(self.percentage_error(actual, prediction_full))
-    #print("error_full:",error_full)
-
-    # get the percentage error for the generic strategy
-    if percentage_cost_random <= self.budget:
-        error_random = abs(self.percentage_error(actual, prediction_random))
+    
+    # get the percentage error for the gpr strategy
+    if percentage_cost_random <= budget:
+        error_random = abs(percentage_error(actual, prediction_random))
     else:
         error_random = 100
-    #print("error_generic:",error_generic)
+    #print("error_random:",error_random)
 
-    # increment accuracy bucket for generic strategy
-    acurracy_bucket_counter_random = self.increment_accuracy_bucket(acurracy_bucket_counter_random, error_random)
+    # increment accuracy bucket for gpr strategy
+    acurracy_bucket_counter_random = increment_accuracy_bucket(acurracy_bucket_counter_random, error_random)
 
 
     ##########
