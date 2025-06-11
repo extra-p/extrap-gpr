@@ -1,0 +1,72 @@
+{
+    "percentage_bucket_counter_random": {
+        "rest": 100.0,
+        "5": 28.57142857142857,
+        "10": 28.57142857142857,
+        "15": 28.57142857142857,
+        "20": 64.28571428571429
+    },
+    "mean_budget_random": 40.338485243875404,
+    "mean_add_points_random": 29.0,
+    "nr_func_modeled_random": 14,
+    "percentage_bucket_counter_grid": {
+        "rest": 100.0,
+        "5": 28.57142857142857,
+        "10": 28.57142857142857,
+        "15": 28.57142857142857,
+        "20": 64.28571428571429
+    },
+    "mean_budget_grid": 27.333972144962615,
+    "mean_add_points_grid": 23.384615384615383,
+    "nr_func_modeled_grid": 13,
+    "percentage_bucket_counter_bayesian": {
+        "rest": 100.0,
+        "5": 57.14285714285714,
+        "10": 71.42857142857143,
+        "15": 85.71428571428571,
+        "20": 85.71428571428571
+    },
+    "mean_budget_bayesian": 41.98831482683388,
+    "mean_add_points_bayesian": 35.357142857142854,
+    "nr_func_modeled_bayesian": 14,
+    "percentage_bucket_counter_full": {
+        "rest": 100.0,
+        "5": 57.14285714285714,
+        "10": 78.57142857142857,
+        "15": 85.71428571428571,
+        "20": 92.85714285714286
+    },
+    "percentage_bucket_counter_generic": {
+        "rest": 100.0,
+        "5": 21.428571428571427,
+        "10": 64.28571428571429,
+        "15": 64.28571428571429,
+        "20": 78.57142857142857
+    },
+    "mean_budget_generic": 40.142875750671216,
+    "mean_add_points_generic": 38.57142857142857,
+    "nr_func_modeled_generic": 14,
+    "percentage_bucket_counter_gpr": {
+        "rest": 100.0,
+        "5": 21.428571428571427,
+        "10": 71.42857142857143,
+        "15": 78.57142857142857,
+        "20": 85.71428571428571
+    },
+    "mean_add_points_gpr": 39.07142857142857,
+    "mean_budget_gpr": 40.489233928720864,
+    "nr_func_modeled_gpr": 14,
+    "percentage_bucket_counter_hybrid": {
+        "rest": 100.0,
+        "5": 21.428571428571427,
+        "10": 64.28571428571429,
+        "15": 71.42857142857143,
+        "20": 78.57142857142857
+    },
+    "mean_budget_hybrid": 41.5575722027075,
+    "mean_add_points_hybrid": 39.785714285714285,
+    "nr_func_modeled_hybrid": 14,
+    "base_point_cost": 8.791839529489142,
+    "min_points": 9,
+    "budget": 46
+}
