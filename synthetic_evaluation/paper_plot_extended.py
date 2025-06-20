@@ -173,7 +173,7 @@ def main():
     gpr_costs = []
     hybrid_costs = []
     random_costs = []
-    gird_costs = []
+    grid_costs = []
     bayesian_costs = []
 
     points_generic = []
@@ -440,33 +440,38 @@ def main():
         full_values_1 ,
         generic_values_1 ,
         gpr_values_1 ,
+        hybrid_values_1,
         random_values_1 ,
-        #hybrid_values_1
+        grid_values_1,
+        bayesian_values_1
     ]
     y_values_list_acc_2 = [
         full_values_2,
         generic_values_2,
         gpr_values_2,
+         hybrid_values_2,
         random_values_2,
-        #hybrid_values_2
+        grid_values_2,
+        bayesian_values_2
     ]
     y_values_list_acc_5 = [
         full_values_5,
         generic_values_5,
         gpr_values_5,
+        hybrid_values_5,
         random_values_5,
-        #hybrid_values_5
+        grid_values_5,
+        bayesian_values_5
     ]
     y_values_list_acc_10 = [
         full_values_10,
         generic_values_10,
         gpr_values_10,
+        hybrid_values_10,
         random_values_10,
-        #hybrid_values_10
+        grid_values_10,
+        bayesian_values_10
     ]
-    
-    #TODO: CONTINUE FROM HERE
-    ############################################################################################################
     
     print("m=2, n=+-1%")
     
@@ -486,7 +491,7 @@ def main():
             maxv = generic_values_1[i]
             cpf_B_max_2_1 = x_values[i]
     cpf_max_2_1 = max(generic_values_1)
-    print("Max. accuracy Full:",cpf_max_2_1,"% at B=",cpf_B_max_2_1,"%.")
+    print("Max. accuracy CPF:",cpf_max_2_1,"% at B=",cpf_B_max_2_1,"%.")
     
     gpr_B_max_2_1 = 0
     maxv = 0
@@ -495,7 +500,43 @@ def main():
             maxv = gpr_values_1[i]
             gpr_B_max_2_1 = x_values[i]
     gpr_max_2_1 = max(gpr_values_1)
-    print("Max. accuracy Full:",gpr_max_2_1,"% at B=",gpr_B_max_2_1,"%.")
+    print("Max. accuracy GPR:",gpr_max_2_1,"% at B=",gpr_B_max_2_1,"%.")
+
+    random_B_max_2_1 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_2_1 = x_values[i]
+    random_max_2_1 = max(random_values_1)
+    print("Max. accuracy random:",random_max_2_1,"% at B=",random_B_max_2_1,"%.")
+
+    grid_B_max_2_1 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_2_1 = x_values[i]
+    grid_max_2_1 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_2_1,"% at B=",grid_B_max_2_1,"%.")
+
+    bayesian_B_max_2_1 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_2_1 = x_values[i]
+    bayesian_max_2_1 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_2_1,"% at B=",bayesian_B_max_2_1,"%.")
+
+    hybrid_B_max_2_1 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_2_1 = x_values[i]
+    hybrid_max_2_1 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_2_1,"% at B=",hybrid_B_max_2_1,"%.")
     
     maxv_2_1 = 0
     Bv_2_1 = 0
@@ -541,6 +582,42 @@ def main():
             gpr_B_max_2_2 = x_values[i]
     gpr_max_2_2 = max(gpr_values_2)
     print("Max. accuracy Full:",gpr_max_2_2,"% at B=",gpr_B_max_2_2,"%.")
+
+    random_B_max_2_2 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_2_2 = x_values[i]
+    random_max_2_2 = max(random_values_1)
+    print("Max. accuracy random:",random_max_2_2,"% at B=",random_B_max_2_2,"%.")
+
+    grid_B_max_2_2 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_2_2 = x_values[i]
+    grid_max_2_2 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_2_2,"% at B=",grid_B_max_2_2,"%.")
+
+    bayesian_B_max_2_2 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_2_2 = x_values[i]
+    bayesian_max_2_2 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_2_2,"% at B=",bayesian_B_max_2_2,"%.")
+
+    hybrid_B_max_2_2 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_2_2 = x_values[i]
+    hybrid_max_2_2 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_2_2,"% at B=",hybrid_B_max_2_2,"%.")
     
     maxv_2_2 = 0
     Bv_2_2 = 0
@@ -587,6 +664,42 @@ def main():
             gpr_B_max_2_5 = x_values[i]
     gpr_max_2_5 = max(gpr_values_5)
     print("Max. accuracy Full:",gpr_max_2_5,"% at B=",gpr_B_max_2_5,"%.")
+
+    random_B_max_2_5 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_2_5 = x_values[i]
+    random_max_2_5 = max(random_values_1)
+    print("Max. accuracy random:",random_max_2_5,"% at B=",random_B_max_2_5,"%.")
+
+    grid_B_max_2_5 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_2_5 = x_values[i]
+    grid_max_2_5 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_2_5,"% at B=",grid_B_max_2_5,"%.")
+
+    bayesian_B_max_2_5 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_2_5 = x_values[i]
+    bayesian_max_2_5 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_2_5,"% at B=",bayesian_B_max_2_5,"%.")
+
+    hybrid_B_max_2_5 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_2_5 = x_values[i]
+    hybrid_max_2_5 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_2_5,"% at B=",hybrid_B_max_2_5,"%.")
     
     maxv_2_5 = 0
     Bv_2_5 = 0
@@ -633,6 +746,42 @@ def main():
             gpr_B_max_2_10 = x_values[i]
     gpr_max_2_10 = max(gpr_values_10)
     print("Max. accuracy Full:",gpr_max_2_10,"% at B=",gpr_B_max_2_10,"%.")
+
+    random_B_max_2_10 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_2_10 = x_values[i]
+    random_max_2_10 = max(random_values_1)
+    print("Max. accuracy random:",random_max_2_10,"% at B=",random_B_max_2_10,"%.")
+
+    grid_B_max_2_10 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_2_10 = x_values[i]
+    grid_max_2_10 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_2_10,"% at B=",grid_B_max_2_10,"%.")
+
+    bayesian_B_max_2_10 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_2_10 = x_values[i]
+    bayesian_max_2_10 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_2_10,"% at B=",bayesian_B_max_2_10,"%.")
+
+    hybrid_B_max_2_10 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_2_10 = x_values[i]
+    hybrid_max_2_10 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_2_10,"% at B=",hybrid_B_max_2_10,"%.")
     
     maxv_2_10 = 0
     Bv_2_10 = 0
@@ -655,25 +804,37 @@ def main():
         full_values_1_3 ,
         generic_values_1_3 ,
         gpr_values_1_3 ,
-        #hybrid_values_1_3
+        hybrid_values_1_3,
+        random_values_1_3,
+        grid_values_1_3,
+        bayesian_values_1_3
     ]
     y_values_list_acc_2_3 = [
         full_values_2_3,
         generic_values_2_3,
         gpr_values_2_3,
-        #hybrid_values_2_3
+        hybrid_values_2_3,
+        random_values_2_3,
+        grid_values_2_3,
+        bayesian_values_2_3
     ]
     y_values_list_acc_5_3 = [
         full_values_5_3,
         generic_values_5_3,
         gpr_values_5_3,
-        #hybrid_values_5_3
+        hybrid_values_5_3,
+        random_values_5_3,
+        grid_values_5_3,
+        bayesian_values_5_3
     ]
     y_values_list_acc_10_3 = [
         full_values_10_3,
         generic_values_10_3,
         gpr_values_10_3,
-        #hybrid_values_10_3
+        hybrid_values_10_3,
+        random_values_10_3,
+        grid_values_10_3,
+        bayesian_values_10_3
     ]
     
     ############################################################################################################
@@ -706,6 +867,42 @@ def main():
             gpr_B_max_3_1 = x_values[i]
     gpr_max_3_1 = max(gpr_values_1_3)
     print("Max. accuracy Full:",gpr_max_3_1,"% at B=",gpr_B_max_3_1,"%.")
+
+    random_B_max_3_1 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_3_1 = x_values[i]
+    random_max_3_1 = max(random_values_1)
+    print("Max. accuracy random:",random_max_3_1,"% at B=",random_B_max_3_1,"%.")
+
+    grid_B_max_3_1 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_3_1 = x_values[i]
+    grid_max_3_1 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_3_1,"% at B=",grid_B_max_3_1,"%.")
+
+    bayesian_B_max_3_1 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_3_1 = x_values[i]
+    bayesian_max_3_1 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_3_1,"% at B=",bayesian_B_max_3_1,"%.")
+
+    hybrid_B_max_3_1 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_3_1 = x_values[i]
+    hybrid_max_3_1 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_3_1,"% at B=",hybrid_B_max_3_1,"%.")
 
     maxv_3_1 = 0
     Bv_3_1 = 0
@@ -751,6 +948,42 @@ def main():
             gpr_B_max_3_2 = x_values[i]
     gpr_max_3_2 = max(gpr_values_2_3)
     print("Max. accuracy Full:",gpr_max_3_2,"% at B=",gpr_B_max_3_2,"%.")
+
+    random_B_max_3_2 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_3_2 = x_values[i]
+    random_max_3_2 = max(random_values_1)
+    print("Max. accuracy random:",random_max_3_2,"% at B=",random_B_max_3_2,"%.")
+
+    grid_B_max_3_2 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_3_2 = x_values[i]
+    grid_max_3_2 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_3_2,"% at B=",grid_B_max_3_2,"%.")
+
+    bayesian_B_max_3_2 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_3_2 = x_values[i]
+    bayesian_max_3_2 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_3_2,"% at B=",bayesian_B_max_3_2,"%.")
+
+    hybrid_B_max_3_2 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_3_2 = x_values[i]
+    hybrid_max_3_2 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_3_2,"% at B=",hybrid_B_max_3_2,"%.")
 
     maxv_3_2 = 0
     Bv_3_2 = 0
@@ -798,6 +1031,42 @@ def main():
     gpr_max_3_5 = max(gpr_values_5_3)
     print("Max. accuracy Full:",gpr_max_3_5,"% at B=",gpr_B_max_3_5,"%.")
 
+    random_B_max_3_5 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_3_5 = x_values[i]
+    random_max_3_5 = max(random_values_1)
+    print("Max. accuracy random:",random_max_3_5,"% at B=",random_B_max_3_5,"%.")
+
+    grid_B_max_3_5 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_3_5 = x_values[i]
+    grid_max_3_5 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_3_5,"% at B=",grid_B_max_3_5,"%.")
+
+    bayesian_B_max_3_5 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_3_5 = x_values[i]
+    bayesian_max_3_5 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_3_5,"% at B=",bayesian_B_max_3_5,"%.")
+
+    hybrid_B_max_3_5 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_3_5 = x_values[i]
+    hybrid_max_3_5 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_3_5,"% at B=",hybrid_B_max_3_5,"%.")
+
     maxv_3_5 = 0
     Bv_3_5 = 0
     cpfv_3_5 = 0
@@ -844,6 +1113,42 @@ def main():
     gpr_max_3_10 = max(gpr_values_10_3)
     print("Max. accuracy Full:",gpr_max_3_10,"% at B=",gpr_B_max_3_10,"%.")
 
+    random_B_max_3_10 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_3_10 = x_values[i]
+    random_max_3_10 = max(random_values_1)
+    print("Max. accuracy random:",random_max_3_10,"% at B=",random_B_max_3_10,"%.")
+
+    grid_B_max_3_10 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_3_10 = x_values[i]
+    grid_max_3_10 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_3_10,"% at B=",grid_B_max_3_10,"%.")
+
+    bayesian_B_max_3_10 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_3_10 = x_values[i]
+    bayesian_max_3_10 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_3_10,"% at B=",bayesian_B_max_3_10,"%.")
+
+    hybrid_B_max_3_10 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_3_10 = x_values[i]
+    hybrid_max_3_10 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_3_10,"% at B=",hybrid_B_max_3_10,"%.")
+
     maxv_3_10 = 0
     Bv_3_10 = 0
     cpfv_3_10 = 0
@@ -865,25 +1170,37 @@ def main():
         full_values_1_4 ,
         generic_values_1_4 ,
         gpr_values_1_4 ,
-        #hybrid_values_1_4
+        hybrid_values_1_4,
+        random_values_1_4,
+        grid_values_1_4,
+        bayesian_values_1_4
     ]
     y_values_list_acc_2_4 = [
         full_values_2_4,
         generic_values_2_4,
         gpr_values_2_4,
-        #hybrid_values_2_4
+        hybrid_values_2_4,
+        random_values_2_4,
+        grid_values_2_4,
+        bayesian_values_2_4
     ]
     y_values_list_acc_5_4 = [
         full_values_5_4,
         generic_values_5_4,
         gpr_values_5_4,
-        #hybrid_values_5_4
+        hybrid_values_5_4,
+        random_values_5_4,
+        grid_values_5_4,
+        bayesian_values_5_4
     ]
     y_values_list_acc_10_4 = [
         full_values_10_4,
         generic_values_10_4,
         gpr_values_10_4,
-        #hybrid_values_10_4
+        hybrid_values_10_4,
+        random_values_10_4,
+        grid_values_10_4,
+        bayesian_values_10_4
     ]
 
     ############################################################################################################
@@ -916,6 +1233,42 @@ def main():
             gpr_B_max_4_1 = x_values[i]
     gpr_max_4_1 = max(gpr_values_1_4)
     print("Max. accuracy Full:",gpr_max_4_1,"% at B=",gpr_B_max_4_1,"%.")
+
+    random_B_max_4_1 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_4_1 = x_values[i]
+    random_max_4_1 = max(random_values_1)
+    print("Max. accuracy random:",random_max_4_1,"% at B=",random_B_max_4_1,"%.")
+
+    grid_B_max_4_1 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_4_1 = x_values[i]
+    grid_max_4_1 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_4_1,"% at B=",grid_B_max_4_1,"%.")
+
+    bayesian_B_max_4_1 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_4_1 = x_values[i]
+    bayesian_max_4_1 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_4_1,"% at B=",bayesian_B_max_4_1,"%.")
+
+    hybrid_B_max_4_1 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_4_1 = x_values[i]
+    hybrid_max_4_1 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_4_1,"% at B=",hybrid_B_max_4_1,"%.")
 
     maxv_4_1 = 0
     Bv_4_1 = 0
@@ -961,6 +1314,42 @@ def main():
             gpr_B_max_4_2 = x_values[i]
     gpr_max_4_2 = max(gpr_values_2_4)
     print("Max. accuracy Full:",gpr_max_4_2,"% at B=",gpr_B_max_4_2,"%.")
+
+    random_B_max_4_2 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_4_2 = x_values[i]
+    random_max_4_2 = max(random_values_1)
+    print("Max. accuracy random:",random_max_4_2,"% at B=",random_B_max_4_2,"%.")
+
+    grid_B_max_4_2 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_4_2 = x_values[i]
+    grid_max_4_2 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_4_2,"% at B=",grid_B_max_4_2,"%.")
+
+    bayesian_B_max_4_2 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_4_2 = x_values[i]
+    bayesian_max_4_2 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_4_2,"% at B=",bayesian_B_max_4_2,"%.")
+
+    hybrid_B_max_4_2 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_4_2 = x_values[i]
+    hybrid_max_4_2 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_4_2,"% at B=",hybrid_B_max_4_2,"%.")
 
     maxv_4_2 = 0
     Bv_4_2 = 0
@@ -1008,6 +1397,42 @@ def main():
     gpr_max_4_5 = max(gpr_values_5_4)
     print("Max. accuracy Full:",gpr_max_4_5,"% at B=",gpr_B_max_4_5,"%.")
 
+    random_B_max_4_5 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_4_5 = x_values[i]
+    random_max_4_5 = max(random_values_1)
+    print("Max. accuracy random:",random_max_4_5,"% at B=",random_B_max_4_5,"%.")
+
+    grid_B_max_4_5 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_4_5 = x_values[i]
+    grid_max_4_5 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_4_5,"% at B=",grid_B_max_4_5,"%.")
+
+    bayesian_B_max_4_5 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_4_5 = x_values[i]
+    bayesian_max_4_5 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_4_5,"% at B=",bayesian_B_max_4_5,"%.")
+
+    hybrid_B_max_4_5 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_4_5 = x_values[i]
+    hybrid_max_4_5 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_4_5,"% at B=",hybrid_B_max_4_5,"%.")
+
     maxv_4_5 = 0
     Bv_4_5 = 0
     cpfv_4_5 = 0
@@ -1054,6 +1479,42 @@ def main():
     gpr_max_4_10 = max(gpr_values_10_4)
     print("Max. accuracy Full:",gpr_max_4_10,"% at B=",gpr_B_max_4_10,"%.")
 
+    random_B_max_4_10 = 0
+    maxv = 0
+    for i in range(len(random_values_1)):
+        if random_values_1[i] >= maxv:
+            maxv = random_values_1[i]
+            random_B_max_4_10 = x_values[i]
+    random_max_4_10 = max(random_values_1)
+    print("Max. accuracy random:",random_max_4_10,"% at B=",random_B_max_4_10,"%.")
+
+    grid_B_max_4_10 = 0
+    maxv = 0
+    for i in range(len(grid_values_1)):
+        if grid_values_1[i] >= maxv:
+            maxv = grid_values_1[i]
+            grid_B_max_4_10 = x_values[i]
+    grid_max_4_10 = max(grid_values_1)
+    print("Max. accuracy grid:",grid_max_4_10,"% at B=",grid_B_max_4_10,"%.")
+
+    bayesian_B_max_4_10 = 0
+    maxv = 0
+    for i in range(len(bayesian_values_1)):
+        if bayesian_values_1[i] >= maxv:
+            maxv = bayesian_values_1[i]
+            bayesian_B_max_4_10 = x_values[i]
+    bayesian_max_4_10 = max(bayesian_values_1)
+    print("Max. accuracy bayesian:",bayesian_max_4_10,"% at B=",bayesian_B_max_4_10,"%.")
+
+    hybrid_B_max_4_10 = 0
+    maxv = 0
+    for i in range(len(hybrid_values_1)):
+        if hybrid_values_1[i] >= maxv:
+            maxv = hybrid_values_1[i]
+            hybrid_B_max_4_10 = x_values[i]
+    hybrid_max_4_10 = max(hybrid_values_1)
+    print("Max. accuracy hybrid:",hybrid_max_4_10,"% at B=",hybrid_B_max_4_10,"%.")
+
     maxv_4_10 = 0
     Bv_4_10 = 0
     cpfv_4_10 = 0
@@ -1075,6 +1536,9 @@ def main():
         generic_costs,
         gpr_costs,
         hybrid_costs,
+        random_costs,
+        grid_costs,
+        bayesian_costs,
         base_point_costs
     ]
     y_values_list_points = [
@@ -1082,12 +1546,15 @@ def main():
         points_generic,
         points_gpr,
         points_hybrid,
+        points_random,
+        points_grid,
+        points_bayesian,
         base_points
     ]
     
-    labels_acc = ['Full matrix', 'CPF strategy', 'GPR strategy', 'Hybrid strategy']
-    labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. modeling requirement $\\bar{b}_{min}$']
-    labels_points = ['All available points', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', 'Min. points required $\\bar{p}_{min}$']
+    labels_acc = ['Full matrix', 'CPF', 'GPR', 'Hybrid', "Random", "Grid", "Bayesian"]
+    labels_cost = ['CPF strategy', 'GPR strategy', 'Hybrid strategy', "Random strategy", "Grid strategy", "Bayesian strategy", 'Min. modeling requirement $\\bar{b}_{min}$']
+    labels_points = ['All available points', 'CPF strategy', 'GPR strategy', 'Hybrid strategy', "Random strategy", "Grid strategy", "Bayesian strategy", 'Min. points required $\\bar{p}_{min}$']
 
     SMALL_SIZE = 8
     MEDIUM_SIZE = 10
@@ -1113,13 +1580,14 @@ def main():
     fig, ((ax1, ax2, ax3, ax4), (ax5, ax6, ax7, ax8), (ax9, ax10, ax11, ax12)) = plt.subplots(3, 4, figsize=(18.5*cm, 11*cm), sharex=True, sharey=True)
     
     # plot the accuracy of bucket 5 and n=1%
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
+    ls=["-",(0,(1,1)),'-',':',(0, (3,1,1,1,1,1)), "-.", "--"]
+    lw = [1,1.5,1.5,3,1.5, 1.5, 1.5]
     ax1.set_xscale("symlog")
     ax1.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
+    zorders=[7,6,5,4,3,2,1]
+    colors=["gray", "blue", "red", "orange", "purple", "green", "dimgray"]
+    
     for y_values, label, color in zip(y_values_list_acc_1, labels_acc, colors):
         if style_counter == 0:
             ax1.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1147,13 +1615,9 @@ def main():
     ax1.set_ylabel('Models within\n $\pm5\%$ at $P_{+}$ [\%]')
     
     # plot the accuracy of bucket 5 and n=2%
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax2.set_xscale("symlog")
     ax2.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_2, labels_acc, colors):
         if style_counter == 0:
             ax2.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1180,13 +1644,9 @@ def main():
     #ax2.set_xlabel('$n=2\%$')
     
     # plot the accuracy of bucket 5 and n=5%
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax3.set_xscale("symlog")
     ax3.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_5, labels_acc, colors):
         if style_counter == 0:
             ax3.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1217,13 +1677,9 @@ def main():
     #ax3.legend(loc="lower right", prop={'size': 8})
     
     # plot the accuracy of bucket 5 and n=10%
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax4.set_xscale("symlog")
     ax4.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_10, labels_acc, colors):
         if style_counter == 0:
             ax4.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1260,13 +1716,9 @@ def main():
     #### 3 parameters #####
     
     # plot the accuracy of bucket 5 and n=1%
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax5.set_xscale("symlog")
     ax5.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_1_3, labels_acc, colors):
         if style_counter == 0:
             ax5.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1293,13 +1745,9 @@ def main():
     #ax5.set_xlabel('$n=1\%$')
     ax5.set_ylabel('Models within\n $\pm5\%$ at $P_{+}$ [\%]')
     
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax6.set_xscale("symlog")
     ax6.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_2_3, labels_acc, colors):
         if style_counter == 0:
             ax6.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1325,13 +1773,9 @@ def main():
     ax6.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax6.set_xlabel('$n=2\%$')
     
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax7.set_xscale("symlog")
     ax7.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_5_3, labels_acc, colors):
         if style_counter == 0:
             ax7.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1357,13 +1801,9 @@ def main():
     ax7.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     #ax7.set_xlabel('$n=5\%$')
     
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax8.set_xscale("symlog")
     ax8.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_10_3, labels_acc, colors):
         if style_counter == 0:
             ax8.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1396,13 +1836,9 @@ def main():
     #### 4 parameters ######
 
     # plot the accuracy of bucket 5 and n=1%
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax9.set_xscale("symlog")
     ax9.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_1_4, labels_acc, colors):
         if style_counter == 0:
             ax9.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1429,13 +1865,9 @@ def main():
     ax9.set_xlabel('$n=\pm1\%$')
     ax9.set_ylabel('Models within\n $\pm5\%$ at $P_{+}$ [\%]')
     
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax10.set_xscale("symlog")
     ax10.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_2_4, labels_acc, colors):
         if style_counter == 0:
             ax10.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1461,13 +1893,9 @@ def main():
     ax10.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax10.set_xlabel('$n=\pm2\%$')
     
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax11.set_xscale("symlog")
     ax11.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_5_4, labels_acc, colors):
         if style_counter == 0:
             ax11.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1493,13 +1921,9 @@ def main():
     ax11.set_xticks([0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5,6,7,8,8,9,10,20,30,40,50,60,70,80,90,100])
     ax11.set_xlabel('$n=\pm5\%$')
     
-    ls=["-",'dotted','--',':','-']
-    lw = [1,1.5,1.5,4,1.5]
     ax12.set_xscale("symlog")
     ax12.set_xlim(0.1, 120)
     style_counter = 0
-    zorders=[5,4,3,2,1]
-    colors=["gray", "blue", "red", "orange", "yellow"]
     for y_values, label, color in zip(y_values_list_acc_10_4, labels_acc, colors):
         if style_counter == 0:
             ax12.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
@@ -1533,7 +1957,7 @@ def main():
     ax122.set_yticks([])
     
     handles, labels = ax1.get_legend_handles_labels()
-    fig.legend(handles, labels, loc='upper center', ncol=4, bbox_to_anchor=(0.5, 1.065), frameon=False, fontsize=8, columnspacing=0.8)
+    fig.legend(handles, labels, loc='upper center', ncol=7, bbox_to_anchor=(0.5, 1.065), frameon=False, fontsize=8, columnspacing=0.8)
     
     fig.text(0.5, -0.05, 'Allowed modeling budget $B$ [\%]', ha='center', fontsize=8)
     
