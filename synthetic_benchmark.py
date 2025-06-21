@@ -152,10 +152,8 @@ class SyntheticBenchmark():
         else:
             self.base_values = 2
         self.hybrid_switch = args.hybrid_switch
-        if args.newonly == 0:
-            self.newonly = False
-        else:
-            self.newonly = True
+        if args.algos:
+            self.algos = args.algos
 
     def calculate_percentage_of_buckets(self, acurracy_bucket_counter):
         # calculate the percentages for each accuracy bucket
@@ -1402,7 +1400,7 @@ class SyntheticBenchmark():
         if self.mode == "budget":
 
             if current_cost_percent <= self.budget:
-                if self.newonly == False:
+                if "generic" in self.algos:
                     while True:
                         # find another point for selection
                         remaining_points_new, selected_coord_list_new, new_point = add_additional_point_generic(remaining_points_generic, selected_points_generic)
@@ -1469,6 +1467,7 @@ class SyntheticBenchmark():
         #add_points_generic = len(selected_points_generic) - min_points
         #if percentage_cost_generic > self.budget:
         #    added_points_generic = math.nan
+        #print("DEBUG added_points_generic:", added_points_generic)
         add_points_generic_container.append(added_points_generic)
         add_points_generic = added_points_generic
         #if percentage_cost_generic < 100:
@@ -1645,7 +1644,7 @@ class SyntheticBenchmark():
             experiment_gpr_base = create_experiment2(selected_points_gpr, experiment, len(experiment.parameters), parameters, 0, 0)
         
         if base_point_cost <= self.budget:
-            if self.newonly == False:
+            if "gpr" in self.algos:
                 while True:
                     
                     # identify all possible next points that would 
@@ -1906,7 +1905,7 @@ class SyntheticBenchmark():
             experiment_hybrid_base = create_experiment2(selected_points_hybrid, experiment, len(experiment.parameters), parameters, 0, 0)
 
         if self.mode == "budget":
-            if self.newonly == False:
+            if "hybrid" in self.algos:
 
                 while True:
                     # identify all possible next points that would 
@@ -2173,43 +2172,50 @@ class SyntheticBenchmark():
         if self.mode == "budget":
 
             if current_cost_percent <= self.budget:
-                while True:
-                    # find another point for selection
-                    new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value = add_additional_point_random(remaining_points_random, selected_points_random, measurements_random, self.nr_repetitions)
+                if "random" in self.algos:
+                    while True:
 
-                    #print("DEBUG:", new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value)
+                        #print("DEBUG selected_points_random:", selected_points_random)
 
-                    # calculate new selected point cost
-                    new_cost = current_cost + new_point_cost
-                    new_cost_percent = new_cost / (total_cost / 100)
+                        # find another point for selection
+                        new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value = add_additional_point_random(remaining_points_random, selected_points_random, measurements_random, self.nr_repetitions)
 
-                    # current cost exceeds budget so break the loop
-                    # to make sure no mistakes occur here
-                    # sometimes the numbers do not perfectly add up to the target budget
-                    # but to 100.00001
-                    # this is the fix for this case
-                    new_cost_percent = float("{0:.2f}".format(new_cost_percent))
-                    #print("new_cost_percent:",new_cost_percent)
+                        #print("DEBUG selected_coord_list_new:", selected_coord_list_new)
 
-                    if new_cost_percent > self.budget:
-                        break
+                        #print("DEBUG:", new_point_cost, selected_cord_new, remaining_points_new, selected_coord_list_new, new_measurement_value)
 
-                    # add the new found point
-                    else:
-                        # increment counter value, because a new measurement point was added
-                        added_points_random += 1
+                        # calculate new selected point cost
+                        new_cost = current_cost + new_point_cost
+                        new_cost_percent = new_cost / (total_cost / 100)
 
-                        # create new model
-                        experiment_random_base = self.create_experiment(selected_cord_new, experiment_random_base, new_measurement_value)
-                        
-                        selected_points_random = selected_coord_list_new
-                        remaining_points_random = remaining_points_new
-                        current_cost = new_cost
-                        current_cost_percent = new_cost_percent
+                        # current cost exceeds budget so break the loop
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        new_cost_percent = float("{0:.2f}".format(new_cost_percent))
+                        #print("new_cost_percent:",new_cost_percent)
 
-                    # if there are no points remaining that can be selected break the loop
-                    if len(remaining_points_random) == 0:
-                        break
+                        if new_cost_percent > self.budget:
+                            break
+
+                        # add the new found point
+                        else:
+                            # increment counter value, because a new measurement point was added
+                            added_points_random += 1
+
+                            # create new model
+                            #experiment_random_base = self.create_experiment(selected_cord_new, experiment_random_base, new_measurement_value)
+                            experiment_random_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+                            
+                            selected_points_random = selected_coord_list_new
+                            remaining_points_random = remaining_points_new
+                            current_cost = new_cost
+                            current_cost_percent = new_cost_percent
+
+                        # if there are no points remaining that can be selected break the loop
+                        if len(remaining_points_random) == 0:
+                            break
 
             else:
                 pass
@@ -2219,6 +2225,9 @@ class SyntheticBenchmark():
 
         else:
             return 1
+        
+        #print(remaining_points_random)
+        #print(selected_points_random, len(selected_points_random))
 
         # calculate the percentage of cost of the selected points compared to the total cost of the full matrix
         percentage_cost_random = current_cost_percent
@@ -2231,6 +2240,7 @@ class SyntheticBenchmark():
         #add_points_random = len(selected_points_random) - min_points
         #if percentage_cost_random > self.budget:
         #    added_points_random = math.nan
+        #print("DEBUG added_points_random:", added_points_random)
         add_points_random_container.append(added_points_random)
         add_points_random = added_points_random
         #if percentage_cost_random < 100:
@@ -2241,11 +2251,11 @@ class SyntheticBenchmark():
         
         #for x in experiment_random_base.measurements[(Callpath("main"),Metric("runtime"))]:
         #    print(x, x.values)
-        #print("Model generic:",model_random)
+        #print("Model random:",model_random)
 
         # create model using full matrix of points
         model_full, _ = self.get_extrap_model(experiment)
-        #print("model_full:",model_full)
+        #print("model_full_random:",model_full)
 
         # set the measurement point values for the evaluation of the prediction
         if self.nr_parameters == 2:
@@ -2283,9 +2293,6 @@ class SyntheticBenchmark():
         else:
             error_random = 100
         #print("error_generic:",error_generic)
-
-        # increment accuracy bucket for full matrix of points
-        acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
 
         # increment accuracy bucket for generic strategy
         acurracy_bucket_counter_random = self.increment_accuracy_bucket(acurracy_bucket_counter_random, error_random)
@@ -2357,171 +2364,173 @@ class SyntheticBenchmark():
         current_cost_percent = current_cost / (total_cost / 100)
 
         from collections import defaultdict
+
+        if "grid" in self.algos:
         
-        if self.mode == "budget":
+            if self.mode == "budget":
 
-            if current_cost_percent <= self.budget:
-                
-                # loop through all remaining_combinations of the grid
-                if self.nr_parameters == 2:
+                if current_cost_percent <= self.budget:
+                    
+                    # loop through all remaining_combinations of the grid
+                    if self.nr_parameters == 2:
 
-                    for i, (a, b) in enumerate(remaining_combinations):
-                            
-                        # get the new selected point from grid
-                        new_point = Coordinate(a, b)
-                        #print("DEBUG: ", new_point)
+                        for i, (a, b) in enumerate(remaining_combinations):
+                                
+                            # get the new selected point from grid
+                            new_point = Coordinate(a, b)
+                            #print("DEBUG: ", new_point)
 
-                        # update remaining point list and selected point list
-                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
+                            # update remaining point list and selected point list
+                            remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
 
-                        # calculate selected point cost
-                        current_cost = current_cost + new_point_cost
-                        current_cost_percent = current_cost / (total_cost / 100)
-                        #print(current_cost_percent)
+                            # calculate selected point cost
+                            current_cost = current_cost + new_point_cost
+                            current_cost_percent = current_cost / (total_cost / 100)
+                            #print(current_cost_percent)
 
-                        # current cost exceeds budget so break the loop
-                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                        # to make sure no mistakes occur here
-                        # sometimes the numbers do not perfectly add up to the target budget
-                        # but to 100.00001
-                        # this is the fix for this case
-                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                        #print("current_cost_percent:",current_cost_percent)
+                            # current cost exceeds budget so break the loop
+                            #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                            # to make sure no mistakes occur here
+                            # sometimes the numbers do not perfectly add up to the target budget
+                            # but to 100.00001
+                            # this is the fix for this case
+                            current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                            #print("current_cost_percent:",current_cost_percent)
 
-                        if current_cost_percent > self.budget:
-                            break
+                            if current_cost_percent > self.budget:
+                                break
 
-                        # add the new found point
-                        else:
+                            # add the new found point
+                            else:
 
-                            # update the map with the numbers of already selected points
-                            #point_map_generic[new_point] = selection_point_counter
-                            selection_point_counter += 1
-                            #print("point:",point)
-                            #print("point_map_generic:",point_map_generic)
+                                # update the map with the numbers of already selected points
+                                #point_map_generic[new_point] = selection_point_counter
+                                selection_point_counter += 1
+                                #print("point:",point)
+                                #print("point_map_generic:",point_map_generic)
 
-                            # increment counter value, because a new measurement point was added
-                            #added_points_generic += 1
-                            added_points_grid += self.nr_repetitions
+                                # increment counter value, because a new measurement point was added
+                                #added_points_generic += 1
+                                added_points_grid += self.nr_repetitions
 
-                            # create new model
-                            experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+                                # create new model
+                                experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
 
-                            selected_points_grid = selected_coord_list_new
-                            remaining_points_grid = remaining_points_new
+                                selected_points_grid = selected_coord_list_new
+                                remaining_points_grid = remaining_points_new
 
-                        # if there are no points remaining that can be selected break the loop
-                        if len(remaining_points_grid) == 0:
-                            break
-
-
-                elif self.nr_parameters == 3:
-                    for i, (a, b, c) in enumerate(remaining_combinations):
-                        new_point = Coordinate(a, b, c)
-                        #print("DEBUG new_point:", new_point)
-
-                        # update remaining point list and selected point list
-                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
-
-                        # calculate selected point cost
-                        current_cost = current_cost + new_point_cost
-                        current_cost_percent = current_cost / (total_cost / 100)
-                        #print(current_cost_percent)
-
-                        # current cost exceeds budget so break the loop
-                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                        # to make sure no mistakes occur here
-                        # sometimes the numbers do not perfectly add up to the target budget
-                        # but to 100.00001
-                        # this is the fix for this case
-                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                        #print("current_cost_percent:",current_cost_percent)
-
-                        if current_cost_percent > self.budget:
-                            break
-
-                        # add the new found point
-                        else:
-
-                            # update the map with the numbers of already selected points
-                            #point_map_generic[new_point] = selection_point_counter
-                            selection_point_counter += 1
-                            #print("point:",point)
-                            #print("point_map_generic:",point_map_generic)
-
-                            # increment counter value, because a new measurement point was added
-                            #added_points_generic += 1
-                            added_points_grid += self.nr_repetitions
-
-                            # create new model
-                            experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
-
-                            selected_points_grid = selected_coord_list_new
-                            remaining_points_grid = remaining_points_new
-
-                        # if there are no points remaining that can be selected break the loop
-                        if len(remaining_points_grid) == 0:
-                            break
+                            # if there are no points remaining that can be selected break the loop
+                            if len(remaining_points_grid) == 0:
+                                break
 
 
-                elif self.nr_parameters == 4:
-                    for i, (a, b, c, d) in enumerate(remaining_combinations):
-                        new_point = Coordinate(a, b, c, d)
-                        #print("DEBUG new_point:", new_point)
+                    elif self.nr_parameters == 3:
+                        for i, (a, b, c) in enumerate(remaining_combinations):
+                            new_point = Coordinate(a, b, c)
+                            #print("DEBUG new_point:", new_point)
 
-                        # update remaining point list and selected point list
-                        remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
+                            # update remaining point list and selected point list
+                            remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
 
-                        # calculate selected point cost
-                        current_cost = current_cost + new_point_cost
-                        current_cost_percent = current_cost / (total_cost / 100)
-                        #print(current_cost_percent)
+                            # calculate selected point cost
+                            current_cost = current_cost + new_point_cost
+                            current_cost_percent = current_cost / (total_cost / 100)
+                            #print(current_cost_percent)
 
-                        # current cost exceeds budget so break the loop
-                        #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
-                        # to make sure no mistakes occur here
-                        # sometimes the numbers do not perfectly add up to the target budget
-                        # but to 100.00001
-                        # this is the fix for this case
-                        current_cost_percent = float("{0:.2f}".format(current_cost_percent))
-                        #print("current_cost_percent:",current_cost_percent)
+                            # current cost exceeds budget so break the loop
+                            #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                            # to make sure no mistakes occur here
+                            # sometimes the numbers do not perfectly add up to the target budget
+                            # but to 100.00001
+                            # this is the fix for this case
+                            current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                            #print("current_cost_percent:",current_cost_percent)
 
-                        if current_cost_percent > self.budget:
-                            break
+                            if current_cost_percent > self.budget:
+                                break
 
-                        # add the new found point
-                        else:
+                            # add the new found point
+                            else:
 
-                            # update the map with the numbers of already selected points
-                            #point_map_generic[new_point] = selection_point_counter
-                            selection_point_counter += 1
-                            #print("point:",point)
-                            #print("point_map_generic:",point_map_generic)
+                                # update the map with the numbers of already selected points
+                                #point_map_generic[new_point] = selection_point_counter
+                                selection_point_counter += 1
+                                #print("point:",point)
+                                #print("point_map_generic:",point_map_generic)
 
-                            # increment counter value, because a new measurement point was added
-                            #added_points_generic += 1
-                            added_points_grid += self.nr_repetitions
+                                # increment counter value, because a new measurement point was added
+                                #added_points_generic += 1
+                                added_points_grid += self.nr_repetitions
 
-                            # create new model
-                            experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+                                # create new model
+                                experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
 
-                            selected_points_grid = selected_coord_list_new
-                            remaining_points_grid = remaining_points_new
+                                selected_points_grid = selected_coord_list_new
+                                remaining_points_grid = remaining_points_new
 
-                        # if there are no points remaining that can be selected break the loop
-                        if len(remaining_points_grid) == 0:
-                            break
+                            # if there are no points remaining that can be selected break the loop
+                            if len(remaining_points_grid) == 0:
+                                break
 
+
+                    elif self.nr_parameters == 4:
+                        for i, (a, b, c, d) in enumerate(remaining_combinations):
+                            new_point = Coordinate(a, b, c, d)
+                            #print("DEBUG new_point:", new_point)
+
+                            # update remaining point list and selected point list
+                            remaining_points_new, selected_coord_list_new, new_point_cost = add_additional_point_grid(remaining_points_grid, selected_points_grid, new_point)
+
+                            # calculate selected point cost
+                            current_cost = current_cost + new_point_cost
+                            current_cost_percent = current_cost / (total_cost / 100)
+                            #print(current_cost_percent)
+
+                            # current cost exceeds budget so break the loop
+                            #print("current_cost_percent > self.budget", current_cost_percent, self.budget)
+                            # to make sure no mistakes occur here
+                            # sometimes the numbers do not perfectly add up to the target budget
+                            # but to 100.00001
+                            # this is the fix for this case
+                            current_cost_percent = float("{0:.2f}".format(current_cost_percent))
+                            #print("current_cost_percent:",current_cost_percent)
+
+                            if current_cost_percent > self.budget:
+                                break
+
+                            # add the new found point
+                            else:
+
+                                # update the map with the numbers of already selected points
+                                #point_map_generic[new_point] = selection_point_counter
+                                selection_point_counter += 1
+                                #print("point:",point)
+                                #print("point_map_generic:",point_map_generic)
+
+                                # increment counter value, because a new measurement point was added
+                                #added_points_generic += 1
+                                added_points_grid += self.nr_repetitions
+
+                                # create new model
+                                experiment_grid_base = create_experiment2(selected_coord_list_new, experiment, len(experiment.parameters), parameters, 0, 0)
+
+                                selected_points_grid = selected_coord_list_new
+                                remaining_points_grid = remaining_points_new
+
+                            # if there are no points remaining that can be selected break the loop
+                            if len(remaining_points_grid) == 0:
+                                break
+
+                    else:
+                        return 1
                 else:
-                    return 1
-            else:
+                    pass
+
+            elif self.mode == "free":
                 pass
 
-        elif self.mode == "free":
-            pass
-
-        else:
-            return 1
+            else:
+                return 1
 
         # calculate selected point cost
         selected_cost = calculate_selected_point_cost2(selected_points_grid, experiment, 0, 0)
@@ -2547,11 +2556,11 @@ class SyntheticBenchmark():
         
         #for x in experiment_grid_base.measurements[(Callpath("main"),Metric("runtime"))]:
         #    print(x, x.values)
-        #print("Model generic:",model_grid)
+        #print("Model grid:",model_grid)
 
         # create model using full matrix of points
         model_full, _ = self.get_extrap_model(experiment)
-        #print("model_full:",model_full)
+        #print("model_full_grid:",model_full)
 
         # set the measurement point values for the evaluation of the prediction
         if self.nr_parameters == 2:
@@ -2589,9 +2598,6 @@ class SyntheticBenchmark():
         else:
             error_grid = 100
         #print("error_generic:",error_generic)
-
-        # increment accuracy bucket for full matrix of points
-        acurracy_bucket_counter_full = self.increment_accuracy_bucket(acurracy_bucket_counter_full, error_full)
 
         # increment accuracy bucket for generic strategy
         acurracy_bucket_counter_grid = self.increment_accuracy_bucket(acurracy_bucket_counter_grid, error_grid)
@@ -2717,169 +2723,170 @@ class SyntheticBenchmark():
         norm_factors = [normalization_factors.get(param, 1.0) 
                         for param in experiment_bayesian_base.parameters]
 
-        if base_point_cost <= self.budget:
-            while True:
-                
-                # identify all possible next points that would 
-                # still fit into the modeling budget in core hours
-                fitting_measurements = []
-                for key, value in remaining_points_bayesian.items():
+        if "bayesian" in self.algos:
+            if base_point_cost <= self.budget:
+                while True:
                     
-                    #current_cost = calculate_selected_point_cost2(selected_points_bayesian, experiment_bayesian_base, 0, 0)
-                    current_cost = self.calculate_selected_point_cost(experiment_bayesian_base)
-                    
-                    # always take the first value in the list, until none left
-                    #new_cost = current_cost + np.sum(value)
-                    new_cost = current_cost + value[0]
-                    cost_percent = new_cost / (total_cost / 100)
-                    
-                    #if new_cost > budget_core_hours:
-                    #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
-                    #if cost_percent > 100:
-                    #    print("cost percent <= budget percent:", cost_percent, self.budget)
-                    # to make sure no mistakes occur here
-                    # sometimes the numbers do not perfectly add up to the target budget
-                    # but to 100.00001
-                    # this is the fix for this case
-                    cost_percent = float("{0:.3f}".format(cost_percent))
-                    if cost_percent > 100.0:
-                        cost_percent = 100.0
+                    # identify all possible next points that would 
+                    # still fit into the modeling budget in core hours
+                    fitting_measurements = []
+                    for key, value in remaining_points_bayesian.items():
+                        
+                        #current_cost = calculate_selected_point_cost2(selected_points_bayesian, experiment_bayesian_base, 0, 0)
+                        current_cost = self.calculate_selected_point_cost(experiment_bayesian_base)
+                        
+                        # always take the first value in the list, until none left
+                        #new_cost = current_cost + np.sum(value)
+                        new_cost = current_cost + value[0]
+                        cost_percent = new_cost / (total_cost / 100)
+                        
+                        #if new_cost > budget_core_hours:
+                        #    print("new_cost <= budget_core_hours:", new_cost, budget_core_hours)
+                        #if cost_percent > 100:
+                        #    print("cost percent <= budget percent:", cost_percent, self.budget)
+                        # to make sure no mistakes occur here
+                        # sometimes the numbers do not perfectly add up to the target budget
+                        # but to 100.00001
+                        # this is the fix for this case
+                        cost_percent = float("{0:.3f}".format(cost_percent))
+                        if cost_percent > 100.0:
+                            cost_percent = 100.0
 
-                    if cost_percent <= self.budget:
-                        fitting_measurements.append(key)
+                        if cost_percent <= self.budget:
+                            fitting_measurements.append(key)
 
-                #print("fitting_measurements:",fitting_measurements)
-                #print("selected_points_bayesian:", selected_points_bayesian)
+                    #print("fitting_measurements:",fitting_measurements)
+                    #print("selected_points_bayesian:", selected_points_bayesian)
 
-                # Propose next sampling point using BO
-                #X_candidates = np.array([c.as_tuple() for c in fitting_measurements])
-                #print("X_candidates:", X_candidates)
+                    # Propose next sampling point using BO
+                    #X_candidates = np.array([c.as_tuple() for c in fitting_measurements])
+                    #print("X_candidates:", X_candidates)
 
-                """X_candidates_list = []
-                for fm in fitting_measurements:
-                    parameter_values = fm.as_tuple()
-                    x = []
-                    for j in range(len(parameter_values)):
-                        if len(normalization_factors) != 0:
-                            x.append(parameter_values[j] * normalization_factors[experiment_bayesian_base.parameters[j]])
-                        else:
-                            x.append(parameter_values[j])
-                    #x = [x]
-                    X_candidates_list.append(x)
-                    #print("DEBUG x:", x)
-                X_candidates = np.array(X_candidates_list)"""
-                X_candidates_list = [
-                    [val * norm_factors[j] if normalization_factors else val
-                    for j, val in enumerate(fm.as_tuple())]
-                    for fm in fitting_measurements
-                ]
+                    """X_candidates_list = []
+                    for fm in fitting_measurements:
+                        parameter_values = fm.as_tuple()
+                        x = []
+                        for j in range(len(parameter_values)):
+                            if len(normalization_factors) != 0:
+                                x.append(parameter_values[j] * normalization_factors[experiment_bayesian_base.parameters[j]])
+                            else:
+                                x.append(parameter_values[j])
+                        #x = [x]
+                        X_candidates_list.append(x)
+                        #print("DEBUG x:", x)
+                    X_candidates = np.array(X_candidates_list)"""
+                    X_candidates_list = [
+                        [val * norm_factors[j] if normalization_factors else val
+                        for j, val in enumerate(fm.as_tuple())]
+                        for fm in fitting_measurements
+                    ]
 
-                # Convert to NumPy array
-                X_candidates = np.array(X_candidates_list)
-                #print("X_candidates:", X_candidates)
+                    # Convert to NumPy array
+                    X_candidates = np.array(X_candidates_list)
+                    #print("X_candidates:", X_candidates)
 
-                """y_train = []
-                for i in range(len(selected_points_bayesian)):
-                    for j in range(len(measurements_bayesian[(Callpath("main"), Metric("runtime"))])):
-                        if measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].coordinate == selected_points_bayesian[i]:
-                            y_train.append(measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].mean)
-                y_train = np.array(y_train)"""
-                measurement_key = (Callpath("main"), Metric("runtime"))
-                measurements_by_coord = {
-                    m.coordinate: m.mean
-                    for m in measurements_bayesian[measurement_key]
-                }
+                    """y_train = []
+                    for i in range(len(selected_points_bayesian)):
+                        for j in range(len(measurements_bayesian[(Callpath("main"), Metric("runtime"))])):
+                            if measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].coordinate == selected_points_bayesian[i]:
+                                y_train.append(measurements_bayesian[(Callpath("main"), Metric("runtime"))][j].mean)
+                    y_train = np.array(y_train)"""
+                    measurement_key = (Callpath("main"), Metric("runtime"))
+                    measurements_by_coord = {
+                        m.coordinate: m.mean
+                        for m in measurements_bayesian[measurement_key]
+                    }
 
-                y_train = np.array([
-                    measurements_by_coord[coord]
-                    for coord in selected_points_bayesian
-                    if coord in measurements_by_coord  # Optional: safety check
-                ])
-                #print("y_train:", y_train)
+                    y_train = np.array([
+                        measurements_by_coord[coord]
+                        for coord in selected_points_bayesian
+                        if coord in measurements_by_coord  # Optional: safety check
+                    ])
+                    #print("y_train:", y_train)
 
-                if len(X_candidates) == 0:
-                    break
-
-                ei = expected_improvement(X_candidates, gaussian_process, y_train)
-                best_idx = np.argmax(ei)
-                X_next = X_candidates[best_idx].reshape(1, -1)
-                best_coordinate = fitting_measurements[best_idx]
-                #print("X_next:",X_next)
-                #print("best_coordinate:", best_coordinate)
-
-                # find the next best additional measurement point using the gpr
-                best_index = -1
-                for i in range(len(fitting_measurements)):
-                    parameter_values = fitting_measurements[i].as_tuple()
-                    cord = Coordinate(parameter_values)
-                    #print(best_coordinate, cord)
-                    if best_coordinate == cord:
-                        best_index = i
+                    if len(X_candidates) == 0:
                         break
-                #print("best_index:", best_index)
 
-                # if there has been a point found that is suitable
-                if best_index != -1:
+                    ei = expected_improvement(X_candidates, gaussian_process, y_train)
+                    best_idx = np.argmax(ei)
+                    X_next = X_candidates[best_idx].reshape(1, -1)
+                    best_coordinate = fitting_measurements[best_idx]
+                    #print("X_next:",X_next)
+                    #print("best_coordinate:", best_coordinate)
 
-                    # add the identified measurement point to the selected point list
-                    parameter_values = fitting_measurements[best_index].as_tuple()
-                    cord = Coordinate(parameter_values)
-                    #print("DEBUG cord:", cord)
-                    #selected_points_bayesian.append(cord)
-                    
-                    # only add coordinate to selected points list if not already in there (because of reps)
-                    if cord not in selected_points_bayesian:
-                        selected_points_bayesian.append(cord)
-                    
-                    # add the new point to the gpr and call fit()
-                    gaussian_process = add_measurement_to_gpr(gaussian_process, 
-                            cord, 
-                            measurements_bayesian,
-                            callpath, 
-                            metric,
-                            normalization_factors,
-                            experiment_bayesian_base.parameters)
-                    
-                    new_value = 0
-                    
-                    # remove the identified measurement point from the remaining point list
-                    try:
-                        # only pop cord when there are no values left in the measurement
+                    # find the next best additional measurement point using the gpr
+                    best_index = -1
+                    for i in range(len(fitting_measurements)):
+                        parameter_values = fitting_measurements[i].as_tuple()
+                        cord = Coordinate(parameter_values)
+                        #print(best_coordinate, cord)
+                        if best_coordinate == cord:
+                            best_index = i
+                            break
+                    #print("best_index:", best_index)
+
+                    # if there has been a point found that is suitable
+                    if best_index != -1:
+
+                        # add the identified measurement point to the selected point list
+                        parameter_values = fitting_measurements[best_index].as_tuple()
+                        cord = Coordinate(parameter_values)
+                        #print("DEBUG cord:", cord)
+                        #selected_points_bayesian.append(cord)
                         
-                        # if that's not the case pop the value from the measurement of the cord
-                        measurement = None
-                        cord_id = None
-                        for i in range(len(measurements_bayesian[(Callpath("main"), Metric("runtime"))])):
-                            if measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
-                                cord_id = i
-                                x = measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values
-                                if len(x) > 0:
-                                    new_value = x[0]
-                                    x = np.delete(x, 0)
-                                    measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values = x
-                                break
+                        # only add coordinate to selected points list if not already in there (because of reps)
+                        if cord not in selected_points_bayesian:
+                            selected_points_bayesian.append(cord)
                         
-                        # pop value from cord in remaining points list that has been selected as best next point
-                        remaining_points_bayesian[cord].pop(0)
+                        # add the new point to the gpr and call fit()
+                        gaussian_process = add_measurement_to_gpr(gaussian_process, 
+                                cord, 
+                                measurements_bayesian,
+                                callpath, 
+                                metric,
+                                normalization_factors,
+                                experiment_bayesian_base.parameters)
                         
-                        # pop cord from remaining points when no value left anymore
-                        if len(measurements_bayesian[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
-                            remaining_points_bayesian.pop(cord)
+                        new_value = 0
                         
-                    except KeyError:
-                        pass
+                        # remove the identified measurement point from the remaining point list
+                        try:
+                            # only pop cord when there are no values left in the measurement
+                            
+                            # if that's not the case pop the value from the measurement of the cord
+                            measurement = None
+                            cord_id = None
+                            for i in range(len(measurements_bayesian[(Callpath("main"), Metric("runtime"))])):
+                                if measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].coordinate == cord:
+                                    cord_id = i
+                                    x = measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values
+                                    if len(x) > 0:
+                                        new_value = x[0]
+                                        x = np.delete(x, 0)
+                                        measurements_bayesian[(Callpath("main"), Metric("runtime"))][i].values = x
+                                    break
+                            
+                            # pop value from cord in remaining points list that has been selected as best next point
+                            remaining_points_bayesian[cord].pop(0)
+                            
+                            # pop cord from remaining points when no value left anymore
+                            if len(measurements_bayesian[(Callpath("main"), Metric("runtime"))][cord_id].values) == 0:
+                                remaining_points_bayesian.pop(cord)
+                            
+                        except KeyError:
+                            pass
 
-                    # update the number of additional points used
-                    add_points_bayesian += 1
+                        # update the number of additional points used
+                        add_points_bayesian += 1
 
-                    # add this point to the gpr experiment
-                    #experiment_bayesian_base = create_experiment2(selected_points_bayesian, experiment_bayesian_base, len(experiment_bayesian_base.parameters), parameters, 0, 0)
-                    experiment_bayesian_base = self.create_experiment(cord, experiment_bayesian_base, new_value)
+                        # add this point to the gpr experiment
+                        #experiment_bayesian_base = create_experiment2(selected_points_bayesian, experiment_bayesian_base, len(experiment_bayesian_base.parameters), parameters, 0, 0)
+                        experiment_bayesian_base = self.create_experiment(cord, experiment_bayesian_base, new_value)
 
-                # if there are no suitable measurement points found
-                # break the while True loop
-                else:
-                    break
+                    # if there are no suitable measurement points found
+                    # break the while True loop
+                    else:
+                        break
             
         # cost used of the gpr strategy
         current_cost = calculate_selected_point_cost2(selected_points_bayesian, experiment_bayesian_base, 0, 0)
@@ -3283,6 +3290,7 @@ class SyntheticBenchmark():
         json_out = {}
 
         # calculate the percentages for each accuracy bucket
+        #print("DEBUG acurracy_bucket_counter_full:", acurracy_bucket_counter_full)
         percentage_bucket_counter_full = self.calculate_percentage_of_buckets(acurracy_bucket_counter_full)
         print("percentage_bucket_counter_full:",percentage_bucket_counter_full)
         print("")
@@ -3547,7 +3555,7 @@ class SyntheticBenchmark():
         ####################
 
         # plot the results of the model accuracy analysis
-        if self.plot == True and self.newonly == False:
+        if self.plot == True:
             plot_model_accuracy(percentage_bucket_counter_full, percentage_bucket_counter_generic, percentage_bucket_counter_gpr, percentage_bucket_counter_hybrid, self.budget)
         
         used_costs = {
@@ -3559,7 +3567,7 @@ class SyntheticBenchmark():
         json_out["budget"] = self.budget
 
         # plot the analysis result for the costs and budgets
-        if self.plot == True and self.newonly == False:
+        if self.plot == True:
             plot_costs(used_costs, mean_base_point_cost, self.budget)
 
         add_points = {
@@ -3568,7 +3576,7 @@ class SyntheticBenchmark():
         }
 
         # plot the analysis result for the additional measurement point numbers
-        if self.plot == True and self.newonly == False:
+        if self.plot == True:
             plot_measurement_point_number(add_points, min_points, self.budget)
 
         ##############################
