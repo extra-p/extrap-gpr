@@ -40,10 +40,10 @@ def main():
     else:
         plot_name = "paper_plot_extended.pdf"
     
-    path_1 = "2_parameter/1_noise/combined"
-    path_2 = "2_parameter/2_noise/combined"
-    path_5 = "2_parameter/5_noise/combined"
-    path_10 = "2_parameter/10_noise/combined"
+    path_1 = "2_parameter/1_noise/rebuttal"
+    path_2 = "2_parameter/2_noise/rebuttal"
+    path_5 = "2_parameter/5_noise/rebuttal"
+    path_10 = "2_parameter/10_noise/rebuttal"
     
     path_1_3 = "3_parameter/1_noise/combined"
     path_2_3 = "3_parameter/2_noise/combined"
@@ -1622,6 +1622,8 @@ def main():
         if style_counter == 0:
             ax2.scatter(100, y_values[len(y_values)-1], s=15, label=label, marker="D", linestyle = 'None', zorder=10, edgecolor="black", facecolor=colors[style_counter])
         else:
+            #print(x_values, y_values)
+            #print(len(x_values), len(y_values))
             ax2.plot(x_values, y_values, label=label, linestyle=ls[style_counter], linewidth=lw[style_counter], alpha=0.7, color=colors[style_counter], zorder=zorders[style_counter])
         style_counter += 1
 
@@ -1662,11 +1664,11 @@ def main():
     strtemp = "+"+str('{0:.2f}'.format(maxv_2_5))+"\% for \nB="+str('{0:.0f}'.format(Bv_2_5))+"\%"
     ax3.annotate(strtemp, xy=(Bv_2_5, ytemp), xycoords='data', xytext=(-60, -25), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     strtemp = str('{0:.2f}'.format(cpf_max_2_5))+"\% \nB="+str('{0:.0f}'.format(cpf_B_max_2_5))+"\%"
-    ax3.annotate(strtemp, xy=(cpf_B_max_2_5, cpf_max_2_5), xycoords='data', xytext=(-20, -40), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    ax3.annotate(strtemp, xy=(cpf_B_max_2_5, cpf_max_2_5), xycoords='data', xytext=(-20, -50), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
     strtemp = str('{0:.2f}'.format(gpr_max_2_5))+"\% \nB="+str('{0:.0f}'.format(gpr_B_max_2_5))+"\%"
     ax3.annotate(strtemp, xy=(gpr_B_max_2_5, gpr_max_2_5), xycoords='data', xytext=(-70, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
-    strtemp = str('{0:.2f}'.format(full_max_2_5))+"\% for \nB="+str('{0:.0f}'.format(full_B_max_2_5))+"\%"
-    ax3.annotate(strtemp, xy=(full_B_max_2_5, full_max_2_5), xycoords='data', xytext=(-35, -55), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color='dimgray'), fontsize=7, color="dimgray")
+    strtemp = str('{0:.2f}'.format(full_max_2_5))+"\% \nB="+str('{0:.0f}'.format(full_B_max_2_5))+"\%"
+    ax3.annotate(strtemp, xy=(full_B_max_2_5, full_max_2_5), xycoords='data', xytext=(-25, -55), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color='dimgray'), fontsize=7, color="dimgray")
     
     ax3.grid(alpha=0.3, which='major')
     ax3.grid(alpha=0.3, which='minor')
@@ -1695,11 +1697,11 @@ def main():
     strtemp = "+"+str('{0:.2f}'.format(maxv_2_10))+"\% for \nB="+str('{0:.0f}'.format(Bv_2_10))+"\%"
     ax4.annotate(strtemp, xy=(Bv_2_10, ytemp), xycoords='data', xytext=(-60, -15), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5,), fontsize=7)
     strtemp = str('{0:.2f}'.format(cpf_max_2_10))+"\% \nB="+str('{0:.0f}'.format(cpf_B_max_2_10))+"\%"
-    ax4.annotate(strtemp, xy=(cpf_B_max_2_10, cpf_max_2_10), xycoords='data', xytext=(-25, -40), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
-    strtemp = str('{0:.2f}'.format(gpr_max_2_10))+"\% for \nB="+str('{0:.0f}'.format(gpr_B_max_2_10))+"\%"
-    ax4.annotate(strtemp, xy=(gpr_B_max_2_10, gpr_max_2_10), xycoords='data', xytext=(-60, -10), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
-    strtemp = str('{0:.2f}'.format(full_max_2_10))+"\% for \nB="+str('{0:.0f}'.format(full_B_max_2_10))+"\%"
-    ax4.annotate(strtemp, xy=(full_B_max_2_10, full_max_2_10), xycoords='data', xytext=(-40, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
+    ax4.annotate(strtemp, xy=(cpf_B_max_2_10, cpf_max_2_10), xycoords='data', xytext=(-90, 0), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="blue"), fontsize=7, color="blue")
+    strtemp = str('{0:.2f}'.format(gpr_max_2_10))+"\% \nB="+str('{0:.0f}'.format(gpr_B_max_2_10))+"\%"
+    ax4.annotate(strtemp, xy=(gpr_B_max_2_10, gpr_max_2_10), xycoords='data', xytext=(-60, -20), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="red"), fontsize=7, color="red")
+    strtemp = str('{0:.2f}'.format(full_max_2_10))+"\% \nB="+str('{0:.0f}'.format(full_B_max_2_10))+"\%"
+    ax4.annotate(strtemp, xy=(full_B_max_2_10, full_max_2_10), xycoords='data', xytext=(-30, -22), textcoords='offset points', arrowprops=dict(arrowstyle="->", lw=0.5, color="dimgray"), fontsize=7, color="dimgray")
     
     ax4.grid(alpha=0.3, which='major')
     ax4.grid(alpha=0.3, which='minor')
