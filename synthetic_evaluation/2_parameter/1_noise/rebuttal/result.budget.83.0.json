@@ -1,0 +1,99 @@
+{
+    "percentage_bucket_counter_random": {
+        "rest": 100.0,
+        "5": 85.63,
+        "10": 93.35,
+        "15": 97.69,
+        "20": 99.92999999999999
+    },
+    "mean_budget_random": 81.135276,
+    "mean_add_points_random": 87.4261,
+    "nr_func_modeled_random": 10000,
+    "percentage_bucket_counter_grid": {
+        "rest": 100.0,
+        "5": 83.2,
+        "10": 92.35,
+        "15": 96.74000000000001,
+        "20": 99.61
+    },
+    "mean_budget_grid": 69.42209090404779,
+    "mean_add_points_grid": 54.868589743589745,
+    "nr_func_modeled_grid": 9984,
+    "percentage_bucket_counter_bayesian": {
+        "rest": 100.0,
+        "5": 85.72,
+        "10": 93.45,
+        "15": 97.74000000000001,
+        "20": 99.92
+    },
+    "mean_budget_bayesian": 80.5218877383637,
+    "mean_add_points_bayesian": 96.58221644328866,
+    "nr_func_modeled_bayesian": 9998,
+    "percentage_bucket_counter_full": {
+        "rest": 100.0,
+        "5": 85.67,
+        "10": 93.36,
+        "15": 97.7,
+        "20": 99.92999999999999
+    },
+    "percentage_bucket_counter_generic": {
+        "rest": 100.0,
+        "5": 83.69,
+        "10": 93.44,
+        "15": 97.55,
+        "20": 99.79
+    },
+    "mean_budget_generic": 69.98060824164315,
+    "mean_add_points_generic": 95.47229445889178,
+    "nr_func_modeled_generic": 9998,
+    "percentage_bucket_counter_gpr": {
+        "rest": 100.0,
+        "5": 85.76,
+        "10": 93.43,
+        "15": 97.77,
+        "20": 99.94
+    },
+    "mean_add_points_gpr": 96.6914,
+    "mean_budget_gpr": 80.01352027222923,
+    "nr_func_modeled_gpr": 10000,
+    "percentage_bucket_counter_hybrid": {
+        "rest": 100.0,
+        "5": 85.76,
+        "10": 93.43,
+        "15": 97.77,
+        "20": 99.94
+    },
+    "mean_budget_hybrid": 80.01352027222923,
+    "mean_add_points_hybrid": 96.6914,
+    "nr_func_modeled_hybrid": 10000,
+    "point_map_generic": {
+        "(4, 10)": 1.0,
+        "(4, 20)": 2.0,
+        "(4, 30)": 3.0,
+        "(4, 40)": 4.0,
+        "(4, 50)": 5.0,
+        "(8, 10)": 6.0565,
+        "(8, 20)": 9.9885,
+        "(8, 30)": 11.0944,
+        "(8, 40)": 12.4362,
+        "(8, 50)": 13.8631,
+        "(16, 10)": 7.08,
+        "(16, 20)": 13.0757,
+        "(16, 30)": 14.728,
+        "(16, 40)": 16.3136,
+        "(16, 50)": 17.6692,
+        "(32, 10)": 8.1272,
+        "(32, 20)": 17.0279,
+        "(32, 30)": 18.7408,
+        "(32, 40)": 20.231,
+        "(32, 50)": 21.4425,
+        "(64, 10)": 9.112393376818867,
+        "(64, 20)": 21.2058,
+        "(64, 30)": 22.7594,
+        "(64, 40)": 23.99506654428637,
+        "(64, 50)": 0
+    },
+    "base_point_cost": 4.446068947260631,
+    "min_points": 9,
+    "budget": 83.0
+}
