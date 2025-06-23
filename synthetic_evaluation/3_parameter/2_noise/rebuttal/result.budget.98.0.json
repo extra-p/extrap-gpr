@@ -1,7 +1,7 @@
 {
     "percentage_bucket_counter_random": {
         "rest": 100.0,
-        "5": 87.8,
+        "5": 87.9,
         "10": 95.19999999999999,
         "15": 98.1,
         "20": 99.7
@@ -11,7 +11,7 @@
     "nr_func_modeled_random": 1000,
     "percentage_bucket_counter_grid": {
         "rest": 100.0,
-        "5": 84.1,
+        "5": 87.9,
         "10": 92.10000000000001,
         "15": 94.8,
         "20": 95.8
@@ -21,7 +21,7 @@
     "nr_func_modeled_grid": 961,
     "percentage_bucket_counter_bayesian": {
         "rest": 100.0,
-        "5": 87.8,
+        "5": 87.9,
         "10": 95.19999999999999,
         "15": 98.3,
         "20": 99.7

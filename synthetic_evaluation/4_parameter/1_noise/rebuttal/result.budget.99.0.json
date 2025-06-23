@@ -1,7 +1,7 @@
 {
     "percentage_bucket_counter_random": {
         "rest": 100.0,
-        "5": 81.0,
+        "5": 84.7,
         "10": 94.0,
         "15": 99.0,
         "20": 100.0
@@ -11,7 +11,7 @@
     "nr_func_modeled_random": 100,
     "percentage_bucket_counter_grid": {
         "rest": 100.0,
-        "5": 65.0,
+        "5": 84.7,
         "10": 73.2,
         "15": 75.4,
         "20": 77.10000000000001
