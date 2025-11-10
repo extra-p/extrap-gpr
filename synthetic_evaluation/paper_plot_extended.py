@@ -492,6 +492,7 @@ def main():
             cpf_B_max_2_1 = x_values[i]
     cpf_max_2_1 = max(generic_values_1)
     print("Max. accuracy CPF:",cpf_max_2_1,"% at B=",cpf_B_max_2_1,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_1[18])
     
     gpr_B_max_2_1 = 0
     maxv = 0
@@ -501,6 +502,7 @@ def main():
             gpr_B_max_2_1 = x_values[i]
     gpr_max_2_1 = max(gpr_values_1)
     print("Max. accuracy GPR:",gpr_max_2_1,"% at B=",gpr_B_max_2_1,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_1[18])
 
     random_B_max_2_1 = 0
     maxv = 0
@@ -573,6 +575,7 @@ def main():
             cpf_B_max_2_2 = x_values[i]
     cpf_max_2_2 = max(generic_values_2)
     print("Max. accuracy Full:",cpf_max_2_2,"% at B=",cpf_B_max_2_2,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_2[18])
     
     gpr_B_max_2_2 = 0
     maxv = 0
@@ -582,6 +585,7 @@ def main():
             gpr_B_max_2_2 = x_values[i]
     gpr_max_2_2 = max(gpr_values_2)
     print("Max. accuracy Full:",gpr_max_2_2,"% at B=",gpr_B_max_2_2,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_2[18])
 
     random_B_max_2_2 = 0
     maxv = 0
@@ -655,7 +659,8 @@ def main():
             cpf_B_max_2_5 = x_values[i]
     cpf_max_2_5 = max(generic_values_5)
     print("Max. accuracy Full:",cpf_max_2_5,"% at B=",cpf_B_max_2_5,"%.")
-    
+    print("Accuracy CPF at 10\% cost:",generic_values_5[18])
+
     gpr_B_max_2_5 = 0
     maxv = 0
     for i in range(len(gpr_values_5)):
@@ -664,6 +669,7 @@ def main():
             gpr_B_max_2_5 = x_values[i]
     gpr_max_2_5 = max(gpr_values_5)
     print("Max. accuracy Full:",gpr_max_2_5,"% at B=",gpr_B_max_2_5,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_5[18])
 
     random_B_max_2_5 = 0
     maxv = 0
@@ -737,6 +743,7 @@ def main():
             cpf_B_max_2_10 = x_values[i]
     cpf_max_2_10 = max(generic_values_10)
     print("Max. accuracy Full:",cpf_max_2_10,"% at B=",cpf_B_max_2_10,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_10[18])
     
     gpr_B_max_2_10 = 0
     maxv = 0
@@ -746,6 +753,7 @@ def main():
             gpr_B_max_2_10 = x_values[i]
     gpr_max_2_10 = max(gpr_values_10)
     print("Max. accuracy Full:",gpr_max_2_10,"% at B=",gpr_B_max_2_10,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_10[18])
 
     random_B_max_2_10 = 0
     maxv = 0
@@ -858,6 +866,7 @@ def main():
             cpf_B_max_3_1 = x_values[i]
     cpf_max_3_1 = max(generic_values_1_3)
     print("Max. accuracy Full:",cpf_max_3_1,"% at B=",cpf_B_max_3_1,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_1_3[18])
 
     gpr_B_max_3_1 = 0
     maxv = 0
@@ -867,6 +876,7 @@ def main():
             gpr_B_max_3_1 = x_values[i]
     gpr_max_3_1 = max(gpr_values_1_3)
     print("Max. accuracy Full:",gpr_max_3_1,"% at B=",gpr_B_max_3_1,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_1_3[18])
 
     random_B_max_3_1 = 0
     maxv = 0
@@ -939,6 +949,7 @@ def main():
             cpf_B_max_3_2 = x_values[i]
     cpf_max_3_2 = max(generic_values_2_3)
     print("Max. accuracy Full:",cpf_max_3_2,"% at B=",cpf_B_max_3_2,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_2_3[18])
 
     gpr_B_max_3_2 = 0
     maxv = 0
@@ -948,6 +959,7 @@ def main():
             gpr_B_max_3_2 = x_values[i]
     gpr_max_3_2 = max(gpr_values_2_3)
     print("Max. accuracy Full:",gpr_max_3_2,"% at B=",gpr_B_max_3_2,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_2_3[18])
 
     random_B_max_3_2 = 0
     maxv = 0
@@ -1021,6 +1033,7 @@ def main():
             cpf_B_max_3_5 = x_values[i]
     cpf_max_3_5 = max(generic_values_5_3)
     print("Max. accuracy Full:",cpf_max_3_5,"% at B=",cpf_B_max_3_5,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_5_3[18])
 
     gpr_B_max_3_5 = 0
     maxv = 0
@@ -1030,6 +1043,7 @@ def main():
             gpr_B_max_3_5 = x_values[i]
     gpr_max_3_5 = max(gpr_values_5_3)
     print("Max. accuracy Full:",gpr_max_3_5,"% at B=",gpr_B_max_3_5,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_5_3[18])
 
     random_B_max_3_5 = 0
     maxv = 0
@@ -1103,6 +1117,7 @@ def main():
             cpf_B_max_3_10 = x_values[i]
     cpf_max_3_10 = max(generic_values_10_3)
     print("Max. accuracy Full:",cpf_max_3_10,"% at B=",cpf_B_max_3_10,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_10_3[18])
 
     gpr_B_max_3_10 = 0
     maxv = 0
@@ -1112,6 +1127,7 @@ def main():
             gpr_B_max_3_10 = x_values[i]
     gpr_max_3_10 = max(gpr_values_10_3)
     print("Max. accuracy Full:",gpr_max_3_10,"% at B=",gpr_B_max_3_10,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_10_3[18])
 
     random_B_max_3_10 = 0
     maxv = 0
@@ -1224,6 +1240,7 @@ def main():
             cpf_B_max_4_1 = x_values[i]
     cpf_max_4_1 = max(generic_values_1_4)
     print("Max. accuracy Full:",cpf_max_4_1,"% at B=",cpf_B_max_4_1,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_1_4[18])
 
     gpr_B_max_4_1 = 0
     maxv = 0
@@ -1233,6 +1250,7 @@ def main():
             gpr_B_max_4_1 = x_values[i]
     gpr_max_4_1 = max(gpr_values_1_4)
     print("Max. accuracy Full:",gpr_max_4_1,"% at B=",gpr_B_max_4_1,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_1_4[18])
 
     random_B_max_4_1 = 0
     maxv = 0
@@ -1305,6 +1323,7 @@ def main():
             cpf_B_max_4_2 = x_values[i]
     cpf_max_4_2 = max(generic_values_2_4)
     print("Max. accuracy Full:",cpf_max_4_2,"% at B=",cpf_B_max_4_2,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_2_4[18])
 
     gpr_B_max_4_2 = 0
     maxv = 0
@@ -1314,6 +1333,7 @@ def main():
             gpr_B_max_4_2 = x_values[i]
     gpr_max_4_2 = max(gpr_values_2_4)
     print("Max. accuracy Full:",gpr_max_4_2,"% at B=",gpr_B_max_4_2,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_2_4[18])
 
     random_B_max_4_2 = 0
     maxv = 0
@@ -1387,6 +1407,7 @@ def main():
             cpf_B_max_4_5 = x_values[i]
     cpf_max_4_5 = max(generic_values_5_4)
     print("Max. accuracy Full:",cpf_max_4_5,"% at B=",cpf_B_max_4_5,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_5_4[18])
 
     gpr_B_max_4_5 = 0
     maxv = 0
@@ -1396,6 +1417,7 @@ def main():
             gpr_B_max_4_5 = x_values[i]
     gpr_max_4_5 = max(gpr_values_5_4)
     print("Max. accuracy Full:",gpr_max_4_5,"% at B=",gpr_B_max_4_5,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_5_4[18])
 
     random_B_max_4_5 = 0
     maxv = 0
@@ -1469,6 +1491,7 @@ def main():
             cpf_B_max_4_10 = x_values[i]
     cpf_max_4_10 = max(generic_values_10_4)
     print("Max. accuracy Full:",cpf_max_4_10,"% at B=",cpf_B_max_4_10,"%.")
+    print("Accuracy CPF at 10\% cost:",generic_values_10_4[18])
 
     gpr_B_max_4_10 = 0
     maxv = 0
@@ -1478,6 +1501,7 @@ def main():
             gpr_B_max_4_10 = x_values[i]
     gpr_max_4_10 = max(gpr_values_10_4)
     print("Max. accuracy Full:",gpr_max_4_10,"% at B=",gpr_B_max_4_10,"%.")
+    print("Accuracy GPR at 10\% cost:",gpr_values_10_4[18])
 
     random_B_max_4_10 = 0
     maxv = 0

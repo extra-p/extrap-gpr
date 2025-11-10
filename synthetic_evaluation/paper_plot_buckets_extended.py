@@ -211,7 +211,7 @@ def main():
     print("max. difference GPR/CPF:",maxv_3_10,"at B=",Bv_3_10,"%.")
     print("")
     
-    labels_acc = ['Full matrix', 'CPF', 'GPR', 'Hybrid', "Random", "Grid", "Bayesian"]
+    labels_acc = ['GPR', 'CPF', 'Hybrid', "Random", "Grid", "Bayesian", 'Full matrix']
     
     SMALL_SIZE = 8
     MEDIUM_SIZE = 10
